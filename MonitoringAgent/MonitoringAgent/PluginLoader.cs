@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
+using System.Reflection;
 
 namespace MonitoringAgent
 {
@@ -24,7 +21,7 @@ namespace MonitoringAgent
             var catalog = new AggregateCatalog();
             //Adds all the parts found in the same assembly as the Program class
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(Program).Assembly));
-            catalog.Catalogs.Add(new DirectoryCatalog(System.IO.Path.GetFullPath(@"Plugins\")));
+            catalog.Catalogs.Add(new DirectoryCatalog(Path.GetFullPath(@"Plugins")));
 
             //Create the CompositionContainer with the parts in the catalog
             _container = new CompositionContainer(catalog);
@@ -33,15 +30,30 @@ namespace MonitoringAgent
             try
             {
                 this._container.ComposeParts(this);
-                foreach (var item in catalog)
+                foreach (var item in catalog.Catalogs)
                 {
-                    Console.WriteLine(item.ToString());
+                    if(item is DirectoryCatalog)
+                    {
+                        foreach (var loadedFile in ((DirectoryCatalog)item).LoadedFiles)
+                        {
+                            Console.WriteLine(loadedFile.ToString());
+                            var DLL = Assembly.LoadFile(loadedFile);
+
+                            foreach (Type type in DLL.GetExportedTypes())
+                            {
+                                dynamic c = Activator.CreateInstance(type);
+                                c.Output();
+                            }
+                        }
+                    }
                 }
             }
             catch (CompositionException compositionException)
             {
                 Console.WriteLine(compositionException.ToString());
             }
+
+           
         }
 
     }
