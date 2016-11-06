@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
@@ -10,7 +11,9 @@ namespace MonitoringAgent
     {
         private CompositionContainer _container;
 
-        public void Loader()
+        public List<dynamic> pluginList; 
+
+        public List<dynamic> Loader()
         {
             if (!Directory.Exists("Plugins"))
             {
@@ -26,6 +29,7 @@ namespace MonitoringAgent
             //Create the CompositionContainer with the parts in the catalog
             _container = new CompositionContainer(catalog);
 
+            pluginList = new List<dynamic>();
             //Fill the imports of this object
             try
             {
@@ -42,18 +46,19 @@ namespace MonitoringAgent
                             foreach (Type type in DLL.GetExportedTypes())
                             {
                                 dynamic c = Activator.CreateInstance(type);
-                                c.Output();
+                                //_output = c.Output();
+                                pluginList.Add(c);
                             }
                         }
                     }
                 }
+                return pluginList;
             }
             catch (CompositionException compositionException)
             {
                 Console.WriteLine(compositionException.ToString());
+                return null;
             }
-
-           
         }
 
     }

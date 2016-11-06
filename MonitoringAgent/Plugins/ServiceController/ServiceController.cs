@@ -6,8 +6,9 @@ namespace ServiceControl
 {
     public class ServiceControl
     {
-        public void Output()
+        public Dictionary<string, string> Output()
         {
+            Dictionary<string, string> dic = new Dictionary<string,string>();
             List<String> services = new List<string>();
             services.Add("DRS.CaseService");
             services.Add("TPNIServer");
@@ -17,10 +18,21 @@ namespace ServiceControl
             services.Add("SQLSERVERAGENT");
             services.Add("ReportServer");
             services.Add("OpenVPNService");
-            services.Add("MpsSvc");
+            services.Add("MpsSvc"); 
             services.Add("IISADMIN");
 
-            CheckService(services);
+            foreach (var service in services)
+            {
+                ServiceController sc = new ServiceController(service.ToString());
+                if (sc != null)
+                {
+                    dic.Add(sc.ServiceName.ToString(), sc.Status.ToString());
+                }
+            }
+
+            return dic; 
+
+            //CheckService(services);
 
         }
         public void CheckService(List<string> services)

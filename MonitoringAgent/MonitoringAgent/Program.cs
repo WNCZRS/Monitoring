@@ -5,11 +5,14 @@ using System.Threading;
 using System.Configuration;
 using System.Management;
 using Newtonsoft.Json;
+using System.Text;
+using System.Collections.Generic;
 
 namespace MonitoringAgent
 {
     class Program
     {
+        static PluginLoader _plugins;
         static bool _running = true;
         static PerformanceCounter _cpuCounter, _memUsageCounter;
 
@@ -19,8 +22,8 @@ namespace MonitoringAgent
             Console.WriteLine("Application is RUNNING");
 
             // Load Plugins
-            //var instance = new PluginLoader();
-            //instance.Loader();
+            _plugins = new PluginLoader();
+            _plugins.Loader();
 
             StartThread(); 
         }
@@ -65,6 +68,7 @@ namespace MonitoringAgent
 
         static void RunPollingThread(object data)
         {
+            List<Dictionary<string, string>> outputList;
             // Convert the object that was passed in
             DateTime lastPollTime = DateTime.MinValue;
 
@@ -73,9 +77,16 @@ namespace MonitoringAgent
             // Start the polling loop
             while (_running)
             {
+                outputList = new List<Dictionary<string, string>>();
+
                 // Poll every second
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 1000)
                 {
+                    foreach (var plugin in _plugins.pluginList)
+                    {
+                        outputList.Add(plugin.Output());
+                    }
+
                     double cpuTime;
                     ulong memUsage, totalMemory;
 
@@ -100,7 +111,7 @@ namespace MonitoringAgent
                     client.Headers.Add("Content-Type", "application/json");
                     //client.UploadString(serverUrl, json);
                     //client.UploadString("http://192.168.0.105:15123/api/cpuinfo", json);
-                    client.UploadString("http://localhost:15123/api/cpuinfo", json);
+                    client.UploadString("http://localhost:8000/api/cpuinfo", json);
 
                     // Reset the poll time
                     lastPollTime = DateTime.Now;
