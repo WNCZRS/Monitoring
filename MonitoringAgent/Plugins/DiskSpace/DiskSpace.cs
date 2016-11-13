@@ -1,41 +1,40 @@
-﻿using System;
+﻿using MonitoringAgent;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DiskSpaceInfo
 {
-    public class DiskSpace
+    public class DiskSpace : IPlugin
     {
-        public Dictionary<string, string> Output()
+        PluginOutputCollection _pluginOutputs;
+
+        public string Name
         {
-            Dictionary<string, string> res = new Dictionary<string, string>();
-            DriveInfo[] allDrives = DriveInfo.GetDrives();
-
-            foreach (DriveInfo d in allDrives)
+            get
             {
-                /*Console.WriteLine("Drive {0}", d.Name);
-                Console.WriteLine("     Drive Type: {0}", d.DriveType);
-                if (d.IsReady == true)
-                {
-                    Console.WriteLine("  Volume label: {0}", d.VolumeLabel);
-                    Console.WriteLine("  File system: {0}", d.DriveFormat);
-                    Console.WriteLine(
-                        "  Available space to current user:{0, 15} bytes",
-                        d.AvailableFreeSpace);
+                return "Disk free space";
+            }
+        }
 
-                    Console.WriteLine(
-                        "  Total available space:          {0, 15} bytes",
-                        d.TotalFreeSpace);
+        public DiskSpace()
+        {
+            _pluginOutputs = new PluginOutputCollection(Name);
+        }
 
-                    Console.WriteLine(
-                        "  Total size of drive:            {0, 15} bytes ",
-                        d.TotalSize);
-                }       */
+        public PluginOutputCollection Output()
+        {
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+            string freeSpace = string.Empty;
 
-                res.Add(d.Name, d.VolumeLabel);
+            foreach (DriveInfo drive in allDrives)
+            {
+                freeSpace = Math.Round((drive.AvailableFreeSpace / Math.Pow(1024,3)), 2).ToString() + " GB";
+                _pluginOutputs.NewPluginOutput(drive.Name, freeSpace);
             }
 
-            return res;
+            return _pluginOutputs;
         }
     }
 }

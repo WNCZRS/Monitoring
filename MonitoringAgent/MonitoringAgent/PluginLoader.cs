@@ -7,49 +7,108 @@ using System.Reflection;
 
 namespace MonitoringAgent
 {
+    public interface IPlugin
+    {
+        string Name { get; }
+        PluginOutputCollection Output();
+    }
+
+    public class PluginOutput
+    {
+        private string _propertyName;
+        private object _value;
+
+        public string PropertyName
+        {
+            get
+            {
+                return _propertyName;
+            }
+        }
+        public object Value
+        {
+            get
+            {
+                return _value;
+            }
+        }
+
+        public PluginOutput(string propertyName, object value)
+        {
+            _propertyName = propertyName;
+            _value = value;
+        }
+    }
+
+    public class PluginOutputCollection
+    {
+        string _pluginName;
+        List<PluginOutput> _pluginOutputList;
+
+        public string PluginName
+        {
+            get
+            {
+                return _pluginName;
+            }
+        }
+
+        public List<PluginOutput> PluginOuputList
+        {
+            get
+            {
+                return _pluginOutputList;
+            }
+        }
+
+        public PluginOutputCollection(string name = "")
+        {
+            _pluginName = name;
+            _pluginOutputList = new List<PluginOutput>();
+        }
+
+        public void NewPluginOutput(string name, object value)
+        {
+            _pluginOutputList.Add(new PluginOutput(name, value));
+        }
+    }
+
     public class PluginLoader
     {
-        private CompositionContainer _container;
+        private string _path;
 
-        public List<dynamic> pluginList; 
+        public List<IPlugin> pluginList;
 
-        public List<dynamic> Loader()
+        public PluginLoader()
         {
-            if (!Directory.Exists("Plugins"))
+            pluginList = new List<IPlugin>();
+            _path = "Plugins";
+        }
+        public List<IPlugin> Loader()
+        {
+            string[] dllFileNames = null;
+
+            if (!Directory.Exists(_path))
             {
-                Directory.CreateDirectory("Plugins");
+                Directory.CreateDirectory(_path);
+            }
+            else
+            {
+                dllFileNames = Directory.GetFiles(_path, "*.dll");
             }
 
-            //An aggregate catalog that combines multiple catalogs
-            var catalog = new AggregateCatalog();
-            //Adds all the parts found in the same assembly as the Program class
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(Program).Assembly));
-            catalog.Catalogs.Add(new DirectoryCatalog(Path.GetFullPath(@"Plugins")));
 
-            //Create the CompositionContainer with the parts in the catalog
-            _container = new CompositionContainer(catalog);
-
-            pluginList = new List<dynamic>();
             //Fill the imports of this object
             try
             {
-                this._container.ComposeParts(this);
-                foreach (var item in catalog.Catalogs)
+                foreach (string dllFile in dllFileNames)
                 {
-                    if(item is DirectoryCatalog)
-                    {
-                        foreach (var loadedFile in ((DirectoryCatalog)item).LoadedFiles)
-                        {
-                            Console.WriteLine(loadedFile.ToString());
-                            var DLL = Assembly.LoadFile(loadedFile);
+                    AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
 
-                            foreach (Type type in DLL.GetExportedTypes())
-                            {
-                                dynamic c = Activator.CreateInstance(type);
-                                //_output = c.Output();
-                                pluginList.Add(c);
-                            }
-                        }
+                    foreach (Type type in Assembly.Load(an).GetTypes())
+                    {
+                        IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
+                        pluginList.Add(plugin);
                     }
                 }
                 return pluginList;

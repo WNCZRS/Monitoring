@@ -6,9 +6,11 @@
 
         // Whether we're connected or not
         self.connected = ko.observable(false);
+        //self.connected = plug.observable(false);
 
         // Collection of machines that are connected
-        self.machines = ko.observableArray();
+        self.propValues = ko.observableArray();
+        //self.plugName = plug.observableArray();
     };
 
     // Instantiate the viewmodel..
@@ -16,35 +18,43 @@
 
     // .. and bind it to the view
     ko.applyBindings(vm, $("#computerInfo")[0]);
+    //plug.applyBindings(vm, $("#computerInfo")[0]);
 
     // Get a reference to our hub
-    var hub = $.connection.cpuInfo;
+    var hub = $.connection.pluginInfo;
 
     // Add a handler to receive updates from the server
-    hub.client.cpuInfoMessage = function (machineName, cpu, memUsage, memTotal) {
+    hub.client.pluginMessage = function (propName, value) {
+       
+        var propValues = {
+            propName: propName,
+            value: value
+        }
 
-        var machine = {
-            machineName: machineName,
-            cpu: cpu.toFixed(0),
-            memUsage: (memUsage / 1024).toFixed(2),
-            memTotal: (memTotal / 1024).toFixed(2),
-            memPercent: ((memUsage / memTotal) * 100).toFixed(1) + "%"
-        };
+        var pluginModel = ko.mapping.fromJS(propValues);
 
-        var machineModel = ko.mapping.fromJS(machine);
-
-        // Check if we already have it:
-        var match = ko.utils.arrayFirst(vm.machines(), function (item) {
-            return item.machineName() == machineName;
+        /*var matchPlug = plug.utils.arrayFirst(vm.plugName(), function (item) {
+            return item.plugName() == plugName;
         });
 
-        if (!match)
-            vm.machines.push(machineModel);
+        if (!matchPlug)
+            vm.plugName.push(plugName);
         else {
-            var index = vm.machines.indexOf(match);
-            vm.machines.replace(vm.machines()[index], machineModel);
+            var index = vm.plugName.indexOf(matchPlug);
+            vm.plugName.replace(vm.plugName()[index], plugName)
+        }*/
+
+        var match = ko.utils.arrayFirst(vm.propValues(), function (item) {
+            return item.propName() == propName;
+        });  
+
+        if (!match)
+            vm.propValues.push(pluginModel);
+        else {
+            var index = vm.propValues.indexOf(match);
+            vm.propValues.replace(vm.propValues()[index], pluginModel);
         }
-    };
+    }
 
     // Start the connectio
     $.connection.hub.start().done(function () {

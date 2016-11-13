@@ -14,7 +14,6 @@ namespace MonitoringAgent
     {
         static PluginLoader _plugins;
         static bool _running = true;
-        static PerformanceCounter _cpuCounter, _memUsageCounter;
 
         public static void Main(string[] args)
         {
@@ -34,13 +33,13 @@ namespace MonitoringAgent
 
             try
             {
-                _cpuCounter = new PerformanceCounter();
+                /*_cpuCounter = new PerformanceCounter();
                 _cpuCounter.CategoryName = "Processor";
                 _cpuCounter.CounterName = "% Processor Time";
                 _cpuCounter.InstanceName = "_Total";
 
                 _memUsageCounter = new PerformanceCounter("Memory", "Available KBytes");
-
+                  */
                 // Create a new thread to start polling and sending the data
                 pollingThread = new Thread(new ParameterizedThreadStart(RunPollingThread));
                 pollingThread.Start();
@@ -68,7 +67,7 @@ namespace MonitoringAgent
 
         static void RunPollingThread(object data)
         {
-            List<Dictionary<string, string>> outputList;
+            List<PluginOutputCollection> outputList;
             // Convert the object that was passed in
             DateTime lastPollTime = DateTime.MinValue;
 
@@ -77,17 +76,28 @@ namespace MonitoringAgent
             // Start the polling loop
             while (_running)
             {
-                outputList = new List<Dictionary<string, string>>();
+                outputList = new List<PluginOutputCollection>();
 
                 // Poll every second
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 1000)
                 {
+                    WebClient client = new WebClient();
+                    string json = string.Empty;
                     foreach (var plugin in _plugins.pluginList)
                     {
-                        outputList.Add(plugin.Output());
+                        //outputList.Add(plugin.Output());
+                        PluginOutputCollection poc = plugin.Output();
+                        foreach (PluginOutput po in poc.PluginOuputList)
+                        {
+                            json = JsonConvert.SerializeObject(new { poc.PluginName, po.PropertyName, po.Value });
+                            client.Headers.Add("Content-Type", "application/json");
+                            client.UploadString("http://localhost:15123/api/Plugin", json);
+                        }
                     }
 
-                    double cpuTime;
+
+                    //var postData = new { outputList[0].PluginOuputList[0].PropertyName, outputList[0].PluginOuputList[0].Value };
+                    /*double cpuTime;
                     ulong memUsage, totalMemory;
 
                     // Get the stuff we need to send
@@ -100,18 +110,18 @@ namespace MonitoringAgent
                         Processor = cpuTime,
                         MemUsage = memUsage,
                         TotalMemory = totalMemory
-                    };
+                    };       */
 
-                    var json = JsonConvert.SerializeObject(postData);
+                    //var json = JsonConvert.SerializeObject(postData); 
 
                     // Post the data to the server
                     //var serverUrl = new Uri(ConfigurationManager.AppSettings["ServerUrl"]);
 
-                    var client = new WebClient();
-                    client.Headers.Add("Content-Type", "application/json");
+                    //var client = new WebClient();
+                    //client.Headers.Add("Content-Type", "application/json");
                     //client.UploadString(serverUrl, json);
-                    //client.UploadString("http://192.168.0.105:15123/api/cpuinfo", json);
-                    client.UploadString("http://localhost:8000/api/cpuinfo", json);
+                    //client.UploadString("http://localhost:15123/api/Plugin", json);
+                    //client.UploadString("http://localhost:8000/api/cpuinfo", json);
 
                     // Reset the poll time
                     lastPollTime = DateTime.Now;
@@ -123,7 +133,7 @@ namespace MonitoringAgent
             }
         }
 
-        static void GetMetrics(out double processorTime, out ulong memUsage, out ulong totalMemory)
+        /*static void GetMetrics(out double processorTime, out ulong memUsage, out ulong totalMemory)
         {
             processorTime = (double)_cpuCounter.NextValue();
             memUsage = (ulong)_memUsageCounter.NextValue();
@@ -138,7 +148,7 @@ namespace MonitoringAgent
             {
                 totalMemory = (ulong)item["TotalVisibleMemorySize"];
             }
-        }
+        } */
 
     }
 }

@@ -18,24 +18,16 @@
     <table border="0" class="table table-striped">
         <tr>
             <th>Machine</th>
-            <th>CPU %</th>
-            <th>Memory Available (Mb)</th>
-            <th>Total Memory (Mb)</th>
-            <th>Mem Available %</th>
         </tr>
 
-        <!-- ko foreach: machines -->
-        <tr data-bind="css: { highCpu: cpu() > 90 }">
-            <td data-bind="text: machineName"></td>
-            <td data-bind="text: cpu"></td>
-            <td data-bind="text: memUsage"></td>
-            <td data-bind="text: memTotal"></td>
-            <td data-bind="text: memPercent"></td>
+        <!-- ko foreach: propValues -->
+        <tr>
+            <td data-bind="text: propName"></td>
+            <td data-bind="text: value"></td>
         </tr>
         <!-- /ko -->
 
     </table>
-
 </div>
 
 @section Scripts {
