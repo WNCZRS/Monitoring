@@ -38,6 +38,8 @@ namespace ServiceControl
 
             string serviceName, serviceStatus = string.Empty;
 
+            _pluginOutputs.PluginOuputList.Clear();
+
             foreach (var service in services)
             {
                 ServiceController sc = new ServiceController(service.ToString());

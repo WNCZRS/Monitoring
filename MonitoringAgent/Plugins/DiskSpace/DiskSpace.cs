@@ -27,6 +27,7 @@ namespace DiskSpaceInfo
         {
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             string freeSpace = string.Empty;
+            _pluginOutputs.PluginOuputList.Clear();
 
             foreach (DriveInfo drive in allDrives)
             {
