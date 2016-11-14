@@ -44,6 +44,12 @@
     <Compile Include="ServiceController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MonitoringAgent\MonitoringAgent.csproj">
+      <Project>{44ee042e-eb69-413c-acdf-6093450b908c}</Project>
+      <Name>MonitoringAgent</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,12 +1,27 @@
-﻿using System;
+﻿using MonitoringAgent;
+using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
 
 namespace ServiceControl
 {
-    public class ServiceControl
+    public class ServiceControl : IPlugin
     {
-        public Dictionary<string, string> Output()
+        PluginOutputCollection _pluginOutputs;
+
+        public string Name
+        {
+            get
+            {
+                return "Service status";
+            }
+        }
+        public ServiceControl()
+        {
+            _pluginOutputs = new PluginOutputCollection(Name);
+        }
+
+        public PluginOutputCollection Output()
         {
             Dictionary<string, string> dic = new Dictionary<string,string>();
             List<String> services = new List<string>();
@@ -21,29 +36,19 @@ namespace ServiceControl
             services.Add("MpsSvc"); 
             services.Add("IISADMIN");
 
+            string serviceName, serviceStatus = string.Empty;
+
             foreach (var service in services)
             {
                 ServiceController sc = new ServiceController(service.ToString());
                 if (sc != null)
                 {
-                    dic.Add(sc.ServiceName.ToString(), sc.Status.ToString());
+                    serviceName = service.ToString();
+                    serviceStatus = sc.Status.ToString();
+                    _pluginOutputs.NewPluginOutput(serviceName, serviceStatus);
                 }
             }
-
-            return dic; 
-
-            //CheckService(services);
-
+            return _pluginOutputs;
         }
-        public void CheckService(List<string> services)
-        {
-            foreach (var item in services)
-            {
-                ServiceController sc = new ServiceController(item.ToString());
-                Console.WriteLine("{1} status:\t\t {0}", sc.Status.ToString(), item.ToString());
-            }
-            
-        }
-
     }
 }
