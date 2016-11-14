@@ -30,10 +30,12 @@ namespace DiskSpaceInfo
 
             foreach (DriveInfo drive in allDrives)
             {
-                freeSpace = Math.Round((drive.AvailableFreeSpace / Math.Pow(1024,3)), 2).ToString() + " GB";
-                _pluginOutputs.NewPluginOutput(drive.Name, freeSpace);
+                if (drive.DriveType == DriveType.Fixed)
+                {
+                    freeSpace = Math.Round((drive.AvailableFreeSpace / Math.Pow(1024, 3)), 2).ToString() + " GB";
+                    _pluginOutputs.NewPluginOutput(drive.Name, freeSpace);
+                }
             }
-
             return _pluginOutputs;
         }
     }

@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MonitoringAgent\MonitoringAgent.csproj">
-      <Project>{44EE042E-EB69-413C-ACDF-6093450B908C}</Project>
+      <Project>{44ee042e-eb69-413c-acdf-6093450b908c}</Project>
       <Name>MonitoringAgent</Name>
     </ProjectReference>
   </ItemGroup>
