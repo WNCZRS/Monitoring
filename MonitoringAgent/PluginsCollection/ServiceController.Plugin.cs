@@ -1,9 +1,8 @@
-﻿using MonitoringAgent;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
 
-namespace ServiceControl
+namespace PluginsCollection
 {
     public class ServiceControl : IPlugin
     {
@@ -32,7 +31,7 @@ namespace ServiceControl
             services.Add("SQLSERVERAGENT");
             services.Add("ReportServer");
             services.Add("OpenVPNService");
-            services.Add("MpsSvc"); 
+            services.Add("MpsSvc");  
             services.Add("IISADMIN");
 
             string serviceName, serviceStatus = string.Empty;

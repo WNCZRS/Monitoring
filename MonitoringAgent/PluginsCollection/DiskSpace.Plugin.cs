@@ -1,8 +1,7 @@
-﻿using MonitoringAgent;
-using System;
+﻿using System;
 using System.IO;
 
-namespace DiskSpaceInfo
+namespace PluginsCollection
 {
     public class DiskSpace : IPlugin
     {

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
-using System.Configuration;
-using System.Management;
 using Newtonsoft.Json;
-using System.Text;
 using System.Collections.Generic;
+using PluginsCollection;
 
 namespace MonitoringAgent
 {
@@ -15,10 +12,13 @@ namespace MonitoringAgent
         static PluginLoader _plugins;
         static bool _running = true;
 
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static void Main(string[] args)
         {
+            ConfigureService.Configure();
             // Application Running Information
-            Console.WriteLine("Application is RUNNING");
+            log.Info("Application is RUNNING");
 
             // Load Plugins
             _plugins = new PluginLoader();
@@ -33,13 +33,6 @@ namespace MonitoringAgent
 
             try
             {
-                /*_cpuCounter = new PerformanceCounter();
-                _cpuCounter.CategoryName = "Processor";
-                _cpuCounter.CounterName = "% Processor Time";
-                _cpuCounter.InstanceName = "_Total";
-
-                _memUsageCounter = new PerformanceCounter("Memory", "Available KBytes");
-                  */
                 // Create a new thread to start polling and sending the data
                 pollingThread = new Thread(new ParameterizedThreadStart(RunPollingThread));
                 pollingThread.Start();
@@ -89,39 +82,12 @@ namespace MonitoringAgent
                         PluginOutputCollection poc = plugin.Output();
                         foreach (PluginOutput po in poc.PluginOuputList)
                         {
+
                             json = JsonConvert.SerializeObject(new { poc.PluginName, po.PropertyName, po.Value });
                             client.Headers.Add("Content-Type", "application/json");
                             client.UploadString("http://localhost:15123/api/Plugin", json);
                         }
                     }
-
-
-                    //var postData = new { outputList[0].PluginOuputList[0].PropertyName, outputList[0].PluginOuputList[0].Value };
-                    /*double cpuTime;
-                    ulong memUsage, totalMemory;
-
-                    // Get the stuff we need to send
-                    GetMetrics(out cpuTime, out memUsage, out totalMemory);
-
-                    // Send the data
-                    var postData = new
-                    {
-                        MachineName = System.Environment.MachineName,
-                        Processor = cpuTime,
-                        MemUsage = memUsage,
-                        TotalMemory = totalMemory
-                    };       */
-
-                    //var json = JsonConvert.SerializeObject(postData); 
-
-                    // Post the data to the server
-                    //var serverUrl = new Uri(ConfigurationManager.AppSettings["ServerUrl"]);
-
-                    //var client = new WebClient();
-                    //client.Headers.Add("Content-Type", "application/json");
-                    //client.UploadString(serverUrl, json);
-                    //client.UploadString("http://localhost:15123/api/Plugin", json);
-                    //client.UploadString("http://localhost:8000/api/cpuinfo", json);
 
                     // Reset the poll time
                     lastPollTime = DateTime.Now;

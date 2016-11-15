@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.IO;
-using System.Reflection;
+﻿using System.Collections.Generic;
 
-namespace MonitoringAgent
+namespace PluginsCollection
 {
     public interface IPlugin
     {
@@ -86,7 +81,10 @@ namespace MonitoringAgent
         }
         public List<IPlugin> Loader()
         {
-            string[] dllFileNames = null;
+            pluginList = LoadPlugins();
+
+            return pluginList;
+            /*string[] dllFileNames = null;
 
             if (!Directory.Exists(_path))
             {
@@ -96,7 +94,6 @@ namespace MonitoringAgent
             {
                 dllFileNames = Directory.GetFiles(_path, "*.dll");
             }
-
 
             //Fill the imports of this object
             try
@@ -117,8 +114,23 @@ namespace MonitoringAgent
             {
                 Console.WriteLine(compositionException.ToString());
                 return null;
-            }
+            }   */
+
         }
 
+        public List<IPlugin> LoadPlugins()
+        {
+            pluginList.Clear();
+
+            pluginList.Add(new DiskSpace());
+            pluginList.Add(new ServiceControl());
+            pluginList.Add(new MachineIdentifier());
+            pluginList.Add(new MACAddress());
+            pluginList.Add(new TerminalServicesUsers());
+            //pluginList.Add(new Performance());
+            //pluginList.Add(new SQLdbAvailabilityCheck());
+
+            return pluginList;
+        }
     }
 }
