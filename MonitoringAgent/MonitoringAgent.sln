@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitoringAgent", "MonitoringAgent\MonitoringAgent.csproj", "{44EE042E-EB69-413C-ACDF-6093450B908C}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceCounter", "Plugins\PerformanceCounter\PerformanceCounter.csproj", "{19E9E66F-C37E-4EDE-B22C-72DCCD5AF613}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLdbAvailabilityCheck", "Plugins\SQLdbAvailabilityCheck\SQLdbAvailabilityCheck.csproj", "{03516265-F5C5-4685-99A9-38E9991C96F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineIdentifier", "Plugins\MachineIdentifier\MachineIdentifier.csproj", "{9B137CA1-691F-4C19-9D72-5B6B5892A0B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{03516265-F5C5-4685-99A9-38E9991C96F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03516265-F5C5-4685-99A9-38E9991C96F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03516265-F5C5-4685-99A9-38E9991C96F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B137CA1-691F-4C19-9D72-5B6B5892A0B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B137CA1-691F-4C19-9D72-5B6B5892A0B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B137CA1-691F-4C19-9D72-5B6B5892A0B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B137CA1-691F-4C19-9D72-5B6B5892A0B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +62,6 @@ Global
 		{150CC5DF-EF82-4616-9B07-EC871A0F0CCD} = {2EB06B23-BAA3-4C7A-9021-E1981CE72113}
 		{19E9E66F-C37E-4EDE-B22C-72DCCD5AF613} = {2EB06B23-BAA3-4C7A-9021-E1981CE72113}
 		{03516265-F5C5-4685-99A9-38E9991C96F8} = {2EB06B23-BAA3-4C7A-9021-E1981CE72113}
+		{9B137CA1-691F-4C19-9D72-5B6B5892A0B9} = {2EB06B23-BAA3-4C7A-9021-E1981CE72113}
 	EndGlobalSection
 EndGlobal

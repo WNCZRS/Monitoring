@@ -23,7 +23,6 @@ namespace ServiceControl
 
         public PluginOutputCollection Output()
         {
-            Dictionary<string, string> dic = new Dictionary<string,string>();
             List<String> services = new List<string>();
             services.Add("DRS.CaseService");
             services.Add("TPNIServer");
