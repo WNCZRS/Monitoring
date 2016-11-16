@@ -70,14 +70,14 @@ namespace PluginsCollection
 
     public class PluginLoader
     {
-        private string _path;
+        //private string _path;
 
         public List<IPlugin> pluginList;
 
         public PluginLoader()
         {
             pluginList = new List<IPlugin>();
-            _path = "Plugins";
+           // _path = "Plugins";
         }
         public List<IPlugin> Loader()
         {
@@ -127,6 +127,7 @@ namespace PluginsCollection
             pluginList.Add(new MachineIdentifier());
             pluginList.Add(new MACAddress());
             pluginList.Add(new TerminalServicesUsers());
+            pluginList.Add(new ComputerName());
             //pluginList.Add(new Performance());
             //pluginList.Add(new SQLdbAvailabilityCheck());
 
