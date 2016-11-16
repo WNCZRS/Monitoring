@@ -12,11 +12,14 @@ namespace MonitoringAgent
         static PluginLoader _plugins;
         static bool _running = true;
 
+        // Logging initialization
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public static void Main(string[] args)
         {
+            // Configure service using Topshelf dll
             ConfigureService.Configure();
+
             // Application Running Information
             log.Info("Application is RUNNING");
 
@@ -24,7 +27,7 @@ namespace MonitoringAgent
             _plugins = new PluginLoader();
             _plugins.Loader();
 
-            StartThread(); 
+            StartThread();
         }
 
         private static void StartThread()
@@ -37,10 +40,8 @@ namespace MonitoringAgent
                 pollingThread = new Thread(new ParameterizedThreadStart(RunPollingThread));
                 pollingThread.Start();
 
-                Console.WriteLine("Press a key to stop and exit");
-                Console.ReadKey();
-
-                Console.WriteLine("Stopping thread..");
+                Console.WriteLine("Starting thread..");
+                log.Info("Starting thread...");
 
                 _running = false;
 
@@ -65,6 +66,7 @@ namespace MonitoringAgent
             DateTime lastPollTime = DateTime.MinValue;
 
             Console.WriteLine("Started polling...");
+            log.Info("Started polling...");
 
             // Start the polling loop
             while (_running)
@@ -82,7 +84,6 @@ namespace MonitoringAgent
                         PluginOutputCollection poc = plugin.Output();
                         foreach (PluginOutput po in poc.PluginOuputList)
                         {
-
                             json = JsonConvert.SerializeObject(new { poc.PluginName, po.PropertyName, po.Value });
                             client.Headers.Add("Content-Type", "application/json");
                             client.UploadString("http://localhost:15123/api/Plugin", json);
