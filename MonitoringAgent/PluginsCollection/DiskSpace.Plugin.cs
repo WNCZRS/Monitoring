@@ -24,7 +24,7 @@ namespace PluginsCollection
         {
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             string freeSpace = string.Empty;
-            _pluginOutputs.PluginOuputList.Clear();
+            _pluginOutputs.PluginOutputList.Clear();
 
             foreach (DriveInfo drive in allDrives)
             {

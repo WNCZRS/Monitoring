@@ -6,11 +6,9 @@
 
         // Whether we're connected or not
         self.connected = ko.observable(false);
-        //self.connected = plug.observable(false);
 
         // Collection of machines that are connected
         self.propValues = ko.observableArray();
-        //self.plugName = plug.observableArray();
     };
 
     // Instantiate the viewmodel..
@@ -18,41 +16,51 @@
 
     // .. and bind it to the view
     ko.applyBindings(vm, $("#computerInfo")[0]);
-    //plug.applyBindings(vm, $("#computerInfo")[0]);
 
     // Get a reference to our hub
     var hub = $.connection.pluginInfo;
 
-    // Add a handler to receive updates from the server
-    hub.client.pluginMessage = function (propName, value) {
-       
-        var propValues = {
-            propName: propName,
-            value: value
-        }
+    hub.client.machineInitialize = function (MACaddress) {
 
-        var pluginModel = ko.mapping.fromJS(propValues);
+        var matchMAC = ko.utils.arrayFirst(vm.propValues(), function (item) {
+            return item.propName() === propName;
+        }); 
 
-        /*var matchPlug = plug.utils.arrayFirst(vm.plugName(), function (item) {
-            return item.plugName() == plugName;
+        if (!matchMAC) 
+            vm.propValues.push(ko.mapping.fromJS(item));
+    }
+
+    hub.client.pluginsMessage = function (pluginOutput) {
+
+        var result = document.createElement('table');
+        var tableBody = document.createElement('tbody');
+
+        pluginOutput.forEach(function (plugin) {
+            var headRow = document.createElement('tr');
+            var headCell = document.createElement('th');
+            headCell.textContent = plugin.PluginName;
+            headRow.appendChild(headCell);
+            tableBody.appendChild(headRow);
+
+            plugin.PluginOutputList.forEach(function (pluginElement) {
+                var row = document.createElement('tr');
+                var cellName = document.createElement('td');
+                var cellValue = document.createElement('td');
+                cellName.textContent = pluginElement.PropertyName;
+                cellValue.textContent = pluginElement.Value;
+                row.appendChild(cellName);
+                row.appendChild(cellValue);
+                tableBody.appendChild(row);
+            });
         });
+        result.appendChild(tableBody);
+        result.id = "test";
 
-        if (!matchPlug)
-            vm.plugName.push(plugName);
+        if (document.getElementById("test") === null) {
+            document.body.appendChild(result);
+        }
         else {
-            var index = vm.plugName.indexOf(matchPlug);
-            vm.plugName.replace(vm.plugName()[index], plugName)
-        }*/
-
-        var match = ko.utils.arrayFirst(vm.propValues(), function (item) {
-            return item.propName() == propName;
-        });  
-
-        if (!match)
-            vm.propValues.push(pluginModel);
-        else {
-            var index = vm.propValues.indexOf(match);
-            vm.propValues.replace(vm.propValues()[index], pluginModel);
+            document.body.replaceChild(result, document.getElementById("test"));
         }
     }
 

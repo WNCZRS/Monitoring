@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using PluginsCollection;
 using System.Configuration;
+using System.Text;
 
 namespace MonitoringAgent
 {
@@ -65,6 +66,10 @@ namespace MonitoringAgent
         static void RunPollingThread(object data)
         {
             List<PluginOutputCollection> outputList;
+            WebClient client;
+            string json;
+            string serverIP = ConfigurationManager.AppSettings["ServerIP"];
+
             // Convert the object that was passed in
             DateTime lastPollTime = DateTime.MinValue;
 
@@ -74,26 +79,21 @@ namespace MonitoringAgent
             // Start the polling loop
             while (_running)
             {
-                outputList = new List<PluginOutputCollection>();
-
                 // Poll every second
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 1000)
                 {
-                    WebClient client = new WebClient();
-                    string json = string.Empty;
+                    client = new WebClient();
+                    json = string.Empty;
+                    outputList = new List<PluginOutputCollection>();
+
                     foreach (var plugin in _plugins.pluginList)
                     {
-                        //outputList.Add(plugin.Output());
-                        PluginOutputCollection poc = plugin.Output();
-                        string serverIP = ConfigurationManager.AppSettings["ServerIP"];
-
-                        foreach (PluginOutput po in poc.PluginOuputList)
-                        {
-                            json = JsonConvert.SerializeObject(new { poc.PluginName, po.PropertyName, po.Value });
-                            client.Headers.Add("Content-Type", "application/json");
-                            client.UploadString(serverIP, json);
-                        }
+                        outputList.Add(plugin.Output());
                     }
+
+                    json = JsonConvert.SerializeObject(outputList);
+                    client.Headers.Add("Content-Type", "application/json");
+                    client.UploadString(serverIP, json);
 
                     // Reset the poll time
                     lastPollTime = DateTime.Now;
@@ -105,22 +105,5 @@ namespace MonitoringAgent
                 }
             }
         }
-
-        /*static void GetMetrics(out double processorTime, out ulong memUsage, out ulong totalMemory)
-        {
-            processorTime = (double)_cpuCounter.NextValue();
-            memUsage = (ulong)_memUsageCounter.NextValue();
-            totalMemory = 0;
-
-            // Get total memory from WMI
-            ObjectQuery memQuery = new ObjectQuery("SELECT * FROM CIM_OperatingSystem");
-
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(memQuery);
-
-            foreach (ManagementObject item in searcher.Get())
-            {
-                totalMemory = (ulong)item["TotalVisibleMemorySize"];
-            }
-        } */
     }
 }

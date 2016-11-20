@@ -19,12 +19,20 @@ namespace PluginsCollection
             {
                 return _propertyName;
             }
+            set
+            {
+                _propertyName = value;
+            }
         }
         public object Value
         {
             get
             {
                 return _value;
+            }
+            set
+            {
+                _value = value;
             }
         }
 
@@ -46,9 +54,13 @@ namespace PluginsCollection
             {
                 return _pluginName;
             }
+            set
+            {
+                _pluginName = value;
+            }
         }
 
-        public List<PluginOutput> PluginOuputList
+        public List<PluginOutput> PluginOutputList
         {
             get
             {

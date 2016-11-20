@@ -2,15 +2,17 @@
 using Microsoft.AspNet.SignalR;
 using MonitoringServer.Hubs;
 using MonitoringServer.Models;
+using System.Collections.Generic;
+using PluginsCollection;
 
 namespace MonitoringServer.Api
 {
     public class PluginController : ApiController
     {
-        public void Post(PluginOutput pluginOutput)
+        public void Post(List<PluginOutputCollection> pluginOutput)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
-            context.Clients.All.pluginMessage(/*pluginOutput.PluginName,*/ pluginOutput.PropertyName, pluginOutput.Value);
+            context.Clients.All.pluginsMessage(pluginOutput);
         }
     }
 }
