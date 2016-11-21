@@ -31,12 +31,12 @@ namespace PluginsCollection
             services.Add("SQLSERVERAGENT");
             services.Add("ReportServer");
             services.Add("OpenVPNService");
-            services.Add("MpsSvc");  
+            services.Add("MpsSvc");      
             services.Add("IISADMIN");
 
             string serviceName, serviceStatus = string.Empty;
 
-            _pluginOutputs.PluginOuputList.Clear();
+            _pluginOutputs.PluginOutputList.Clear();
 
             foreach (var service in services)
             {

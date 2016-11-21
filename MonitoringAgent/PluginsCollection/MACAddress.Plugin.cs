@@ -21,7 +21,7 @@ namespace PluginsCollection
 
         public PluginOutputCollection Output()
         {
-            _pluginOutputs.PluginOuputList.Clear();
+            _pluginOutputs.PluginOutputList.Clear();
             var macAddr =
             (
                 from nic in NetworkInterface.GetAllNetworkInterfaces()

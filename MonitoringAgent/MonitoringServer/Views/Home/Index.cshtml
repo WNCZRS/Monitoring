@@ -10,26 +10,6 @@
     }
 </style>
 
-<div id="computerInfo">
-
-    <h2>Real-time System Resource Monitor</h2>
-    <h5 data-bind="visible: connected">Connected to message hub</h5>
-
-    <table border="0" class="table table-striped">
-        <tr>
-            <th>Machine</th>
-        </tr>
-
-        <!-- ko foreach: propValues -->
-        <tr>
-            <td data-bind="text: propName"></td>
-            <td data-bind="text: value"></td>
-        </tr>
-        <!-- /ko -->
-
-    </table>
-</div>
-
 @section Scripts {
     <script src="~/Scripts/index.js"></script>
 }

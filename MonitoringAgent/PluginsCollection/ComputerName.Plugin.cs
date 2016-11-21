@@ -22,7 +22,7 @@ namespace PluginsCollection
         {
             // Get computer name
             string computerName = string.Empty;
-            _pluginOutputs.PluginOuputList.Clear();
+            _pluginOutputs.PluginOutputList.Clear();
 
             computerName = Environment.MachineName.ToString();
 

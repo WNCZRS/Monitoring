@@ -24,6 +24,7 @@ namespace PluginsCollection
         public PluginOutputCollection Output()
         {
             ITerminalServicesManager manager = new TerminalServicesManager();
+            _pluginOutputs.PluginOutputList.Clear();
             using (ITerminalServer server = manager.GetRemoteServer(Environment.MachineName.ToString()))
             {
                 server.Open();

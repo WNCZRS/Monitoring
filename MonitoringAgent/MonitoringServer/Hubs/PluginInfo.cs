@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNet.SignalR;
+using PluginsCollection;
+using System.Collections.Generic;
 
 namespace MonitoringServer.Hubs
 {
     public class PluginInfo : Hub
     {
-        public void SendPluginInfo(/*string pluginName, */string propertyName, object value)
+        public void SendPluginInfo(List<PluginOutputCollection> pluginsValues)
         {
-            this.Clients.All.pluginMessage(/*pluginName,*/ propertyName, value);
-        }
+            this.Clients.All.pluginMessage(pluginsValues);
+        }  
     }
 }
