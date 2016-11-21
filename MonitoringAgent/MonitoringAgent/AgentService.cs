@@ -17,7 +17,6 @@ namespace MonitoringAgent
         static bool _running = true;
         public void Start()
         {
-
             // Application Running Information
             _log.Info("Application is RUNNING");
 
