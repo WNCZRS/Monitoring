@@ -7,6 +7,7 @@ namespace PluginsCollection
     public class ServiceControl : IPlugin
     {
         PluginOutputCollection _pluginOutputs;
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public string Name
         {
@@ -32,7 +33,7 @@ namespace PluginsCollection
             services.Add("ReportServer");
             services.Add("OpenVPNService");
             services.Add("MpsSvc");      
-            services.Add("IISADMIN");
+            services.Add("IISADMIN");  
 
             string serviceName, serviceStatus = string.Empty;
 
@@ -43,9 +44,18 @@ namespace PluginsCollection
                 ServiceController sc = new ServiceController(service.ToString());
                 if (sc != null)
                 {
-                    serviceName = service.ToString();
-                    serviceStatus = sc.Status.ToString();
-                    _pluginOutputs.NewPluginOutput(serviceName, serviceStatus);
+                    try
+                    {
+                        serviceName = service.ToString();
+                        serviceStatus = sc.Status.ToString();
+                        _pluginOutputs.NewPluginOutput(serviceName, serviceStatus);
+                    }
+                    catch (Exception ex)
+                    {
+                        //_log.Error(String.Format("Exeption in service: {0} \n {1}", service, ex));
+                        continue;
+                    }
+
                 }
             }
             return _pluginOutputs;
