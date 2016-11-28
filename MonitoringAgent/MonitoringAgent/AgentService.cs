@@ -97,9 +97,50 @@ namespace MonitoringAgent
 
                     json = JsonConvert.SerializeObject(output);
                     client.Headers.Add("Content-Type", "application/json");
-                    client.UploadString(serverIP, json);
-                    //client.UploadString("http://192.168.0.108:8000/api/Plugin",json);
 
+                    bool connectionStatus = false;
+                    connectionStatus = CheckConnection(serverIP);
+
+                    if (connectionStatus)
+                    {
+                        try
+                        {
+                            client.UploadString(serverIP, json);
+                        }
+                        catch (Exception err)
+                        {
+                            _log.Error("Upload string ERROR: ", err);
+                            continue;
+                        }
+                        try
+                        {
+                            Dictionary<int, string> dbValues = new Dictionary<int, string>();
+                            string dbName = "MonitoringAgentDB.sqlite";
+                            dbValues = SQLiteDB.GetStoredJson(dbName);
+                            foreach (var item in dbValues)
+                            {
+                                string jsonDB = item.Value;
+                                client.UploadString(serverIP, jsonDB);
+                                SQLiteDB.UpdateStatus(dbName, item.Key);
+                            }
+                        }
+                        catch (Exception err)
+                        {
+                            _log.Error("Read stored values from database", err);
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        string dbName = "MonitoringAgentDB.sqlite";
+                        SQLiteDB.CreateDbFile(dbName);
+                        SQLiteDB.CreateTable(dbName);
+                        SQLiteDB.InsertToDb(dbName, json);
+
+                        _log.Warn("Server unreachable, writing into local db");
+                    }
+
+                    
                     // Reset the poll time
                     lastPollTime = DateTime.Now;
 
@@ -124,6 +165,24 @@ namespace MonitoringAgent
         public static string getPCName()
         {
             return Environment.MachineName;
+        }
+
+        private static bool CheckConnection(String URL)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+                request.Timeout = 5000;
+                request.Credentials = CredentialCache.DefaultNetworkCredentials;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode == HttpStatusCode.OK) return true;
+                else return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
