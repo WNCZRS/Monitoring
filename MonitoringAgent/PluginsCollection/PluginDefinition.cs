@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace PluginsCollection
 {
@@ -10,8 +13,9 @@ namespace PluginsCollection
 
     public class PluginOutput
     {
-        private string _propertyName;
-        private object _value;
+        private string  _propertyName;
+        private object  _value;
+        private bool    _isCritical;
 
         public string PropertyName
         {
@@ -24,6 +28,7 @@ namespace PluginsCollection
                 _propertyName = value;
             }
         }
+
         public object Value
         {
             get
@@ -36,10 +41,24 @@ namespace PluginsCollection
             }
         }
 
-        public PluginOutput(string propertyName, object value)
+        public bool IsCritical
+        {
+            get
+            {
+                return _isCritical;
+            }
+            set
+            {
+                _isCritical = value;
+            }
+        }
+
+
+        public PluginOutput(string propertyName, object value, bool isCritical)
         {
             _propertyName = propertyName;
             _value = value;
+            _isCritical = isCritical;
         }
     }
 
@@ -74,9 +93,9 @@ namespace PluginsCollection
             _pluginOutputList = new List<PluginOutput>();
         }
 
-        public void NewPluginOutput(string name, object value)
+        public void NewPluginOutput(string name, object value, bool isCritical)
         {
-            _pluginOutputList.Add(new PluginOutput(name, value));
+            _pluginOutputList.Add(new PluginOutput(name, value, isCritical));
         }
     }
 
@@ -173,16 +192,16 @@ namespace PluginsCollection
 
         public List<IPlugin> LoadPlugins()
         {
+            Type parentType = typeof(IPlugin);
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Type[] types = assembly.GetTypes();
+            IEnumerable<Type> imp = types.Where(t => t.GetInterfaces().Contains(parentType));
             pluginList.Clear();
 
-            pluginList.Add(new DiskSpace());
-            pluginList.Add(new ServiceControl());
-            pluginList.Add(new MachineIdentifier());
-            pluginList.Add(new MACAddress());
-            pluginList.Add(new TerminalServicesUsers());
-            pluginList.Add(new ComputerName());
-            //pluginList.Add(new Performance());
-            //pluginList.Add(new SQLdbAvailabilityCheck());
+            foreach (Type type in imp)
+            {
+                pluginList.Add((IPlugin)Activator.CreateInstance(type));
+            }
 
             return pluginList;
         }

@@ -48,15 +48,12 @@ namespace MonitoringAgent
                 Console.WriteLine("Starting thread..");
                 _log.Info("Starting thread...");
 
-              //  _running = false;
-
                 pollingThread.Join(5000);
 
             }
             catch (Exception)
             {
                 pollingThread.Abort();
-
                 throw;
             }
 
@@ -66,7 +63,6 @@ namespace MonitoringAgent
 
         static void RunPollingThread(object data)
         {
-            List<PluginOutputCollection> outputList;
             WebClient client;
             string json;
             string serverIP = ConfigurationManager.AppSettings["ServerIP"];
@@ -84,7 +80,7 @@ namespace MonitoringAgent
             while (_running)
             {
                 // Poll every second
-                if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 1000)
+                if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000)
                 {
                     client = new WebClient();
                     json = string.Empty;
@@ -143,7 +139,6 @@ namespace MonitoringAgent
                     
                     // Reset the poll time
                     lastPollTime = DateTime.Now;
-
                 }
                 else
                 {
@@ -154,12 +149,9 @@ namespace MonitoringAgent
 
         public static string getMACAddress()
         {
-            return 
-                (    
-                    from nic in NetworkInterface.GetAllNetworkInterfaces()
-                    where nic.OperationalStatus == OperationalStatus.Up
-                    select nic.GetPhysicalAddress().ToString()
-                ).FirstOrDefault();
+            NetworkInterface[] NI = NetworkInterface.GetAllNetworkInterfaces();
+            NetworkInterface ni = NI.FirstOrDefault(x => x.OperationalStatus == OperationalStatus.Up);
+            return ni.GetPhysicalAddress().ToString();
         }
 
         public static string getPCName()
