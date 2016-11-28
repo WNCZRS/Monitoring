@@ -33,13 +33,13 @@ namespace PluginsCollection
         {
             get
             {
-                throw new NotImplementedException();
+                return "SQL";
             }
         }
 
         public PluginOutputCollection Output()
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

@@ -137,6 +137,7 @@ namespace PluginsCollection
         {
             _pcName = pcName;
             _ID = id;
+            _collectionList = new List<PluginOutputCollection>();
         }
     }
 
