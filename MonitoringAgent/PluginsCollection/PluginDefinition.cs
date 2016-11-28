@@ -80,6 +80,47 @@ namespace PluginsCollection
         }
     }
 
+    public class ClientOutput
+    {
+        private List<PluginOutputCollection> _collectionList;
+        private string _ID;
+        private string _pcName;
+
+        public List<PluginOutputCollection> CollectionList
+        {
+            get
+            {
+                return _collectionList;
+            }
+            set
+            {
+                _collectionList = value;
+            }
+        }
+
+        public string ID
+        {
+            get
+            {
+                return _ID;
+            }
+        }
+
+        public string PCName
+        {
+            get
+            {
+                return _pcName;
+            }
+        }
+
+        public ClientOutput(string pcName, string id)
+        {
+            _pcName = pcName;
+            _ID = id;
+        }
+    }
+
     public class PluginLoader
     {
         //private string _path;

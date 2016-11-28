@@ -30,17 +30,27 @@
             vm.propValues.push(ko.mapping.fromJS(item));
     }
 
-    hub.client.pluginsMessage = function (pluginOutput) {
+
+
+    hub.client.pluginsMessage = function (clientOutput) {
 
         var result = document.createElement('table');
-        var tableBody = document.createElement('tbody');
+        var pcName = document.createElement('tr');
+        var nameCell = document.createElement('th');
+        nameCell.textContent = clientOutput.PCName;
+        pcName.appendChild(nameCell);
+        result.appendChild(pcName);
 
-        pluginOutput.forEach(function (plugin) {
+        clientOutput.CollectionList.forEach(function (plugin) {
             var headRow = document.createElement('tr');
             var headCell = document.createElement('th');
             headCell.textContent = plugin.PluginName;
+            headCell.setAttribute("colspan", "2");
             headRow.appendChild(headCell);
-            tableBody.appendChild(headRow);
+            //headRow.className = "header";
+            //headRow.setAttribute("data-toggle", "collapse");
+            //headRow.setAttribute("data-target", "#collapseElem");
+            result.appendChild(headRow);
 
             plugin.PluginOutputList.forEach(function (pluginElement) {
                 var row = document.createElement('tr');
@@ -50,17 +60,17 @@
                 cellValue.textContent = pluginElement.Value;
                 row.appendChild(cellName);
                 row.appendChild(cellValue);
-                tableBody.appendChild(row);
+                //row.id = "collapseElem";
+                result.appendChild(row);
             });
         });
-        result.appendChild(tableBody);
-        result.id = "test";
+        result.id = clientOutput.ID;
 
-        if (document.getElementById("test") === null) {
+        if (document.getElementById(clientOutput.ID) === null) {
             document.body.appendChild(result);
         }
         else {
-            document.body.replaceChild(result, document.getElementById("test"));
+            document.body.replaceChild(result, document.getElementById(clientOutput.ID));
         }
     }
 

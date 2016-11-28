@@ -9,7 +9,7 @@ namespace MonitoringServer.Api
 {
     public class PluginController : ApiController
     {
-        public void Post(List<PluginOutputCollection> pluginOutput)
+        public void Post(ClientOutput pluginOutput)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
             context.Clients.All.pluginsMessage(pluginOutput);

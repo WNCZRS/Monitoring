@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using PluginsCollection;
 using System.Configuration;
 using System.Text;
+using System.Net.NetworkInformation;
+using System.Linq;
 
 namespace MonitoringAgent
 {
@@ -68,6 +70,7 @@ namespace MonitoringAgent
             WebClient client;
             string json;
             string serverIP = ConfigurationManager.AppSettings["ServerIP"];
+            ClientOutput output;
 
             // Convert the object that was passed in
             DateTime lastPollTime = DateTime.MinValue;
@@ -75,6 +78,8 @@ namespace MonitoringAgent
             Console.WriteLine("Started polling...");
             _log.Info("Started polling...");
 
+
+            output = new ClientOutput(getPCName(), getMACAddress());
             // Start the polling loop
             while (_running)
             {
@@ -83,16 +88,17 @@ namespace MonitoringAgent
                 {
                     client = new WebClient();
                     json = string.Empty;
-                    outputList = new List<PluginOutputCollection>();
+                    output.CollectionList = new List<PluginOutputCollection>();
 
                     foreach (var plugin in _plugins.pluginList)
                     {
-                        outputList.Add(plugin.Output());
+                        output.CollectionList.Add(plugin.Output());
                     }
 
-                    json = JsonConvert.SerializeObject(outputList);
+                    json = JsonConvert.SerializeObject(output);
                     client.Headers.Add("Content-Type", "application/json");
                     client.UploadString(serverIP, json);
+                    //client.UploadString("http://192.168.0.108:8000/api/Plugin",json);
 
                     // Reset the poll time
                     lastPollTime = DateTime.Now;
@@ -103,6 +109,21 @@ namespace MonitoringAgent
                     Thread.Sleep(10);
                 }
             }
+        }
+
+        public static string getMACAddress()
+        {
+            return 
+                (    
+                    from nic in NetworkInterface.GetAllNetworkInterfaces()
+                    where nic.OperationalStatus == OperationalStatus.Up
+                    select nic.GetPhysicalAddress().ToString()
+                ).FirstOrDefault();
+        }
+
+        public static string getPCName()
+        {
+            return Environment.MachineName;
         }
     }
 }
