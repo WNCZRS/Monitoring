@@ -31,7 +31,7 @@ namespace PluginsCollection
                 if (drive.DriveType == DriveType.Fixed)
                 {
                     freeSpace = Math.Round((drive.AvailableFreeSpace / Math.Pow(1024, 3)), 2).ToString() + " GB";
-                    _pluginOutputs.NewPluginOutput(drive.Name, freeSpace);
+                    _pluginOutputs.NewPluginOutput(drive.Name, freeSpace, false);
                 }
             }
             return _pluginOutputs;

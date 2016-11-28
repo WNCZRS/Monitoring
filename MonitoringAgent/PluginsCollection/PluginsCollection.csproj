@@ -51,9 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComputerName.Plugin.cs" />
     <Compile Include="DiskSpace.Plugin.cs" />
-    <Compile Include="MACAddress.Plugin.cs" />
     <Compile Include="MachineIdentifier.Plugin.cs" />
     <Compile Include="PerformanceCounter.Plugin.cs" />
     <Compile Include="PluginDefinition.cs" />

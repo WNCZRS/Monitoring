@@ -48,7 +48,7 @@ namespace PluginsCollection
                     {
                         serviceName = service.ToString();
                         serviceStatus = sc.Status.ToString();
-                        _pluginOutputs.NewPluginOutput(serviceName, serviceStatus);
+                        _pluginOutputs.NewPluginOutput(serviceName, serviceStatus, false);
                     }
                     catch (Exception ex)
                     {

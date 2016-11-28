@@ -28,7 +28,7 @@ namespace PluginsCollection
             foreach (ManagementObject mo in moc)
             {
                 cpuInfo = mo.Properties["processorID"].Value.ToString();
-                _pluginOutputs.NewPluginOutput("CPU ID", cpuInfo);
+                _pluginOutputs.NewPluginOutput("CPU ID", cpuInfo, false);
             }
             return _pluginOutputs;
         }

@@ -33,7 +33,7 @@ namespace PluginsCollection
                     NTAccount account = session.UserAccount;
                     if (account != null)
                     {
-                        _pluginOutputs.NewPluginOutput("User", account.ToString());
+                        _pluginOutputs.NewPluginOutput("User", account.ToString(), false);
                     }
                 }
             }
