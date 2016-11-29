@@ -173,7 +173,7 @@ namespace MonitoringAgent
                 if (response.StatusCode == HttpStatusCode.OK) return true;
                 else return false;
             }
-            catch
+            catch (Exception ex)
             {
                 return false;
             }
