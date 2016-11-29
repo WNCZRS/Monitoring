@@ -63,11 +63,10 @@ namespace MonitoringAgent
 
         static void RunPollingThread(object data)
         {
+            WebClient client;
             string json;
             string serverIP = ConfigurationManager.AppSettings["ServerIP"];
-            WebClient client = new WebClient();
-            ClientOutput output = new ClientOutput(getPCName(), getMACAddress());
-            PluginOutputCollection plugOutput = new PluginOutputCollection();
+            ClientOutput output;
 
             // Convert the object that was passed in
             DateTime lastPollTime = DateTime.MinValue;
@@ -75,22 +74,21 @@ namespace MonitoringAgent
             Console.WriteLine("Started polling...");
             _log.Info("Started polling...");
 
+
+            output = new ClientOutput(getPCName(), getMACAddress());
             // Start the polling loop
             while (_running)
             {
-                // Poll every 5 second
+                // Poll every second
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000)
                 {
+                    client = new WebClient();
                     json = string.Empty;
-                    output.CollectionList.Clear();
+                    output.CollectionList = new List<PluginOutputCollection>();
 
                     foreach (var plugin in _plugins.pluginList)
                     {
-                        plugOutput = plugin.Output();
-                        if (plugOutput != null)
-                        {
-                            output.CollectionList.Add(plugOutput);
-                        }
+                        output.CollectionList.Add(plugin.Output());
                     }
 
                     json = JsonConvert.SerializeObject(output);

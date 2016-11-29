@@ -13,7 +13,7 @@ namespace PluginsCollection
         {
             get
             {
-                return "Performance";
+                throw new NotImplementedException();
             }
         }
 
