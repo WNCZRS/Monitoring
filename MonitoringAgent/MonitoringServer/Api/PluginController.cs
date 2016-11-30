@@ -5,6 +5,7 @@ using PluginsCollection;
 using System.Data.SQLite;
 using System;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace MonitoringServer.Api
 {
@@ -12,6 +13,7 @@ namespace MonitoringServer.Api
     {
         string _connectionString = "Data Source=C:\\Users\\Marko\\Downloads\\sqlitestudio-3.1.1\\SQLiteStudio\\MonitorDB;Version=3";
 
+        [HttpPost]
         public void Post(ClientOutput pluginOutput)
         {
             string json = JsonConvert.SerializeObject(pluginOutput.CollectionList);
@@ -36,6 +38,12 @@ namespace MonitoringServer.Api
 
             var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
             context.Clients.All.pluginsMessage(pluginOutput);
+        }
+
+        [HttpGet]
+        public HttpStatusCode Get()
+        {
+            return HttpStatusCode.OK;
         }
     }
 }
