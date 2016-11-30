@@ -26,13 +26,14 @@ namespace PluginsCollection
             string memoryUsage = string.Empty;
             _pluginOutputs.PluginOutputList.Clear();
 
-            memoryUsage = GetTotalMemoryInBytes().ToString();
-           
+            memoryUsage = (Math.Round((GetTotalMemoryInBytes() / (1024 * 1024 * 1024)), 2)).ToString();
+            memoryUsage += " GB";
+            _pluginOutputs.PluginOutputList.Add(new PluginOutput("Free RAM", memoryUsage, false));
             return _pluginOutputs;
         }
-        static ulong GetTotalMemoryInBytes()
+        static double GetTotalMemoryInBytes()
         {
-            return new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
+            return new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
         }
     }
 }
