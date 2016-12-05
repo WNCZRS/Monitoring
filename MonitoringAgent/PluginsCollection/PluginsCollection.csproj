@@ -38,6 +38,7 @@
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -56,6 +57,7 @@
     <Compile Include="PerformanceCounter.Plugin.cs" />
     <Compile Include="PluginDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RAM.plugin.cs" />
     <Compile Include="ServiceController.Plugin.cs" />
     <Compile Include="SQLdbAvailabilityCheck.Plugin.cs" />
     <Compile Include="TerminalServicesUsers.Plugin.cs" />
