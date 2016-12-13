@@ -17,7 +17,7 @@ namespace MonitoringServer.Api
         public void Post(ClientOutput pluginOutput)
         {
             string json = JsonConvert.SerializeObject(pluginOutput.CollectionList);
-            try
+           /* try
             {
                 using (SQLiteConnection dbConnection = new SQLiteConnection(_connectionString))
                 {
@@ -34,7 +34,7 @@ namespace MonitoringServer.Api
             catch (Exception ex)
             {
                 throw ex;
-            }
+            }*/
 
             var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
             context.Clients.All.pluginsMessage(pluginOutput);

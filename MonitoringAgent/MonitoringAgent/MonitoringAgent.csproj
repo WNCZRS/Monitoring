@@ -94,6 +94,9 @@
       <HintPath>..\packages\Topshelf.4.0.3\lib\net452\Topshelf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="TPOMM.Common">
+      <HintPath>D:\Ondra\Skola\5_rocnik\Diplomka\TPOMM.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigureAgentService.cs" />

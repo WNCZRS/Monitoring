@@ -31,13 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cassia">
-      <HintPath>..\packages\Cassia.2.0.0.60\lib\2.0\Cassia.dll</HintPath>
+    <Reference Include="Cassia, Version=2.0.0.60, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MonitoringAgent\bin\Debug\Cassia.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -49,6 +51,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TPOMM.Common">
+      <HintPath>D:\Ondra\Skola\5_rocnik\Diplomka\TPOMM.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="TPOMM.Tools">
+      <HintPath>D:\Ondra\Skola\5_rocnik\Diplomka\TPOMM.Tools.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiskSpace.Plugin.cs" />
@@ -56,6 +64,7 @@
     <Compile Include="PerformanceCounter.Plugin.cs" />
     <Compile Include="PluginDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RAM.plugin.cs" />
     <Compile Include="ServiceController.Plugin.cs" />
     <Compile Include="SQLdbAvailabilityCheck.Plugin.cs" />
     <Compile Include="TerminalServicesUsers.Plugin.cs" />
