@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Microsoft.VisualBasic.Devices;
 
 namespace PluginsCollection
@@ -31,9 +30,10 @@ namespace PluginsCollection
             _pluginOutputs.PluginOutputList.Add(new PluginOutput("Free RAM", memoryUsage, false));
             return _pluginOutputs;
         }
+
         static double GetTotalMemoryInBytes()
         {
-            return new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
+            return new ComputerInfo().AvailablePhysicalMemory;
         }
     }
 }
