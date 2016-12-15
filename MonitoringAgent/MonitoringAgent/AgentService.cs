@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using PluginsCollection;
 using System.Configuration;
-using System.Text;
 using System.Net.NetworkInformation;
 using System.Linq;
 

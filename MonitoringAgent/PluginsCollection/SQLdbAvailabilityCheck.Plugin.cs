@@ -28,7 +28,7 @@ namespace PluginsCollection
 
         public static bool IsServerConnected(string connectionString)
         {
-            using (SqlConnection connection = new SqlConnection(TPOMM.Tools.Config.Current.cfConnectionString.ToString()))
+            using (SqlConnection connection = new SqlConnection(TPOMM.Tools.Config.Current.ConnectionStrings["CFConnectionString"]))
             {
                 try
                 {
@@ -44,13 +44,14 @@ namespace PluginsCollection
 
         public PluginOutputCollection Output()
         {
+            _pluginOutputs.PluginOutputList.Clear();
             if (IsServerConnected(connString))
             {
                 _pluginOutputs.NewPluginOutput("SQL Status", "Connected", true);
             }
             else
             {
-                _pluginOutputs.NewPluginOutput("SQL Status", "Connected", false);
+                _pluginOutputs.NewPluginOutput("SQL Status", "Disconnected", false);
             }
             return _pluginOutputs;
         }

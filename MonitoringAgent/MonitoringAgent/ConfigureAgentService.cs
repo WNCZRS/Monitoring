@@ -1,4 +1,5 @@
 ﻿using Topshelf;
+
 namespace MonitoringAgent
 {
     internal static class ConfigureService
