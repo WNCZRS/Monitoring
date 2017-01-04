@@ -104,6 +104,8 @@ namespace PluginsCollection
         private List<PluginOutputCollection> _collectionList;
         private string _ID;
         private string _pcName;
+        private string _customer;
+        private bool _initPost;
 
         public List<PluginOutputCollection> CollectionList
         {
@@ -131,13 +133,39 @@ namespace PluginsCollection
             {
                 return _pcName;
             }
+            set
+            {
+                _pcName = value;
+            }
         }
 
-        public ClientOutput(string pcName, string id)
+        public string Customer
+        {
+            get
+            {
+                return _customer;
+            }
+        }
+
+        public bool InitPost
+        {
+            get
+            {
+                return _initPost;
+            }
+            set
+            {
+                _initPost = value;
+            }
+        }
+
+        public ClientOutput(string pcName, string id, string customer)
         {
             _pcName = pcName;
             _ID = id;
+            _customer = customer;
             _collectionList = new List<PluginOutputCollection>();
+            _initPost = false;
         }
     }
 

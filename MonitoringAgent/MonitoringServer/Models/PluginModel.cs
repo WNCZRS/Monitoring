@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace MonitoringServer.Models
 {
     public class PluginOutput
