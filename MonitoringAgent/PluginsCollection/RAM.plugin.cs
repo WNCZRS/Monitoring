@@ -27,7 +27,7 @@ namespace PluginsCollection
 
             memoryUsage = (Math.Round((GetTotalMemoryInBytes() / (1024 * 1024 * 1024)), 2)).ToString();
             memoryUsage += " GB";
-            _pluginOutputs.PluginOutputList.Add(new PluginOutput("Free RAM", memoryUsage, false));
+            _pluginOutputs.PluginOutputList.Add(new PluginOutput("Free RAM", memoryUsage, true));
             return _pluginOutputs;
         }
 

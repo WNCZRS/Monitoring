@@ -29,18 +29,17 @@ namespace MonitoringServer.Api
             if (clientOutput.InitPost)
             {
                 context.Clients.All.initMessage(clientOutput);
-                //StartThread();
+                StartThread();
             }
             SQLiteController.JSONToSQL(_dbName, clientOutput);
-            context.Clients.All.pluginsMessage(clientOutput);
         }
 
-        [HttpPost]
+       /* [HttpPost]
         [Route("api/Plugin/2")]
         public void PostOnNodeSelected()
         {
             object o = 0;
-        }
+        }  */
 
         private void StartThread()
         {

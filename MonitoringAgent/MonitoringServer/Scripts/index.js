@@ -23,7 +23,6 @@
 
     hub.client.initMessage = function (clientOutput) {
         console.log("initMessage");
-        alert("INIT");
 
         var ul3 = document.createElement('ul');
         var li3 = document.createElement('li');
@@ -36,7 +35,7 @@
         ul3.appendChild(li3);
 
         if (clientOutput.Customer === null || clientOutput.Customer === "") {
-            if (document.getElementById(clientOutput.id) === null) {
+            if (document.getElementById(clientOutput.ID) === null) {
                 document.getElementById("noCategory").appendChild(li3);
             }
         }
@@ -47,14 +46,14 @@
             var span2_ = document.createElement('span');
             span2_.className = "node-toggle";
             span2.textContent = clientOutput.Customer;
-            li2.appendChild(span2)
-            li2.appendChild(span2_)
+            li2.appendChild(span2);
+            li2.appendChild(span2_);
             li2.id = clientOutput.Customer;
             document.getElementById("rootNode").appendChild(li2);
-            if (document.getElementById(clientOutput.id) === null) {
+            if (document.getElementById(clientOutput.ID) === null) {
                 document.getElementById(clientOutput.Customer).appendChild(li3);
             }
-        } else if (document.getElementById(clientOutput.id) === null) {
+        } else if (document.getElementById(clientOutput.ID) === null) {
             document.getElementById(clientOutput.Customer).appendChild(li3);
         }
     }
@@ -83,6 +82,9 @@
                 var cellValue = document.createElement('td');
                 cellName.textContent = pluginElement.PropertyName;
                 cellValue.textContent = pluginElement.Value;
+                if (pluginElement.IsCritical) {
+                    cellValue.className = "alertRow";
+                }
                 row.appendChild(cellName);
                 row.appendChild(cellValue);
                 result.appendChild(row);
@@ -95,9 +97,8 @@
         var noResult;
         var activeNode = document.body.getElementsByClassName("active")[0];
         if (activeNode !== null) {
-            var activeNodeID = activeNode.parentElement.id;
+            var activeNodeID = activeNode.firstChild.id;
 
-            console.log(activeNode);
             if (activeNodeID === clientOutput.ID) {
                 oldTable = document.getElementById("resultTable");
                 parent = oldTable.parentElement;
@@ -131,9 +132,9 @@
 
 function onNodeClick(object) {
 
-    console.log(object);
+    //console.log(object);
 
-    var ObjectData = {
+   /* var ObjectData = {
         "id": object.id
     }
 
@@ -152,5 +153,5 @@ function onNodeClick(object) {
     }).fail(function () {
         console.error("fail");
     });
-
+    */
 }
