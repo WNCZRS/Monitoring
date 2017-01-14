@@ -31,12 +31,13 @@
         span3.setAttribute("onclick", "onNodeClick(this)");
         span3.textContent = clientOutput.PCName;
         span3.id = clientOutput.ID;
+        li3.className = "node";
         li3.appendChild(span3);
         ul3.appendChild(li3);
 
         if (clientOutput.Customer === null || clientOutput.Customer === "") {
             if (document.getElementById(clientOutput.ID) === null) {
-                document.getElementById("noCategory").appendChild(li3);
+                document.getElementById("noCategory").appendChild(ul3);
             }
         }
         else if (document.getElementById(clientOutput.Customer) === null) {
@@ -49,12 +50,13 @@
             li2.appendChild(span2);
             li2.appendChild(span2_);
             li2.id = clientOutput.Customer;
+            li2.className = "node";
             document.getElementById("rootNode").appendChild(li2);
             if (document.getElementById(clientOutput.ID) === null) {
-                document.getElementById(clientOutput.Customer).appendChild(li3);
+                document.getElementById(clientOutput.Customer).appendChild(ul3);
             }
         } else if (document.getElementById(clientOutput.ID) === null) {
-            document.getElementById(clientOutput.Customer).appendChild(li3);
+            document.getElementById(clientOutput.Customer).appendChild(ul3);
         }
     }
 

@@ -19,7 +19,8 @@ namespace MonitoringAgent
         // Logging initialization
         private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private ConfigXmlDocument _config;
-        private string _customerName;
+        private string _customerName = string.Empty;
+        private string _pcName = string.Empty;
 
         static PluginLoader _plugins;
         static bool _running = true;
@@ -46,10 +47,24 @@ namespace MonitoringAgent
             if (_config != null)
             {
                 XmlNode customerSettings = _config.SelectSingleNode("root/CustomerSettings");
-                if (customerSettings != null || customerSettings.InnerText != "")
+                if (customerSettings != null && customerSettings.OuterXml != "")
                 {
-                    _customerName = customerSettings.Attributes["Name"].Value;
-                } 
+                    XmlAttribute attribute = customerSettings.Attributes["CustomerName"];
+                    if (attribute != null)
+                    {
+                        _customerName = attribute.Value;
+                    }
+                }
+
+                XmlNode computerSetting = _config.SelectSingleNode("root/ComputerSetting");
+                if (computerSetting != null && computerSetting.OuterXml != "")
+                {
+                    XmlAttribute attribute = computerSetting.Attributes["PCname"];
+                    if (attribute != null)
+                    {
+                        _pcName = attribute.Value;
+                    }
+                }
             }
         }
 
@@ -117,7 +132,7 @@ namespace MonitoringAgent
         private void TakeAndPostData(bool initPost = false)
         {
             string json;
-            ClientOutput output = new ClientOutput(getPCName(), getMACAddress(), "noConfigYet");
+            ClientOutput output = new ClientOutput(getPCName(), getMACAddress(), _customerName);
             WebClient client = new WebClient();
             string serverIP = ConfigurationManager.AppSettings["ServerIP"];
 
@@ -140,7 +155,6 @@ namespace MonitoringAgent
             else
             {
                 output.InitPost = true;
-                output.Customer = _customerName;
             }
 
             json = JsonConvert.SerializeObject(output);
@@ -202,9 +216,16 @@ namespace MonitoringAgent
             return ni.GetPhysicalAddress().ToString();
         }
 
-        public static string getPCName()
+        public string getPCName()
         {
-            return Environment.MachineName;
+            if (_pcName != null && _pcName != string.Empty)
+            {
+                return _pcName;
+            }
+            else
+            {
+                return Environment.MachineName;
+            }
         }
 
         private static bool CheckConnection(String URL)
