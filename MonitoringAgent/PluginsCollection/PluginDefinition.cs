@@ -145,6 +145,10 @@ namespace PluginsCollection
             {
                 return _customer;
             }
+            set
+            {
+                _customer = value;
+            }
         }
 
         public bool InitPost

@@ -8,13 +8,18 @@ using System.Configuration;
 using System.Text;
 using System.Net.NetworkInformation;
 using System.Linq;
+using log4net;
+using System.IO;
+using System.Xml;
 
 namespace MonitoringAgent
 {
     public class AgentService 
     {
         // Logging initialization
-        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private ConfigXmlDocument _config;
+        private string _customerName;
 
         static PluginLoader _plugins;
         static bool _running = true;
@@ -23,6 +28,8 @@ namespace MonitoringAgent
             // Application Running Information
             _log.Info("Application is RUNNING");
 
+            GetConfiguration();
+
             // Load Plugins
             _plugins = new PluginLoader();
             _plugins.Loader();
@@ -30,12 +37,28 @@ namespace MonitoringAgent
             StartThread();
             // write code here that runs when the Windows Service starts up.  
         }
+
+        private void GetConfiguration()
+        {
+            _config = new ConfigXmlDocument();
+            _config.Load(Directory.GetCurrentDirectory() + "\\config.xml");
+
+            if (_config != null)
+            {
+                XmlNode customerSettings = _config.SelectSingleNode("root/CustomerSettings");
+                if (customerSettings != null || customerSettings.InnerText != "")
+                {
+                    _customerName = customerSettings.Attributes["Name"].Value;
+                } 
+            }
+        }
+
         public void Stop()
         {
             // write code here that runs when the Windows Service stops.  
         }
 
-        private static void StartThread()
+        private void StartThread()
         {
             Thread pollingThread = null;
 
@@ -61,7 +84,7 @@ namespace MonitoringAgent
             Console.ReadLine();
         }
 
-        static void RunPollingThread()
+        private void RunPollingThread()
         {
             // Convert the object that was passed in
             DateTime lastPollTime = DateTime.MinValue;
@@ -91,7 +114,7 @@ namespace MonitoringAgent
             }
         }
 
-        private static void TakeAndPostData(bool initPost = false)
+        private void TakeAndPostData(bool initPost = false)
         {
             string json;
             ClientOutput output = new ClientOutput(getPCName(), getMACAddress(), "noConfigYet");
@@ -117,6 +140,7 @@ namespace MonitoringAgent
             else
             {
                 output.InitPost = true;
+                output.Customer = _customerName;
             }
 
             json = JsonConvert.SerializeObject(output);
