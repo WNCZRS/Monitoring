@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualBasic.Devices;
+using System.Collections.Generic;
 
 namespace PluginsCollection
 {
@@ -23,11 +24,14 @@ namespace PluginsCollection
         public PluginOutputCollection Output()
         {
             string memoryUsage = string.Empty;
+            List<SimplePluginOutput> listSPO = new List<SimplePluginOutput>();
             _pluginOutputs.PluginOutputList.Clear();
 
             memoryUsage = (Math.Round((GetTotalMemoryInBytes() / (1024 * 1024 * 1024)), 2)).ToString();
             memoryUsage += " GB";
-            _pluginOutputs.PluginOutputList.Add(new PluginOutput("Free RAM", memoryUsage, true));
+
+            listSPO.Add(new SimplePluginOutput(memoryUsage, true));
+            _pluginOutputs.PluginOutputList.Add(new PluginOutput("Free RAM", listSPO));
             return _pluginOutputs;
         }
 

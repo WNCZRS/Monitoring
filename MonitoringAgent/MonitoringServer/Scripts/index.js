@@ -77,27 +77,34 @@
             headCell.setAttribute("colspan", "2");
             headRow.appendChild(headCell);
             result.appendChild(headRow);
-
+           
             plugin.PluginOutputList.forEach(function (pluginElement) {
                 var row = document.createElement('tr');
                 var cellName = document.createElement('td');
-                var cellValue = document.createElement('td');
                 cellName.textContent = pluginElement.PropertyName;
-                cellValue.textContent = pluginElement.Value;
-                if (pluginElement.IsCritical) {
-                    cellValue.className = "alertRow";
-                }
                 row.appendChild(cellName);
-                row.appendChild(cellValue);
+
+                pluginElement.Values.forEach(function (simplePluginElement) {
+                    var cellValue = document.createElement('td');
+                    cellValue.textContent = simplePluginElement.Value;
+
+                    if (simplePluginElement.IsCritical) {
+                        cellValue.className = "alertRow";
+                    }
+                    row.appendChild(cellValue);
+                })
                 result.appendChild(row);
             });
         });
         result.id = "resultTable";
 
+        console.log("resultTable: ");
+        console.log(result);
         var oldTable = document.getElementById("resultTable");
         var parent;
         var noResult;
         var activeNode = document.body.getElementsByClassName("active")[0];
+
         if (activeNode !== null) {
             var activeNodeID = activeNode.firstChild.id;
 
@@ -132,9 +139,21 @@
     });
 });
 
+function checkFirstVisit() {
+    if (document.cookie.indexOf('checkRefresh') === -1) {
+        // cookie doesn't exist, create it now
+        document.cookie = 'checkRefresh=1';
+    }
+    else {
+        // not first visit, so alert
+        //alert('You refreshed!');
+        console.log('You refreshed!');
+    }
+}
+
 function onNodeClick(object) {
 
-    //console.log(object);
+    console.log("onNodeClick");
 
    /* var ObjectData = {
         "id": object.id

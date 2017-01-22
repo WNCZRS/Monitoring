@@ -42,13 +42,17 @@ namespace PluginsCollection
             foreach (var service in services)
             {
                 ServiceController sc = new ServiceController(service.ToString());
+                List<SimplePluginOutput> listSPO = new List<SimplePluginOutput>();
+
                 if (sc != null)
                 {
                     try
                     {
                         serviceName = service.ToString();
                         serviceStatus = sc.Status.ToString();
-                        _pluginOutputs.NewPluginOutput(serviceName, serviceStatus, false);
+                        listSPO.Add(new SimplePluginOutput(serviceStatus, false));
+
+                        _pluginOutputs.NewPluginOutput(serviceName, listSPO);
                     }
                     catch (Exception ex)
                     {

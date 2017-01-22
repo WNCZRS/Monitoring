@@ -6,9 +6,9 @@ namespace MonitoringServer.Hubs
 {
     public class PluginInfo : Hub
     {
-        public void SendPluginInfo(List<PluginOutputCollection> pluginsValues)
+        public void SendPluginInfo(PluginOutput pluginOutput)
         {
-            this.Clients.All.pluginMessage(pluginsValues);
+            this.Clients.All.pluginMessage(pluginOutput);
         }  
     }
 }

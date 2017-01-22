@@ -14,7 +14,7 @@ namespace MonitoringServer
         {
             app.MapSignalR();
             SQLiteController.CreateDbFile(_dbName);
-            SQLiteController.CreateTable(_dbName);
+            SQLiteController.CreateTables(_dbName);
         }
     }
 }

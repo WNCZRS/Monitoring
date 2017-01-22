@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
 using Cassia;
+using System.Collections.Generic;
 
 namespace PluginsCollection
 {
@@ -24,6 +25,8 @@ namespace PluginsCollection
         public PluginOutputCollection Output()
         {
             ITerminalServicesManager manager = new TerminalServicesManager();
+            List<SimplePluginOutput> listSPO = new List<SimplePluginOutput>();
+
             _pluginOutputs.PluginOutputList.Clear();
             using (ITerminalServer server = manager.GetRemoteServer(Environment.MachineName.ToString()))
             {
@@ -33,7 +36,9 @@ namespace PluginsCollection
                     NTAccount account = session.UserAccount;
                     if (account != null)
                     {
-                        _pluginOutputs.NewPluginOutput("User", account.ToString(), false);
+                        listSPO.Add(new SimplePluginOutput(account.ToString(), false));
+
+                        _pluginOutputs.NewPluginOutput("User", listSPO);
                     }
                 }
             }

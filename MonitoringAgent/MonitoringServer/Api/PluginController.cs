@@ -29,6 +29,7 @@ namespace MonitoringServer.Api
             if (clientOutput.InitPost)
             {
                 context.Clients.All.initMessage(clientOutput);
+                SQLiteController.SaveBasicInfo(_dbName, clientOutput);
                 StartThread();
             }
             SQLiteController.JSONToSQL(_dbName, clientOutput);
@@ -69,7 +70,7 @@ namespace MonitoringServer.Api
 
                     ClientOutput clientOutput = null;
                     //test only must by on click event (treeNode)
-                    clientOutput = SQLiteController.JSONFromSQL(_dbName, "noConfigYet", "1C3E84C84979", "Marko-PC");
+                    clientOutput = SQLiteController.JSONFromSQL(_dbName, "CustomerTest", "C8CBB84172E0", "Marko-PC");
 
                     context.Clients.All.pluginsMessage(clientOutput);
                     lastPollTime = DateTime.Now;

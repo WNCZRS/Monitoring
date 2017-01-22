@@ -25,7 +25,7 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static void CreateTable(string fileName)
+        public static void CreateTables(string fileName)
         {
             string connectionString = string.Format("Data Source={0};Version=3;", fileName);
             try
@@ -33,7 +33,37 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand("CREATE TABLE IF NOT EXISTS [MonitoringServerStorage] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32), [JSON] TEXT)", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"
+                        CREATE TABLE IF NOT EXISTS [MonitoringServerStorage] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32), [JSON] TEXT)", dbConnection);
+                    cmd.ExecuteNonQuery();
+
+                    cmd = new SQLiteCommand(@"CREATE TABLE IF NOT EXISTS [Machines] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32))", dbConnection);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static void SaveBasicInfo(string fileName, ClientOutput clientOutput)
+        {
+            string connectionString = string.Format("Data Source={0};Version=3;", fileName);
+
+            try
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
+                {
+                    dbConnection.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT INTO Machines (RecCreated, ComputerID, ComputerName, Customer) 
+                                                            SELECT @RecCreated, @ComputerID, @ComputerName, @Customer
+                                                            WHERE NOT EXISTS(SELECT ComputerID, ComputerName, Customer FROM Machines 
+                                                                            where ComputerID = @ComputerID and ComputerName = @ComputerName and Customer = @Customer LIMIT 1)", dbConnection);
+                    cmd.Parameters.AddWithValue("@RecCreated", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@ComputerID", clientOutput.ID);
+                    cmd.Parameters.AddWithValue("@ComputerName", clientOutput.PCName);
+                    cmd.Parameters.AddWithValue("@Customer", clientOutput.Customer);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -44,22 +74,22 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static bool JSONToSQL(string fileName, ClientOutput pluginOutput)
+        public static void JSONToSQL(string fileName, ClientOutput clientOutput)
         {
             string json;
             string connectionString = string.Format("Data Source={0};Version=3;", fileName);
 
             try
             {
-                json = JsonConvert.SerializeObject(pluginOutput.CollectionList);
+                json = JsonConvert.SerializeObject(clientOutput.CollectionList);
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand("INSERT INTO MonitoringServerStorage (RecCreated, ComputerID, ComputerName, Customer, JSON) VALUES (@RecCreated, @ComputerID, @ComputerName, @Customer, @JSON)", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT INTO MonitoringServerStorage (RecCreated, ComputerID, ComputerName, Customer, JSON) VALUES (@RecCreated, @ComputerID, @ComputerName, @Customer, @JSON)", dbConnection);
                     cmd.Parameters.AddWithValue("@RecCreated", DateTime.Now);
-                    cmd.Parameters.AddWithValue("@ComputerID", pluginOutput.ID);
-                    cmd.Parameters.AddWithValue("@ComputerName", pluginOutput.PCName);
-                    cmd.Parameters.AddWithValue("@Customer", pluginOutput.Customer);
+                    cmd.Parameters.AddWithValue("@ComputerID", clientOutput.ID);
+                    cmd.Parameters.AddWithValue("@ComputerName", clientOutput.PCName);
+                    cmd.Parameters.AddWithValue("@Customer", clientOutput.Customer);
                     cmd.Parameters.AddWithValue("@JSON", json);
 
                     cmd.ExecuteNonQuery();
@@ -67,10 +97,8 @@ namespace MonitoringServer.Controllers
             }
             catch (Exception ex)
             {
-                return false;
                 throw ex;
             }
-            return true;
         }
 
         public static ClientOutput JSONFromSQL(string fileName, string customer, string computerID, string computerName)
