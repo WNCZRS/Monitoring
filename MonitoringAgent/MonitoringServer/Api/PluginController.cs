@@ -2,46 +2,85 @@
 using Microsoft.AspNet.SignalR;
 using MonitoringServer.Hubs;
 using PluginsCollection;
+using System.Data.SQLite;
+using System;
 using Newtonsoft.Json;
 using System.Net;
+using MonitoringServer.Controllers;
+using System.Threading;
 
 namespace MonitoringServer.Api
 {
     public class PluginController : ApiController
     {
-        string _connectionString = "Data Source=C:\\Users\\Marko\\Downloads\\sqlitestudio-3.1.1\\SQLiteStudio\\MonitorDB;Version=3";
-
-        [HttpPost]
-        public void Post(ClientOutput pluginOutput)
-        {
-            string json = JsonConvert.SerializeObject(pluginOutput.CollectionList);
-           /* try
-            {
-                using (SQLiteConnection dbConnection = new SQLiteConnection(_connectionString))
-                {
-                    SQLiteCommand cmd = new SQLiteCommand("INSERT INTO test (RecCreated, ComputerID, ComputerName, JSON) VALUES (@RecCreated, @ComputerID, @ComputerName, @JSON)", dbConnection);
-                    cmd.Parameters.AddWithValue("@RecCreated", DateTime.Now);
-                    cmd.Parameters.AddWithValue("@ComputerID", pluginOutput.ID);
-                    cmd.Parameters.AddWithValue("@ComputerName", pluginOutput.PCName);
-                    cmd.Parameters.AddWithValue("@JSON", json);
-
-                    dbConnection.Open();
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }*/
-
-            var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
-            context.Clients.All.pluginsMessage(pluginOutput);
-        }
+        string _dbName = "D:\\Monitoring\\MonitoringServerDB.sqlite";
 
         [HttpGet]
         public HttpStatusCode Get()
         {
             return HttpStatusCode.OK;
         }
+
+        [HttpPost]
+        public void Post(ClientOutput clientOutput)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
+
+            if (clientOutput.InitPost)
+            {
+                context.Clients.All.initMessage(clientOutput);
+                SQLiteController.SaveBasicInfo(_dbName, clientOutput);
+                StartThread();
+            }
+            SQLiteController.JSONToSQL(_dbName, clientOutput);
+        }
+
+       /* [HttpPost]
+        [Route("api/Plugin/2")]
+        public void PostOnNodeSelected()
+        {
+            object o = 0;
+        }  */
+
+        private void StartThread()
+        {
+            Thread pollingThread = null;
+            try
+            {
+                pollingThread = new Thread(new ThreadStart(PluginMessanger));
+                pollingThread.Start();
+            }
+            catch (Exception)
+            {
+                pollingThread.Abort();
+                throw;
+            }
+
+        }
+
+        private void PluginMessanger()
+        {
+            DateTime lastPollTime = DateTime.MinValue;
+
+            while (true)
+            {
+                if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000)
+                {
+                    var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
+
+                    ClientOutput clientOutput = null;
+                    //test only must by on click event (treeNode)
+                    clientOutput = SQLiteController.JSONFromSQL(_dbName, "CustomerTest", "C8CBB84172E0", "Marko-PC");
+
+                    context.Clients.All.pluginsMessage(clientOutput);
+                    lastPollTime = DateTime.Now;
+                }
+                else
+                {
+                    Thread.Sleep(10);
+                }
+            }
+        }
+
     }
 }

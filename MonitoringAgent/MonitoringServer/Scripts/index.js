@@ -20,19 +20,48 @@
     // Get a reference to our hub
     var hub = $.connection.pluginInfo;
 
-    hub.client.machineInitialize = function (MACaddress) {
 
-        var matchMAC = ko.utils.arrayFirst(vm.propValues(), function (item) {
-            return item.propName() === propName;
-        }); 
+    hub.client.initMessage = function (clientOutput) {
+        console.log("initMessage");
 
-        if (!matchMAC) 
-            vm.propValues.push(ko.mapping.fromJS(item));
+        var ul3 = document.createElement('ul');
+        var li3 = document.createElement('li');
+        var span3 = document.createElement('span');
+        span3.className = "leaf";
+        span3.setAttribute("onclick", "onNodeClick(this)");
+        span3.textContent = clientOutput.PCName;
+        span3.id = clientOutput.ID;
+        li3.className = "node";
+        li3.appendChild(span3);
+        ul3.appendChild(li3);
+
+        if (clientOutput.Customer === null || clientOutput.Customer === "") {
+            if (document.getElementById(clientOutput.ID) === null) {
+                document.getElementById("noCategory").appendChild(ul3);
+            }
+        }
+        else if (document.getElementById(clientOutput.Customer) === null) {
+            var li2 = document.createElement('li');
+            var span2 = document.createElement('span');
+            span2.className = "leaf";
+            var span2_ = document.createElement('span');
+            span2_.className = "node-toggle";
+            span2.textContent = clientOutput.Customer;
+            li2.appendChild(span2);
+            li2.appendChild(span2_);
+            li2.id = clientOutput.Customer;
+            li2.className = "node";
+            document.getElementById("rootNode").appendChild(li2);
+            if (document.getElementById(clientOutput.ID) === null) {
+                document.getElementById(clientOutput.Customer).appendChild(ul3);
+            }
+        } else if (document.getElementById(clientOutput.ID) === null) {
+            document.getElementById(clientOutput.Customer).appendChild(ul3);
+        }
     }
 
-
-
     hub.client.pluginsMessage = function (clientOutput) {
+        console.log("pluginsMessage");
 
         var result = document.createElement('table');
         var pcName = document.createElement('tr');
@@ -45,33 +74,63 @@
             var headRow = document.createElement('tr');
             var headCell = document.createElement('th');
             headCell.textContent = plugin.PluginName;
-            headCell.setAttribute("colspan", "2");
+            headCell.setAttribute("colspan", "100");
             headRow.appendChild(headCell);
-            //headRow.className = "header";
-            //headRow.setAttribute("data-toggle", "collapse");
-            //headRow.setAttribute("data-target", "#collapseElem");
             result.appendChild(headRow);
-
+           
             plugin.PluginOutputList.forEach(function (pluginElement) {
                 var row = document.createElement('tr');
                 var cellName = document.createElement('td');
-                var cellValue = document.createElement('td');
                 cellName.textContent = pluginElement.PropertyName;
-                cellValue.textContent = pluginElement.Value;
                 row.appendChild(cellName);
-                row.appendChild(cellValue);
-                //row.id = "collapseElem";
+
+                pluginElement.Values.forEach(function (simplePluginElement) {
+                    var cellValue = document.createElement('td');
+                    cellValue.textContent = simplePluginElement.Value;
+
+                    if (simplePluginElement.IsCritical) {
+                        cellValue.className = "alertRow";
+                    }
+                    row.appendChild(cellValue);
+                })
                 result.appendChild(row);
             });
         });
-        result.id = clientOutput.ID;
+        result.id = "resultTable";
 
-        if (document.getElementById(clientOutput.ID) === null) {
-            document.body.appendChild(result);
+        console.log("resultTable: ");
+        console.log(result);
+        var oldTable = document.getElementById("resultTable");
+        var parent;
+        var noResult;
+        var activeNode = document.body.getElementsByClassName("active")[0];
+
+        if (activeNode !== null) {
+            var activeNodeID = activeNode.firstChild.id;
+
+            if (activeNodeID === clientOutput.ID) {
+                oldTable = document.getElementById("resultTable");
+                parent = oldTable.parentElement;
+                parent.replaceChild(result, oldTable);
+            }
+            else {
+                noResult = document.createElement('p');
+                noResult.textContent = "No result for selected machine!";
+                noResult.id = "resultTable";
+                oldTable = document.getElementById("resultTable");
+                parent = oldTable.parentElement;
+                parent.replaceChild(noResult, oldTable);
+            }
         }
         else {
-            document.body.replaceChild(result, document.getElementById(clientOutput.ID));
+            noResult = document.createElement('p');
+            noResult.textContent = "No result for selected machine!";
+            noResult.id = "resultTable";
+            oldTable = document.getElementById("resultTable");
+            parent = oldTable.parentElement;
+            parent.replaceChild(noResult, oldTable);
         }
+
     }
 
     // Start the connectio
@@ -79,3 +138,41 @@
         vm.connected(true);
     });
 });
+
+function checkFirstVisit() {
+    if (document.cookie.indexOf('checkRefresh') === -1) {
+        // cookie doesn't exist, create it now
+        document.cookie = 'checkRefresh=1';
+    }
+    else {
+        // not first visit, so alert
+        //alert('You refreshed!');
+        console.log('You refreshed!');
+    }
+}
+
+function onNodeClick(object) {
+
+    console.log("onNodeClick");
+
+   /* var ObjectData = {
+        "id": object.id
+    }
+
+    var JsonData = JSON.stringify(ObjectData, null, 4);
+    var serviceUrl = "api/Plugin/nodeSelected/";
+    var method = "POST";
+
+    $.ajax({
+        type: method,
+        url: serviceUrl,
+        contentType: "application/json; charset=utf-8",
+        data: JsonData,
+        //headers: { "Authorization": "Bearer " + app.dataModel.getAccessToken() }
+    }).done(function () {
+        console.info("succes");
+    }).fail(function () {
+        console.error("fail");
+    });
+    */
+}

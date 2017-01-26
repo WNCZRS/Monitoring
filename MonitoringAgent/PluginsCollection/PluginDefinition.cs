@@ -14,8 +14,7 @@ namespace PluginsCollection
     public class PluginOutput
     {
         private string  _propertyName;
-        private object  _value;
-        private bool    _isCritical;
+        private List<SimplePluginOutput> _values;
 
         public string PropertyName
         {
@@ -28,6 +27,30 @@ namespace PluginsCollection
                 _propertyName = value;
             }
         }
+
+        public List<SimplePluginOutput> Values
+        {
+            get
+            {
+                return _values;
+            }
+            set
+            {
+                _values = value;
+            }
+        }
+
+        public PluginOutput(string propertyName, List<SimplePluginOutput> values)
+        {
+            _propertyName = propertyName;
+            _values = values;
+        }
+    }
+
+    public class SimplePluginOutput
+    {
+        private object _value;
+        private bool _isCritical;
 
         public object Value
         {
@@ -53,10 +76,8 @@ namespace PluginsCollection
             }
         }
 
-
-        public PluginOutput(string propertyName, object value, bool isCritical)
+        public SimplePluginOutput(object value, bool isCritical)
         {
-            _propertyName = propertyName;
             _value = value;
             _isCritical = isCritical;
         }
@@ -93,9 +114,9 @@ namespace PluginsCollection
             _pluginOutputList = new List<PluginOutput>();
         }
 
-        public void NewPluginOutput(string name, object value, bool isCritical)
+        public void NewPluginOutput(string name, List<SimplePluginOutput> listOfSimplePluginOutput)
         {
-            _pluginOutputList.Add(new PluginOutput(name, value, isCritical));
+            _pluginOutputList.Add(new PluginOutput(name, listOfSimplePluginOutput));
         }
     }
 
@@ -104,6 +125,8 @@ namespace PluginsCollection
         private List<PluginOutputCollection> _collectionList;
         private string _ID;
         private string _pcName;
+        private string _customer;
+        private bool _initPost;
 
         public List<PluginOutputCollection> CollectionList
         {
@@ -131,13 +154,43 @@ namespace PluginsCollection
             {
                 return _pcName;
             }
+            set
+            {
+                _pcName = value;
+            }
         }
 
-        public ClientOutput(string pcName, string id)
+        public string Customer
+        {
+            get
+            {
+                return _customer;
+            }
+            set
+            {
+                _customer = value;
+            }
+        }
+
+        public bool InitPost
+        {
+            get
+            {
+                return _initPost;
+            }
+            set
+            {
+                _initPost = value;
+            }
+        }
+
+        public ClientOutput(string pcName, string id, string customer)
         {
             _pcName = pcName;
             _ID = id;
+            _customer = customer;
             _collectionList = new List<PluginOutputCollection>();
+            _initPost = false;
         }
     }
 
