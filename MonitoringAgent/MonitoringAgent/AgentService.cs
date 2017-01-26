@@ -18,9 +18,6 @@ namespace MonitoringAgent
     {
         // Logging initialization
         private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private ConfigXmlDocument _config;
-        private string _customerName = string.Empty;
-        private string _pcName = string.Empty;
 
         static PluginLoader _plugins;
         static bool _running = true;
@@ -29,43 +26,12 @@ namespace MonitoringAgent
             // Application Running Information
             _log.Info("Application is RUNNING");
 
-            GetConfiguration();
-
             // Load Plugins
             _plugins = new PluginLoader();
             _plugins.Loader();
 
             StartThread();
             // write code here that runs when the Windows Service starts up.  
-        }
-
-        private void GetConfiguration()
-        {
-            _config = new ConfigXmlDocument();
-            _config.Load(Directory.GetCurrentDirectory() + "\\config.xml");
-
-            if (_config != null)
-            {
-                XmlNode customerSettings = _config.SelectSingleNode("root/CustomerSettings");
-                if (customerSettings != null && customerSettings.OuterXml != "")
-                {
-                    XmlAttribute attribute = customerSettings.Attributes["CustomerName"];
-                    if (attribute != null)
-                    {
-                        _customerName = attribute.Value;
-                    }
-                }
-
-                XmlNode computerSetting = _config.SelectSingleNode("root/ComputerSetting");
-                if (computerSetting != null && computerSetting.OuterXml != "")
-                {
-                    XmlAttribute attribute = computerSetting.Attributes["PCname"];
-                    if (attribute != null)
-                    {
-                        _pcName = attribute.Value;
-                    }
-                }
-            }
         }
 
         public void Stop()
@@ -132,9 +98,10 @@ namespace MonitoringAgent
         private void TakeAndPostData(bool initPost = false)
         {
             string json;
-            ClientOutput output = new ClientOutput(getPCName(), getMACAddress(), _customerName);
-            WebClient client = new WebClient();
             string serverIP = ConfigurationManager.AppSettings["ServerIP"];
+            string customerName = ConfigurationManager.AppSettings["CustomerName"];
+            ClientOutput output = new ClientOutput(getPCName(), getMACAddress(), customerName);
+            WebClient client = new WebClient();
 
             PluginOutputCollection plugOutput = new PluginOutputCollection();
 
@@ -218,9 +185,11 @@ namespace MonitoringAgent
 
         public string getPCName()
         {
-            if (_pcName != null && _pcName != string.Empty)
+            string pcName = ConfigurationManager.AppSettings["PCName"];
+
+            if (pcName != null && pcName != string.Empty)
             {
-                return _pcName;
+                return pcName;
             }
             else
             {

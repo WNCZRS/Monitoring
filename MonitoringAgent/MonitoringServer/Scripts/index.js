@@ -74,7 +74,7 @@
             var headRow = document.createElement('tr');
             var headCell = document.createElement('th');
             headCell.textContent = plugin.PluginName;
-            headCell.setAttribute("colspan", "2");
+            headCell.setAttribute("colspan", "100");
             headRow.appendChild(headCell);
             result.appendChild(headRow);
            
