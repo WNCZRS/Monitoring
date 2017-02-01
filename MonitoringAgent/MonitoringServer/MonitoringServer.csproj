@@ -172,6 +172,7 @@
     <Compile Include="Api\PluginController.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\SQLiteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

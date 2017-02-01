@@ -13,7 +13,6 @@ namespace MonitoringServer.Api
 {
     public class PluginController : ApiController
     {
-        string _dbName = "D:\\Monitoring\\MonitoringServerDB.sqlite";
 
         [HttpGet]
         public HttpStatusCode Get()
@@ -29,20 +28,13 @@ namespace MonitoringServer.Api
             if (clientOutput.InitPost)
             {
                 context.Clients.All.initMessage(clientOutput);
-                SQLiteController.SaveBasicInfo(_dbName, clientOutput);
-                StartThread();
+                SQLiteController.SaveBasicInfo(clientOutput);
+                //StartThread();
             }
-            SQLiteController.JSONToSQL(_dbName, clientOutput);
+            SQLiteController.JSONToSQL(clientOutput);
         }
 
-       /* [HttpPost]
-        [Route("api/Plugin/2")]
-        public void PostOnNodeSelected()
-        {
-            object o = 0;
-        }  */
-
-        private void StartThread()
+        /*private void StartThread()
         {
             Thread pollingThread = null;
             try
@@ -70,7 +62,7 @@ namespace MonitoringServer.Api
 
                     ClientOutput clientOutput = null;
                     //test only must by on click event (treeNode)
-                    clientOutput = SQLiteController.JSONFromSQL(_dbName, "CustomerTest", "C8CBB84172E0", "Marko-PC");
+                    clientOutput = SQLiteController.JSONFromSQL("CustomerTest", "C8CBB84172E0", "Marko-PC");
 
                     context.Clients.All.pluginsMessage(clientOutput);
                     lastPollTime = DateTime.Now;
@@ -80,7 +72,7 @@ namespace MonitoringServer.Api
                     Thread.Sleep(10);
                 }
             }
-        }
+        }   */
 
     }
 }

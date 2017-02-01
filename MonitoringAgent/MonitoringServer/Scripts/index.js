@@ -19,7 +19,7 @@
 
     // Get a reference to our hub
     var hub = $.connection.pluginInfo;
-
+  
 
     hub.client.initMessage = function (clientOutput) {
         console.log("initMessage");
@@ -133,13 +133,14 @@
 
     }
 
-    // Start the connectio
+    // Start the connection
     $.connection.hub.start().done(function () {
         vm.connected(true);
     });
 });
 
 function checkFirstVisit() {
+
     if (document.cookie.indexOf('checkRefresh') === -1) {
         // cookie doesn't exist, create it now
         document.cookie = 'checkRefresh=1';
@@ -148,31 +149,20 @@ function checkFirstVisit() {
         // not first visit, so alert
         //alert('You refreshed!');
         console.log('You refreshed!');
+        /*var hub = $.connection.pluginInfo;
+        hub.server.onRefresh();
+
+        // Start the connection
+        $.connection.hub.start().done(function () {
+            //vm.connected(true);
+            });*/
     }
 }
 
 function onNodeClick(object) {
 
     console.log("onNodeClick");
-
-   /* var ObjectData = {
-        "id": object.id
-    }
-
-    var JsonData = JSON.stringify(ObjectData, null, 4);
-    var serviceUrl = "api/Plugin/nodeSelected/";
-    var method = "POST";
-
-    $.ajax({
-        type: method,
-        url: serviceUrl,
-        contentType: "application/json; charset=utf-8",
-        data: JsonData,
-        //headers: { "Authorization": "Bearer " + app.dataModel.getAccessToken() }
-    }).done(function () {
-        console.info("succes");
-    }).fail(function () {
-        console.error("fail");
-    });
-    */
+    console.log(object);
+    var hub = $.connection.pluginInfo;
+    hub.server.nodeClick(object.id);
 }

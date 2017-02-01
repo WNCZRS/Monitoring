@@ -10,6 +10,7 @@ using System.Linq;
 using log4net;
 using System.IO;
 using System.Xml;
+using Microsoft.AspNet.SignalR.Client;
 
 namespace MonitoringAgent
 {
@@ -109,6 +110,10 @@ namespace MonitoringAgent
 
             if (!initPost)
             {
+                string dbName = "MonitoringAgentDB.sqlite";
+                SQLiteDB.CreateDbFile(dbName);
+                SQLiteDB.CreateTable(dbName);
+
                 foreach (var plugin in _plugins.pluginList)
                 {
                     plugOutput = plugin.Output();
@@ -133,6 +138,15 @@ namespace MonitoringAgent
             {
                 try
                 {
+                    var hubConnection = new HubConnection("http://localhost:15123/");
+                    var monitoringHub = hubConnection.CreateHubProxy("MyHub");
+                    //hubConnection.Received += data => Console.WriteLine(data);
+                    
+                    hubConnection.Start().Wait();
+
+                    monitoringHub.Invoke<string>("Send", json);
+                    hubConnection.Send(json).Wait();
+
                     client.UploadString(serverIP, json);
                 }
                 catch (Exception err)

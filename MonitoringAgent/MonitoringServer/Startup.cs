@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
 using MonitoringServer.Controllers;
 using Owin;
 
@@ -7,14 +8,19 @@ using Owin;
 namespace MonitoringServer
 {
     public class Startup
-    {
-        string _dbName = "D:\\Monitoring\\MonitoringServerDB.sqlite";
-
+    {   
         public void Configuration(IAppBuilder app)
         {
-            app.MapSignalR();
-            SQLiteController.CreateDbFile(_dbName);
-            SQLiteController.CreateTables(_dbName);
+            var hubConfiguration = new HubConfiguration();
+            hubConfiguration.EnableDetailedErrors = true;
+            hubConfiguration.EnableJavaScriptProxies = false;
+            app.MapSignalR(hubConfiguration);
+
+            SQLiteController.CreateDbFile();
+            SQLiteController.CreateTables();
+
+            /*MessageController messageController = new MessageController();
+            messageController.StartMessageThread();*/
         }
     }
 }

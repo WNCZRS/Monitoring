@@ -5,13 +5,16 @@ using System.Data;
 using System.Collections.Generic;
 using PluginsCollection;
 using Newtonsoft.Json;
+using System.Configuration;
 
 namespace MonitoringServer.Controllers
 {
     public class SQLiteController
     {
-        public static void CreateDbFile(string fileName)
+        public static void CreateDbFile()
         {
+            string fileName = ConfigurationManager.AppSettings["DatabasePath"];
+
             if (!File.Exists(fileName))
             {
                 try
@@ -25,9 +28,9 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static void CreateTables(string fileName)
+        public static void CreateTables()
         {
-            string connectionString = string.Format("Data Source={0};Version=3;", fileName);
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
             try
             {
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
@@ -47,9 +50,37 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static void SaveBasicInfo(string fileName, ClientOutput clientOutput)
+        public static List<ClientOutput> GetBasicInfo()
         {
-            string connectionString = string.Format("Data Source={0};Version=3;", fileName);
+            List<ClientOutput> clientOutputList = new List<ClientOutput>();
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
+
+            try
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
+                {
+                    dbConnection.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, ComputerID, Customer FROM Machines");
+
+                    SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    while (reader.Read())
+                    {
+                        ClientOutput co = new ClientOutput(reader.GetString(0), reader.GetString(1), reader.GetString(2));
+                        clientOutputList.Add(co);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return clientOutputList;
+        }
+
+        public static void SaveBasicInfo(ClientOutput clientOutput)
+        {
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
 
             try
             {
@@ -74,10 +105,10 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static void JSONToSQL(string fileName, ClientOutput clientOutput)
+        public static void JSONToSQL(ClientOutput clientOutput)
         {
             string json;
-            string connectionString = string.Format("Data Source={0};Version=3;", fileName);
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
 
             try
             {
@@ -101,9 +132,9 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static ClientOutput JSONFromSQL(string fileName, string customer, string computerID, string computerName)
+        public static ClientOutput JSONFromSQL(string customer, string computerID, string computerName)
         {
-            string connectionString = string.Format("Data Source={0};Version=3;", fileName);
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
             ClientOutput clientOutput = new ClientOutput(computerName, computerID, customer);
 
             try
@@ -125,7 +156,6 @@ namespace MonitoringServer.Controllers
             }
             catch (Exception ex)
             {
-                return null;
                 throw ex;
             }
             return clientOutput;
