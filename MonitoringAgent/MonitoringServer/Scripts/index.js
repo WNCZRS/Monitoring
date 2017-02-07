@@ -18,7 +18,8 @@
     ko.applyBindings(vm, $("#computerInfo")[0]);
 
     // Get a reference to our hub
-    var hub = $.connection.pluginInfo;
+    $.connection.hub.url = "http://localhost:15123/signalr";
+    var hub = $.connection.MyHub
   
 
     hub.client.initMessage = function (clientOutput) {
@@ -140,6 +141,17 @@
 });
 
 function checkFirstVisit() {
+    $.connection.hub.url = "http://localhost:15123/signalr";
+    var hub = $.connection.MyHub;
+
+
+    // Start the connection
+    /*$.connection.hub.start().done(function () {
+        //vm.connected(true);
+    });*/
+
+    hub.server.OnRefresh();
+
 
     if (document.cookie.indexOf('checkRefresh') === -1) {
         // cookie doesn't exist, create it now
@@ -149,13 +161,8 @@ function checkFirstVisit() {
         // not first visit, so alert
         //alert('You refreshed!');
         console.log('You refreshed!');
-        /*var hub = $.connection.pluginInfo;
-        hub.server.onRefresh();
 
-        // Start the connection
-        $.connection.hub.start().done(function () {
-            //vm.connected(true);
-            });*/
+
     }
 }
 
@@ -163,6 +170,9 @@ function onNodeClick(object) {
 
     console.log("onNodeClick");
     console.log(object);
-    var hub = $.connection.pluginInfo;
+
+    $.connection.hub.url = "http://localhost:15123/signalr";
+    var hub = $.connection.MyHub;
+
     hub.server.nodeClick(object.id);
 }

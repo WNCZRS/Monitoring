@@ -21,6 +21,9 @@ namespace MonitoringAgent
 
         static PluginLoader _plugins;
         static bool _running = true;
+        
+        public string _dbName = ConfigurationManager.AppSettings["DatabasePath"];
+
         public void Start()
         {
             // Application Running Information
@@ -73,9 +76,28 @@ namespace MonitoringAgent
             Console.WriteLine("Started polling...");
             _log.Info("Started polling...");
 
-            TakeAndPostData(true);
+            CreateDataBaseAndTable();
+            HubConnection hubConnection = new HubConnection("http://localhost:15123/");
+            IHubProxy monitoringHub = hubConnection.CreateHubProxy("MyHub");
+            //hubConnection.Received += data => Console.WriteLine(data);
+
+            hubConnection.Start().ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Console.WriteLine("There was an error opening the connection: {0}",
+                              task.Exception.GetBaseException());
+                }
+                else
+                {
+                    Console.WriteLine("Connected");
+                }
+            }).Wait();
+
+
+            TakeAndPostData(hubConnection, monitoringHub, true);
             Thread.Sleep(1000);
-            TakeAndPostData(true);
+            TakeAndPostData(hubConnection, monitoringHub, true);
 
             // Start the polling loop
             while (_running)
@@ -83,7 +105,7 @@ namespace MonitoringAgent
                 // Poll every 5 second
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000)
                 {
-                    TakeAndPostData();
+                    TakeAndPostData(hubConnection, monitoringHub);
                     
                     // Reset the poll time
                     lastPollTime = DateTime.Now;
@@ -93,9 +115,10 @@ namespace MonitoringAgent
                     Thread.Sleep(10);
                 }
             }
+            hubConnection.Stop();
         }
 
-        private void TakeAndPostData(bool initPost = false)
+        private void TakeAndPostData(HubConnection hubConnection, IHubProxy monitoringHub, bool initPost = false)
         {
             string json;
             string serverIP = ConfigurationManager.AppSettings["ServerIP"];
@@ -110,10 +133,6 @@ namespace MonitoringAgent
 
             if (!initPost)
             {
-                string dbName = "MonitoringAgentDB.sqlite";
-                SQLiteDB.CreateDbFile(dbName);
-                SQLiteDB.CreateTable(dbName);
-
                 foreach (var plugin in _plugins.pluginList)
                 {
                     plugOutput = plugin.Output();
@@ -132,39 +151,50 @@ namespace MonitoringAgent
             client.Headers.Add("Content-Type", "application/json");
 
             bool connectionStatus = false;
-            connectionStatus = CheckConnection(serverIP);
+            connectionStatus = CheckConnection(serverIP, monitoringHub);
 
             if (connectionStatus)
             {
                 try
-                {
-                    var hubConnection = new HubConnection("http://localhost:15123/");
-                    var monitoringHub = hubConnection.CreateHubProxy("MyHub");
-                    //hubConnection.Received += data => Console.WriteLine(data);
-                    
-                    hubConnection.Start().Wait();
+                {                
+                    monitoringHub.Invoke<string>("Send", "test").ContinueWith(task => {
+                        if (task.IsFaulted)
+                        {
+                            Console.WriteLine("There was an error calling send: {0}",
+                                              task.Exception.GetBaseException());
+                        }
+                        else
+                        {
+                            Console.WriteLine(task.Result);
+                        }
+                    });
 
-                    monitoringHub.Invoke<string>("Send", json);
-                    hubConnection.Send(json).Wait();
+                    /*monitoringHub.On<string>("addMessage", param => {
+                        Console.WriteLine(param);
+                    });*/
 
-                    client.UploadString(serverIP, json);
+                    //monitoringHub.Invoke<string>("DoSome", "I'm doing something!!!").Wait();
+
+                    monitoringHub.Invoke<ClientOutput>("SendPluginOutput", output).Wait();
+
+                    //client.UploadString(serverIP, json);
                 }
                 catch (Exception err)
                 {
                     _log.Error("Upload string ERROR: ", err);
+                    hubConnection.Stop();
                     SaveOutputToDB(json);
                     return;
                 }
                 try
                 {
                     Dictionary<int, string> dbValues = new Dictionary<int, string>();
-                    string dbName = "MonitoringAgentDB.sqlite";
-                    dbValues = SQLiteDB.GetStoredJson(dbName);
+                    dbValues = SQLiteDB.GetStoredJson(_dbName);
                     foreach (var item in dbValues)
                     {
                         string jsonDB = item.Value;
                         client.UploadString(serverIP, jsonDB);
-                        SQLiteDB.UpdateStatus(dbName, item.Key);
+                        SQLiteDB.UpdateStatus(_dbName, item.Key);
                     }
                 }
                 catch (Exception err)
@@ -179,17 +209,20 @@ namespace MonitoringAgent
             }
         }
 
-        private static void SaveOutputToDB(string json)
+        private void CreateDataBaseAndTable()
         {
-            string dbName = "MonitoringAgentDB.sqlite";
-            SQLiteDB.CreateDbFile(dbName);
-            SQLiteDB.CreateTable(dbName);
-            SQLiteDB.InsertToDb(dbName, json);
+            SQLiteDB.CreateDbFile(_dbName);
+            SQLiteDB.CreateTable(_dbName);
+        }
+
+        private void SaveOutputToDB(string json)
+        {
+            SQLiteDB.InsertToDb(_dbName, json);
 
             _log.Warn("Server unreachable, writing into local db");
         }
 
-        public static string getMACAddress()
+        public string getMACAddress()
         {
             NetworkInterface[] NI = NetworkInterface.GetAllNetworkInterfaces();
             NetworkInterface ni = NI.FirstOrDefault(x => x.OperationalStatus == OperationalStatus.Up);
@@ -210,22 +243,20 @@ namespace MonitoringAgent
             }
         }
 
-        private static bool CheckConnection(String URL)
+        private bool CheckConnection( String URL, IHubProxy monitoringHub )
         {
+            bool result = false;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
-                request.Timeout = 5000;
-                request.Credentials = CredentialCache.DefaultNetworkCredentials;
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                if (response.StatusCode == HttpStatusCode.OK) return true;
-                else return false;
+                monitoringHub.Invoke<string>("CheckConnection").Wait();
+                result = true;
             }
             catch (Exception ex)
             {
-                return false;
+                _log.Error("Server connection fail.", ex);
+                throw ex;
             }
+            return result;
         }
     }
 }

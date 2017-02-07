@@ -45,8 +45,9 @@ namespace MonitoringServer.Controllers
         {
             ClientOutput clientOutput;
             DateTime lastPollTime = DateTime.MinValue;
-            var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
+            //var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
 
+            int threadID = Thread.CurrentThread.ManagedThreadId;
             while (_threadRunning)
             {
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000)
@@ -56,7 +57,7 @@ namespace MonitoringServer.Controllers
 
                     if (clientOutput != null)
                     {
-                        context.Clients.All.pluginsMessage(clientOutput);
+                        //context.Clients.All.pluginsMessage(clientOutput);
                     }
 
                     lastPollTime = DateTime.Now;
