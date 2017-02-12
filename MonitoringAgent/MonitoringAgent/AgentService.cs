@@ -8,8 +8,6 @@ using System.Configuration;
 using System.Net.NetworkInformation;
 using System.Linq;
 using log4net;
-using System.IO;
-using System.Xml;
 using Microsoft.AspNet.SignalR.Client;
 
 namespace MonitoringAgent
@@ -94,7 +92,6 @@ namespace MonitoringAgent
                 }
             }).Wait();
 
-
             TakeAndPostData(hubConnection, monitoringHub, true);
             Thread.Sleep(1000);
             TakeAndPostData(hubConnection, monitoringHub, true);
@@ -157,7 +154,7 @@ namespace MonitoringAgent
             {
                 try
                 {                
-                    monitoringHub.Invoke<string>("Send", "test").ContinueWith(task => {
+                    /*monitoringHub.Invoke<string>("Send", "test").ContinueWith(task => {
                         if (task.IsFaulted)
                         {
                             Console.WriteLine("There was an error calling send: {0}",
@@ -167,7 +164,7 @@ namespace MonitoringAgent
                         {
                             Console.WriteLine(task.Result);
                         }
-                    });
+                    });*/
 
                     /*monitoringHub.On<string>("addMessage", param => {
                         Console.WriteLine(param);
@@ -248,8 +245,16 @@ namespace MonitoringAgent
             bool result = false;
             try
             {
-                monitoringHub.Invoke<string>("CheckConnection").Wait();
-                result = true;
+                monitoringHub.On<string>("addMessage", param => {
+                    result = true;
+                });
+
+                monitoringHub.Invoke<string>("DoSome", "I'm doing something!!!").Wait();
+
+                monitoringHub.Invoke("CheckConnection", "test").ContinueWith((task) => 
+                {
+                    result = task.IsCompleted;
+                });
             }
             catch (Exception ex)
             {

@@ -32,6 +32,7 @@
         span3.setAttribute("onclick", "onNodeClick(this)");
         span3.textContent = clientOutput.PCName;
         span3.id = clientOutput.ID;
+        span3.setAttribute("customer", clientOutput.Customer);
         li3.className = "node";
         li3.appendChild(span3);
         ul3.appendChild(li3);
@@ -67,8 +68,11 @@
         var result = document.createElement('table');
         var pcName = document.createElement('tr');
         var nameCell = document.createElement('th');
+        var lastUpdate = document.createElement('td');
+        lastUpdate.textContent = "Last Update: " + clientOutput.LastUpdate;
         nameCell.textContent = clientOutput.PCName;
         pcName.appendChild(nameCell);
+        pcName.appendChild(lastUpdate);
         result.appendChild(pcName);
 
         clientOutput.CollectionList.forEach(function (plugin) {
@@ -141,8 +145,8 @@
 });
 
 function checkFirstVisit() {
-    $.connection.hub.url = "http://localhost:15123/signalr";
-    var hub = $.connection.MyHub;
+    /*$.connection.hub.url = "http://localhost:15123/signalr";
+    var hub = $.connection.MyHub;*/
 
 
     // Start the connection
@@ -150,7 +154,7 @@ function checkFirstVisit() {
         //vm.connected(true);
     });*/
 
-    hub.server.OnRefresh();
+    //hub.server.OnRefresh();
 
 
     if (document.cookie.indexOf('checkRefresh') === -1) {
@@ -174,5 +178,6 @@ function onNodeClick(object) {
     $.connection.hub.url = "http://localhost:15123/signalr";
     var hub = $.connection.MyHub;
 
-    hub.server.nodeClick(object.id);
+    console.log(object.getAttribute('customer'));
+    hub.server.nodeClick(object.id, object.textContent, object.getAttribute('customer'));
 }

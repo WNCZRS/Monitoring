@@ -2,46 +2,16 @@
 using Microsoft.AspNet.SignalR.Hubs;
 using MonitoringServer.Controllers;
 using PluginsCollection;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MonitoringServer.Hubs
 {
-    /*public class PluginInfo : Hub
-    {
-        MessageController messangerController;
-        
-        public void InitMessanger()
-        {
-            messangerController = new MessageController();
-        }
-
-        public void SendPluginInfo(PluginOutput pluginOutput)
-        {
-            Clients.All.pluginMessage(pluginOutput);
-        }
-
-        public void NodeClick(string nodeID)
-        {
-            messangerController.SetNodeID(nodeID);
-        }
-
-        public void onRefresh()
-        {
-            List<ClientOutput> treeInfo = SQLiteController.GetBasicInfo();
-        }
-    }*/
-
     [HubName("MyHub")]
     public class MonitoringHub : Hub
     {
-        public MonitoringHub()
+        public bool Send(string message)
         {
-
-        }
-
-        public string Send(string message)
-        {
-            return message;
+            return true;
         }
 
         public void DoSome(string s)
@@ -60,13 +30,13 @@ namespace MonitoringServer.Hubs
             {
                 SQLiteController.JSONToSQL(clientOutput);
             }
-            
-            Clients.All.pluginsMessage(clientOutput);
         }
 
-        public void NodeClick(string nodeID)
+        public void NodeClick(string nodeID, string pcName, string customer)
         {
-            //messangerController.SetNodeID(nodeID);
+            MessageController.SetNodeID(nodeID);
+            MessageController.SetPCName(pcName);
+            MessageController.SetCustomer(customer);
         }
 
         public void OnRefresh()
@@ -74,9 +44,24 @@ namespace MonitoringServer.Hubs
 
         }
 
-        public bool CheckConnection()
+        public bool CheckConnection(string str)
         {
             return true;
+        }
+
+        public override Task OnConnected()
+        {                                  
+            return base.OnConnected();
+        }
+
+        public override Task OnReconnected()
+        {
+            return base.OnReconnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            return base.OnDisconnected(stopCalled);
         }
     }   
 }

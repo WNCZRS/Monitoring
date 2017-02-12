@@ -127,6 +127,7 @@ namespace PluginsCollection
         private string _pcName;
         private string _customer;
         private bool _initPost;
+        private DateTime _lastUpdate;
 
         public List<PluginOutputCollection> CollectionList
         {
@@ -184,6 +185,18 @@ namespace PluginsCollection
             }
         }
 
+        public DateTime LastUpdate
+        {
+            get
+            {
+                return _lastUpdate;
+            }
+            set
+            {
+                _lastUpdate = value;
+            }
+        }
+
         public ClientOutput(string pcName, string id, string customer)
         {
             _pcName = pcName;
@@ -191,6 +204,7 @@ namespace PluginsCollection
             _customer = customer;
             _collectionList = new List<PluginOutputCollection>();
             _initPost = false;
+            _lastUpdate = DateTime.MinValue;
         }
     }
 

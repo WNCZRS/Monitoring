@@ -19,8 +19,9 @@ namespace MonitoringServer
             SQLiteController.CreateDbFile();
             SQLiteController.CreateTables();
 
-            MessageController messageController = new MessageController();
-            messageController.StartMessageThread();
+            //MessageController messageController = new MessageController();
+            //messageController.StartMessageThread();
+            MessageController.StartMessageThread();
         }
     }
 }

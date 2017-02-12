@@ -142,7 +142,8 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand("SELECT ComputerName, JSON FROM MonitoringServerStorage WHERE Customer = @Customer and ComputerID = @ComputerID ORDER BY RecCreated desc LIMIT 1", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, JSON, RecCreated FROM MonitoringServerStorage 
+                                                            WHERE Customer = @Customer and ComputerID = @ComputerID ORDER BY RecCreated desc LIMIT 1", dbConnection);
                     cmd.Parameters.AddWithValue("@Customer", customer);
                     cmd.Parameters.AddWithValue("@ComputerID", computerID);
 
@@ -151,6 +152,7 @@ namespace MonitoringServer.Controllers
                     {
                         clientOutput.PCName = reader.GetString(0);
                         clientOutput.CollectionList = JsonConvert.DeserializeObject<List<PluginOutputCollection>>(reader.GetString(1));
+                        clientOutput.LastUpdate = reader.GetDateTime(2);
                     }
                 }
             }
@@ -159,6 +161,35 @@ namespace MonitoringServer.Controllers
                 throw ex;
             }
             return clientOutput;
+        }
+
+        public static List<ClientOutput> CriticalValuesFromDB()
+        {
+            List<ClientOutput> clientOutputList = new List<ClientOutput>();
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
+
+            try
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
+                {
+                    dbConnection.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT DISTINCT ComputerName, ComputerID, Customer, JSON FROM MonitoringServerStorage 
+                        WHERE ComputerName is not NULL and ComputerName not in ('') GROUP BY ComputerName ORDER BY RecCreated desc", dbConnection);
+
+                    SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    while (reader.Read())
+                    {
+                        ClientOutput co = new ClientOutput(reader.GetString(0), reader.GetString(1), reader.GetString(2));
+                        co.CollectionList = JsonConvert.DeserializeObject<List<PluginOutputCollection>>(reader.GetString(3));
+                        clientOutputList.Add(co);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return clientOutputList;
         }
     }
 }

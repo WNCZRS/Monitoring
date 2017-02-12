@@ -6,60 +6,70 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace MonitoringServer.Controllers
 {
+    enum ViewType
+    {
+        OneMachine,
+        CriticalPreview
+    }
     public class MessageController
     {
-        private bool _threadRunning;
+        private static string _nodeID;
+        private static string _customer;
+        private static string _pcName;
+        private static bool _nodeChanged;
+        private static ViewType _viewType;
 
-        public string NodeID { get; set; }
-
-        public MessageController()
+        private MessageController()
         {
-            _threadRunning = false;
-            NodeID = string.Empty;
+            _customer = string.Empty;
+            _nodeID = string.Empty;
+            _pcName = string.Empty;
+            _nodeChanged = false;
+            _viewType = ViewType.OneMachine;
         }
-        public void StartMessageThread()
+        public static void StartMessageThread()
         {
             Thread pollingThread = null;
             try
             {
-                pollingThread = new Thread(new ThreadStart(PluginMessanger));
-                if (!_threadRunning)
-                {
-                    _threadRunning = true;
-                    pollingThread.Start();
-                }
+                pollingThread = new Thread(new ThreadStart(Messanger));
+                pollingThread.Start();
             }
-            catch (Exception)
+            catch (Exception ex )
             {
-                _threadRunning = false;
+                _nodeChanged = false;
                 pollingThread.Abort();
-                throw;
+                throw ex;
             }
         }
 
-        public void PluginMessanger()
+        public static void Messanger()
         {
-            ClientOutput clientOutput;
             DateTime lastPollTime = DateTime.MinValue;
-            //var context = GlobalHost.ConnectionManager.GetHubContext<PluginInfo>();
 
             int threadID = Thread.CurrentThread.ManagedThreadId;
-            while (_threadRunning)
+            while(true)
             {
-                if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000)
+                if (((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000) || _nodeChanged)
                 {
-                    //test only must by on click event (treeNode)
-                    clientOutput = SQLiteController.JSONFromSQL("CustomerTest", NodeID, "Marko-PC");
-
-                    if (clientOutput != null)
+                    _nodeChanged = false;
+                    switch (_viewType)
                     {
-                        //context.Clients.All.pluginsMessage(clientOutput);
-                    }
+                        case ViewType.OneMachine:
+                            OneMachineView();
+                            break;
 
+                        case ViewType.CriticalPreview:
+                            CriticalPreview();
+                            break;
+
+                        default:
+                            break;
+                    }
                     lastPollTime = DateTime.Now;
                 }
                 else
@@ -69,9 +79,68 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public void SetNodeID(string nodeID)
+        private static void CriticalPreview()
         {
-            NodeID = nodeID;
+            try
+            {
+                List<ClientOutput> clientOutputList = SQLiteController.CriticalValuesFromDB();
+                if (clientOutputList != null || clientOutputList.Count != 0)
+                {
+                    foreach (ClientOutput co in clientOutputList)
+                    {
+                        foreach (PluginOutputCollection pluginCollection in co.CollectionList)
+                        {
+                            foreach (PluginOutput pluginOutput in pluginCollection.PluginOutputList)
+                            {
+                                List<SimplePluginOutput> criticalValues = pluginOutput.Values.FindAll(item => item.IsCritical == true);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static void OneMachineView()
+        {
+            try
+            {
+                ClientOutput clientOutput = SQLiteController.JSONFromSQL(_customer, _nodeID, _pcName);
+                if (clientOutput != null)
+                {
+                    GetContext().Clients.All.pluginsMessage(clientOutput);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static IHubContext GetContext()
+        {
+            return GlobalHost.ConnectionManager.GetHubContext<MonitoringHub>();
+        }
+
+        public static void SetNodeID(string nodeID)
+        {
+            _nodeID = nodeID;
+            _nodeChanged = true;
+        }
+
+        public static void SetPCName(string pcName)
+        {
+            _pcName = pcName;
+            _nodeChanged = true;
+        }
+
+        public static void SetCustomer(string customer)
+        {
+            _customer = customer;
+            _nodeChanged = true;
         }
     }
 }
