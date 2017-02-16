@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MonitoringServer.Controllers
 {
-    enum ViewType
+    public enum ViewType
     {
         OneMachine,
         CriticalPreview
@@ -20,17 +20,30 @@ namespace MonitoringServer.Controllers
         private static string _nodeID;
         private static string _customer;
         private static string _pcName;
-        private static bool _nodeChanged;
+        private static bool _changed;
         private static ViewType _viewType;
+
+        public ViewType ViewType
+        {
+            get
+            {
+                return _viewType;
+            }
+            set
+            {
+                _viewType = value;
+            }
+        }
 
         private MessageController()
         {
             _customer = string.Empty;
             _nodeID = string.Empty;
             _pcName = string.Empty;
-            _nodeChanged = false;
+            _changed = false;
             _viewType = ViewType.OneMachine;
         }
+
         public static void StartMessageThread()
         {
             Thread pollingThread = null;
@@ -41,7 +54,7 @@ namespace MonitoringServer.Controllers
             }
             catch (Exception ex )
             {
-                _nodeChanged = false;
+                _changed = false;
                 pollingThread.Abort();
                 throw ex;
             }
@@ -54,9 +67,9 @@ namespace MonitoringServer.Controllers
             int threadID = Thread.CurrentThread.ManagedThreadId;
             while(true)
             {
-                if (((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000) || _nodeChanged)
+                if (((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000) || _changed)
                 {
-                    _nodeChanged = false;
+                    _changed = false;
                     switch (_viewType)
                     {
                         case ViewType.OneMachine:
@@ -81,20 +94,16 @@ namespace MonitoringServer.Controllers
 
         private static void CriticalPreview()
         {
+            //GetContext().Clients.All.hideTree();
             try
             {
-                List<ClientOutput> clientOutputList = SQLiteController.CriticalValuesFromDB();
+                List<ClientOutput> clientOutputList = SQLiteController.LastValuesFromDB();
                 if (clientOutputList != null || clientOutputList.Count != 0)
                 {
-                    foreach (ClientOutput co in clientOutputList)
+                    List<ClientOutput> criticalValues = GetCriticalValues(clientOutputList);
+                    if (criticalValues.Count > 0)
                     {
-                        foreach (PluginOutputCollection pluginCollection in co.CollectionList)
-                        {
-                            foreach (PluginOutput pluginOutput in pluginCollection.PluginOutputList)
-                            {
-                                List<SimplePluginOutput> criticalValues = pluginOutput.Values.FindAll(item => item.IsCritical == true);
-                            }
-                        }
+                        GetContext().Clients.All.previewCritical(criticalValues);
                     }
                 }
             }
@@ -102,6 +111,35 @@ namespace MonitoringServer.Controllers
             {
                 throw ex;
             }
+        }
+
+        private static List<ClientOutput> GetCriticalValues( List<ClientOutput> clientOutputList )
+        {
+            List<ClientOutput> newClientOutputList = new List<ClientOutput>();
+            foreach (ClientOutput co in clientOutputList)
+            {
+                ClientOutput newClientOutput = new ClientOutput(co.PCName, co.ID, co.Customer);
+                foreach (PluginOutputCollection pluginCollection in co.CollectionList)
+                {
+                    PluginOutputCollection newPluginCollection = new PluginOutputCollection(pluginCollection.PluginName);
+                    foreach (PluginOutput pluginOutput in pluginCollection.PluginOutputList)
+                    {
+                        if (pluginOutput.Values.Any(item => item.IsCritical == true))
+                        {
+                            newPluginCollection.PluginOutputList.Add(pluginOutput);
+                        }
+                    }
+                    if (newPluginCollection.PluginOutputList.Count > 0)
+                    {
+                        newClientOutput.CollectionList.Add(newPluginCollection);
+                    }
+                }
+                if (newClientOutput.CollectionList.Count > 0)
+                {
+                    newClientOutputList.Add(newClientOutput);
+                }
+            }
+            return newClientOutputList;
         }
 
         private static void OneMachineView()
@@ -128,19 +166,37 @@ namespace MonitoringServer.Controllers
         public static void SetNodeID(string nodeID)
         {
             _nodeID = nodeID;
-            _nodeChanged = true;
+            _changed = true;
         }
 
         public static void SetPCName(string pcName)
         {
             _pcName = pcName;
-            _nodeChanged = true;
+            _changed = true;
         }
 
         public static void SetCustomer(string customer)
         {
             _customer = customer;
-            _nodeChanged = true;
+            _changed = true;
+        }
+
+        public static void SetView(ViewType viewType)
+        {
+            _viewType = viewType;
+        }
+
+        public static void SwitchView()
+        {
+            if (_viewType == ViewType.CriticalPreview)
+            {
+                _viewType = ViewType.OneMachine;
+            }
+            else
+            {
+                _viewType = ViewType.CriticalPreview;
+            }
+            _changed = true;
         }
     }
 }

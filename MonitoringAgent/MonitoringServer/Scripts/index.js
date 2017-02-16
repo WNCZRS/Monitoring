@@ -22,8 +22,8 @@
     var hub = $.connection.MyHub
   
 
-    hub.client.initMessage = function (clientOutput) {
-        console.log("initMessage");
+    hub.client.activateTree = function (clientOutput) {
+        console.log("activateTree");
 
         var ul3 = document.createElement('ul');
         var li3 = document.createElement('li');
@@ -97,7 +97,7 @@
                         cellValue.className = "alertRow";
                     }
                     row.appendChild(cellValue);
-                })
+                });
                 result.appendChild(row);
             });
         });
@@ -135,6 +135,57 @@
             parent = oldTable.parentElement;
             parent.replaceChild(noResult, oldTable);
         }
+    }
+
+    hub.client.previewCritical = function (criticalValues) {
+        console.log("previewCritical");
+
+        var result = document.createElement('table');
+
+        criticalValues.forEach(function (clientOutput) {
+
+            var pcName = document.createElement('tr');
+            var nameCell = document.createElement('th');
+            var lastUpdate = document.createElement('td');
+            nameCell.textContent = clientOutput.PCName;
+            pcName.appendChild(nameCell);
+            result.appendChild(pcName);
+
+            clientOutput.CollectionList.forEach(function (plugin) {
+                var headRow = document.createElement('tr');
+                var headCell = document.createElement('th');
+                headCell.textContent = plugin.PluginName;
+                headCell.setAttribute("colspan", "100");
+                headRow.appendChild(headCell);
+                result.appendChild(headRow);
+           
+                plugin.PluginOutputList.forEach(function (pluginElement) {
+                    var row = document.createElement('tr');
+                    var cellName = document.createElement('td');
+                    cellName.textContent = pluginElement.PropertyName;
+                    row.appendChild(cellName);
+
+                    pluginElement.Values.forEach(function (simplePluginElement) {
+                        var cellValue = document.createElement('td');
+                        cellValue.textContent = simplePluginElement.Value;
+
+                        if (simplePluginElement.IsCritical) {
+                            cellValue.className = "alertRow";
+                        }
+                        row.appendChild(cellValue);
+                    });
+                    result.appendChild(row);
+                });
+            });
+            result.id = "resultTable";
+
+            var oldTable = document.getElementById("resultTable");
+            var parent;
+
+            oldTable = document.getElementById("resultTable");
+            parent = oldTable.parentElement;
+            parent.replaceChild(result, oldTable);
+        });
 
     }
 
@@ -180,4 +231,13 @@ function onNodeClick(object) {
 
     console.log(object.getAttribute('customer'));
     hub.server.nodeClick(object.id, object.textContent, object.getAttribute('customer'));
+}
+
+function onSwitchClick() {
+    console.log("onSwitchClick");
+
+    $.connection.hub.url = "http://localhost:15123/signalr";
+    var hub = $.connection.MyHub;
+
+    hub.server.onSwitchClick();
 }

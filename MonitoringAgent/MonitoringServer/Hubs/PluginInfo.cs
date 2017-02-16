@@ -23,7 +23,7 @@ namespace MonitoringServer.Hubs
         {
             if (clientOutput.InitPost)
             {
-                Clients.All.initMessage(clientOutput);
+                Clients.All.activateTree(clientOutput);
                 SQLiteController.SaveBasicInfo(clientOutput);
             }
             else
@@ -37,6 +37,11 @@ namespace MonitoringServer.Hubs
             MessageController.SetNodeID(nodeID);
             MessageController.SetPCName(pcName);
             MessageController.SetCustomer(customer);
+        }
+
+        public void OnSwitchClick()
+        {
+            MessageController.SwitchView();
         }
 
         public void OnRefresh()

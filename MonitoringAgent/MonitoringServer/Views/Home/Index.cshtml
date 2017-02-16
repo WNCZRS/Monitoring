@@ -58,9 +58,15 @@
             background: #ff0000 !important;
             color: #ffffff !important;
         }
+
+        div.hidden {
+            /*display: none;*/
+            visibility: hidden;
+        }
     </style>
 </head>
 <body onload="checkFirstVisit()">
+    <button onclick="onSwitchClick()" id="switchView">SwitchView</button>
     <div class="grid">
         <div class="row cells4">
             <div class="cell">

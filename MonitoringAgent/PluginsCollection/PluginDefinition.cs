@@ -206,6 +206,14 @@ namespace PluginsCollection
             _initPost = false;
             _lastUpdate = DateTime.MinValue;
         }
+
+        public PluginOutputCollection GetPluginOutputByName(string pluginName)
+        {
+            PluginOutputCollection poc;
+            poc = this.CollectionList.Find(item => item.PluginName == pluginName);
+
+            return poc;
+        }
     }
 
     public class PluginLoader
@@ -260,18 +268,24 @@ namespace PluginsCollection
 
         public List<IPlugin> LoadPlugins()
         {
-            Type parentType = typeof(IPlugin);
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Type[] types = assembly.GetTypes();
-            IEnumerable<Type> imp = types.Where(t => t.GetInterfaces().Contains(parentType));
+            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+            IEnumerable<Type> imp = types.Where(t => t.GetInterfaces().Contains(typeof(IPlugin)));
             pluginList.Clear();
-
+  
             foreach (Type type in imp)
             {
                 pluginList.Add((IPlugin)Activator.CreateInstance(type));
             }
 
             return pluginList;
+        }
+
+        public static List<string> GetPluginNames()
+        {
+            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+            IEnumerable<Type> imp = types.Where(t => t.GetInterfaces().Contains(typeof(IPlugin)));
+
+            return imp.Select(item => item.Name).ToList();
         }
     }
 }

@@ -163,7 +163,7 @@ namespace MonitoringServer.Controllers
             return clientOutput;
         }
 
-        public static List<ClientOutput> CriticalValuesFromDB()
+        public static List<ClientOutput> LastValuesFromDB()
         {
             List<ClientOutput> clientOutputList = new List<ClientOutput>();
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
