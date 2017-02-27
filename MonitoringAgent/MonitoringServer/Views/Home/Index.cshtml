@@ -67,14 +67,16 @@
 </head>
 <body onload="checkFirstVisit()">
     <button onclick="onSwitchClick()" id="switchView">SwitchView</button>
-    <div class="grid">
+    <button onclick="onLoadClick()" id="loadTree">LoadTree</button>
+    <div class="grid" id="mainDiv">
         <div class="row cells4">
-            <div class="cell">
-
-                <div class="treeview" data-role="treeview">
+            <div class="cell" id="treeDiv">
+                @*<div class="treeview" data-role="treeview" id="treeview">
                     <ul>
                         <li class="node active">
-                            <span class="leaf"><img src="" class="icon">Machines</span>
+                            <span class="leaf">
+                                <img src="" class="icon">Machines
+                            </span>
                             <span class="node-toggle"></span>
                             <ul id="rootNode">
                                 <li>
@@ -93,16 +95,16 @@
                             </ul>
                         </li>
                     </ul>
-                </div>
+                </div>*@
             </div>
-            <div class="cell collspan3">
-                <table id="resultTable">
+            <div class="cell collspan3" id="tableDiv">
+                @*<table id="resultTable">
                     <tr>
                         <th>
                             initTable
                         </th>
                     </tr>
-                </table>
+                </table>*@
             </div>
         </div>
     </div>

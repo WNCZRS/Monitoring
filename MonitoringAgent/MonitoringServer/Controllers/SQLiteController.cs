@@ -60,7 +60,7 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, ComputerID, Customer FROM Machines");
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, ComputerID, Customer FROM Machines", dbConnection);
 
                     SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                     while (reader.Read())

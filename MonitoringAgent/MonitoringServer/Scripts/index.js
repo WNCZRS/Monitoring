@@ -17,13 +17,47 @@
     // .. and bind it to the view
     ko.applyBindings(vm, $("#computerInfo")[0]);
 
+    console.log("before start connection");
     // Get a reference to our hub
     $.connection.hub.url = "http://localhost:15123/signalr";
+    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub
   
 
     hub.client.activateTree = function (clientOutput) {
         console.log("activateTree");
+
+        InitMainDiv();
+        var treeview = document.getElementById("treeview");
+        if (treeview === null) {
+            var treeDiv = document.getElementById("treeDiv");
+            var treeView = document.createElement("div");
+            var ul = document.createElement("ul");
+            var ul2 = document.createElement("ul");
+            var li = document.createElement("li");
+            var spanTmp1 = document.createElement('span');
+            var spanTmp2 = document.createElement('span');
+            var img = document.createElement('img');
+
+            treeView.className = "treeview";
+            treeView.setAttribute("data-role", "treeview");
+            treeView.id = "treeview";
+            li.className = "node active";
+            spanTmp1.className = "leaf";
+            img.className = "icon";
+            spanTmp1.appendChild(img);
+            spanTmp1.textContent = "Machines";
+            spanTmp2.className = "node-toggle";
+
+            li.appendChild(spanTmp1);
+            li.appendChild(spanTmp2);
+            ul2.id = "rootNode";
+            li.appendChild(ul2);
+            ul.appendChild(li);
+            treeView.appendChild(ul);
+            treeDiv.appendChild(treeView);
+        }
+
 
         var ul3 = document.createElement('ul');
         var li3 = document.createElement('li');
@@ -62,10 +96,20 @@
         }
     }
 
+    hub.client.deactivateTree = function () {
+        console.log("deactivateTree");
+        $(document).find('#treeview').remove();
+        var tree = document.getElementById("treeDiv");
+        //console.log(tree);
+        //document.removeChild(tree);
+    }
+
     hub.client.pluginsMessage = function (clientOutput) {
         console.log("pluginsMessage");
 
-        var result = document.createElement('table');
+        InitMainDiv();
+
+        var newResultTable = document.createElement('table');
         var pcName = document.createElement('tr');
         var nameCell = document.createElement('th');
         var lastUpdate = document.createElement('td');
@@ -73,7 +117,8 @@
         nameCell.textContent = clientOutput.PCName;
         pcName.appendChild(nameCell);
         pcName.appendChild(lastUpdate);
-        result.appendChild(pcName);
+        newResultTable.appendChild(pcName);
+        newResultTable.id = "resultTable";
 
         clientOutput.CollectionList.forEach(function (plugin) {
             var headRow = document.createElement('tr');
@@ -81,7 +126,7 @@
             headCell.textContent = plugin.PluginName;
             headCell.setAttribute("colspan", "100");
             headRow.appendChild(headCell);
-            result.appendChild(headRow);
+            newResultTable.appendChild(headRow);
            
             plugin.PluginOutputList.forEach(function (pluginElement) {
                 var row = document.createElement('tr');
@@ -98,14 +143,18 @@
                     }
                     row.appendChild(cellValue);
                 });
-                result.appendChild(row);
+                newResultTable.appendChild(row);
             });
         });
-        result.id = "resultTable";
 
         console.log("resultTable: ");
-        console.log(result);
-        var oldTable = document.getElementById("resultTable");
+        console.log(newResultTable);
+        var originalResultTable = document.getElementById("resultTable");
+        if (originalResultTable === null) {
+            var newTable = document.createElement("table");
+            newTable.id = "resultTable";
+            document.getElementById("tableDiv").appendChild(newTable);
+        }
         var parent;
         var noResult;
         var activeNode = document.body.getElementsByClassName("active")[0];
@@ -114,33 +163,35 @@
             var activeNodeID = activeNode.firstChild.id;
 
             if (activeNodeID === clientOutput.ID) {
-                oldTable = document.getElementById("resultTable");
-                parent = oldTable.parentElement;
-                parent.replaceChild(result, oldTable);
+                originalResultTable = document.getElementById("resultTable");
+                parent = originalResultTable.parentElement;
+                parent.replaceChild(newResultTable, originalResultTable);
             }
             else {
                 noResult = document.createElement('p');
                 noResult.textContent = "No result for selected machine!";
                 noResult.id = "resultTable";
-                oldTable = document.getElementById("resultTable");
-                parent = oldTable.parentElement;
-                parent.replaceChild(noResult, oldTable);
+                originalResultTable = document.getElementById("resultTable");
+                parent = originalResultTable.parentElement;
+                parent.replaceChild(noResult, originalResultTable);
             }
         }
         else {
             noResult = document.createElement('p');
             noResult.textContent = "No result for selected machine!";
             noResult.id = "resultTable";
-            oldTable = document.getElementById("resultTable");
-            parent = oldTable.parentElement;
-            parent.replaceChild(noResult, oldTable);
+            originalResultTable = document.getElementById("resultTable");
+            parent = originalResultTable.parentElement;
+            parent.replaceChild(noResult, originalResultTable);
         }
     }
 
     hub.client.previewCritical = function (criticalValues) {
         console.log("previewCritical");
 
-        var result = document.createElement('table');
+        InitMainDiv();
+        var newResultTable = document.createElement('table');
+        newResultTable.id = "resultTable";
 
         criticalValues.forEach(function (clientOutput) {
 
@@ -149,7 +200,7 @@
             var lastUpdate = document.createElement('td');
             nameCell.textContent = clientOutput.PCName;
             pcName.appendChild(nameCell);
-            result.appendChild(pcName);
+            newResultTable.appendChild(pcName);
 
             clientOutput.CollectionList.forEach(function (plugin) {
                 var headRow = document.createElement('tr');
@@ -157,7 +208,7 @@
                 headCell.textContent = plugin.PluginName;
                 headCell.setAttribute("colspan", "100");
                 headRow.appendChild(headCell);
-                result.appendChild(headRow);
+                newResultTable.appendChild(headRow);
            
                 plugin.PluginOutputList.forEach(function (pluginElement) {
                     var row = document.createElement('tr');
@@ -174,19 +225,24 @@
                         }
                         row.appendChild(cellValue);
                     });
-                    result.appendChild(row);
+                    newResultTable.appendChild(row);
                 });
             });
-            result.id = "resultTable";
-
-            var oldTable = document.getElementById("resultTable");
-            var parent;
-
-            oldTable = document.getElementById("resultTable");
-            parent = oldTable.parentElement;
-            parent.replaceChild(result, oldTable);
         });
 
+        var tableDiv = document.getElementById("tableDiv");
+
+        var originalResultTable = document.getElementById("resultTable");
+        if (originalResultTable === null) {
+            var newTable = document.createElement("table");
+            newTable.id = "resultTable";
+            tableDiv.appendChild(newResultTable);
+        }
+        else {
+            var parent;
+            parent = originalResultTable.parentElement;
+            parent.replaceChild(newResultTable, originalResultTable);
+        }
     }
 
     // Start the connection
@@ -195,18 +251,35 @@
     });
 });
 
+function InitMainDiv() {
+    console.log("initMainDiv");
+    var mainDiv = document.getElementById("mainDiv");
+    console.log(mainDiv);
+
+    if (mainDiv !== null) {
+        return;
+    }
+
+    mainDiv = document.createElement("div");
+    mainDiv.id = "mainDiv";
+    mainDiv.className = "grid";
+    var rowCells4 = document.createElement('div');
+    rowCells4.className = "row cells4";
+    var cell = document.createElement('div');
+    cell.className = "cell";
+    cell.id = "treeDiv";
+    var cellcollspan3 = document.createElement('div');
+    cellcollspan3.className = "cell collspan3";
+    cellcollspan3.id = "tableDiv";
+    rowCells4.appendChild(cell);
+    rowCells4.appendChild(cellcollspan3);   
+
+    mainDiv.appendChild(rowCells4);
+
+    document.appendChild(mainDiv);
+}
+
 function checkFirstVisit() {
-    /*$.connection.hub.url = "http://localhost:15123/signalr";
-    var hub = $.connection.MyHub;*/
-
-
-    // Start the connection
-    /*$.connection.hub.start().done(function () {
-        //vm.connected(true);
-    });*/
-
-    //hub.server.OnRefresh();
-
 
     if (document.cookie.indexOf('checkRefresh') === -1) {
         // cookie doesn't exist, create it now
@@ -217,7 +290,15 @@ function checkFirstVisit() {
         //alert('You refreshed!');
         console.log('You refreshed!');
 
+        /*$.connection.hub.url = "http://localhost:15123/signalr";
+        var hub = $.connection.MyHub;
+        hub.server.onRefresh();
+        */
 
+        // Start the connection
+        /*$.connection.hub.start().done(function () {
+            //vm.connected(true);
+        });*/
     }
 }
 
@@ -227,6 +308,7 @@ function onNodeClick(object) {
     console.log(object);
 
     $.connection.hub.url = "http://localhost:15123/signalr";
+    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
 
     console.log(object.getAttribute('customer'));
@@ -237,7 +319,18 @@ function onSwitchClick() {
     console.log("onSwitchClick");
 
     $.connection.hub.url = "http://localhost:15123/signalr";
+    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
 
     hub.server.onSwitchClick();
+}
+
+function onLoadClick() {
+    console.log("onLoadClick");
+
+    $.connection.hub.url = "http://localhost:15123/signalr";
+    //$.connection.hub.url = "http://localhost:8000/signalr";
+    var hub = $.connection.MyHub;
+
+    hub.server.onLoadClick();
 }

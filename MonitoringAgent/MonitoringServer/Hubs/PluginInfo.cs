@@ -23,8 +23,9 @@ namespace MonitoringServer.Hubs
         {
             if (clientOutput.InitPost)
             {
-                Clients.All.activateTree(clientOutput);
+                //Clients.All.activateTree(clientOutput);
                 SQLiteController.SaveBasicInfo(clientOutput);
+                MessageController.LoadTreeView();
             }
             else
             {
@@ -46,7 +47,12 @@ namespace MonitoringServer.Hubs
 
         public void OnRefresh()
         {
+            MessageController.SetNodeID("");
+        }
 
+        public void OnLoadClick()
+        {
+            MessageController.LoadTreeView();
         }
 
         public bool CheckConnection(string str)

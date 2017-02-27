@@ -75,7 +75,8 @@ namespace MonitoringAgent
             _log.Info("Started polling...");
 
             CreateDataBaseAndTable();
-            HubConnection hubConnection = new HubConnection("http://localhost:15123/");
+            string serverIP = ConfigurationManager.AppSettings["ServerIP"];
+            HubConnection hubConnection = new HubConnection(serverIP);
             IHubProxy monitoringHub = hubConnection.CreateHubProxy("MyHub");
             //hubConnection.Received += data => Console.WriteLine(data);
 
@@ -147,8 +148,9 @@ namespace MonitoringAgent
             json = JsonConvert.SerializeObject(output);
             client.Headers.Add("Content-Type", "application/json");
 
-            bool connectionStatus = false;
-            connectionStatus = CheckConnection(serverIP, monitoringHub);
+            bool connectionStatus = true;
+            //bool connectionStatus = false;
+            //connectionStatus = CheckConnection(serverIP, monitoringHub);
 
             if (connectionStatus)
             {
