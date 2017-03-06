@@ -47,11 +47,12 @@ namespace MonitoringServer.Hubs
 
         public void OnRefresh()
         {
+            Clients.All.activateTree();
             MessageController.SetNodeID("");
         }
 
         public void OnLoadClick()
-        {
+        {           
             MessageController.LoadTreeView();
         }
 

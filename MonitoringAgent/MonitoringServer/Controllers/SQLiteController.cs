@@ -40,6 +40,10 @@ namespace MonitoringServer.Controllers
                         CREATE TABLE IF NOT EXISTS [MonitoringServerStorage] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32), [JSON] TEXT)", dbConnection);
                     cmd.ExecuteNonQuery();
 
+                    cmd = new SQLiteCommand(@"CREATE UNIQUE INDEX IF NOT EXISTS Computer_Unique_ID ON Machines (ComputerID ASC);",
+                        dbConnection);
+                    cmd.ExecuteNonQuery();
+
                     cmd = new SQLiteCommand(@"CREATE TABLE IF NOT EXISTS [Machines] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32))", dbConnection);
                     cmd.ExecuteNonQuery();
                 }
@@ -87,10 +91,8 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT INTO Machines (RecCreated, ComputerID, ComputerName, Customer) 
-                                                            SELECT @RecCreated, @ComputerID, @ComputerName, @Customer
-                                                            WHERE NOT EXISTS(SELECT ComputerID, ComputerName, Customer FROM Machines 
-                                                                            where ComputerID = @ComputerID and ComputerName = @ComputerName and Customer = @Customer LIMIT 1)", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT OR REPLACE INTO Machines (RecCreated, ComputerID, ComputerName, Customer) 
+                                                            SELECT @RecCreated, @ComputerID, @ComputerName, @Customer", dbConnection);
                     cmd.Parameters.AddWithValue("@RecCreated", DateTime.Now);
                     cmd.Parameters.AddWithValue("@ComputerID", clientOutput.ID);
                     cmd.Parameters.AddWithValue("@ComputerName", clientOutput.PCName);
@@ -167,14 +169,14 @@ namespace MonitoringServer.Controllers
         {
             List<ClientOutput> clientOutputList = new List<ClientOutput>();
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
-
+            int minutesBack = 10;
             try
             {
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT DISTINCT ComputerName, ComputerID, Customer, JSON FROM MonitoringServerStorage 
-                        WHERE ComputerName is not NULL and ComputerName not in ('') GROUP BY ComputerName ORDER BY RecCreated desc", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT DISTINCT ComputerName, ComputerID, Customer, JSON FROM MonitoringServerStorage where RecCreated > DATETIME('now', '-' || @minutesBack || ' minutes', 'localtime') and ComputerName is not NULL and ComputerName not in ('') GROUP BY ComputerName ORDER BY RecCreated desc", dbConnection);
+                    cmd.Parameters.AddWithValue("@minutesBack", minutesBack);
 
                     SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                     while (reader.Read())

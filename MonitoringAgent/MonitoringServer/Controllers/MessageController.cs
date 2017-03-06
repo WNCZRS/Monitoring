@@ -94,6 +94,7 @@ namespace MonitoringServer.Controllers
 
         private static void CriticalPreview()
         {
+            GetContext().Clients.All.InitMainDiv();
             try
             {
                 List<ClientOutput> clientOutputList = SQLiteController.LastValuesFromDB();
@@ -189,8 +190,9 @@ namespace MonitoringServer.Controllers
         {
             if (_viewType == ViewType.CriticalPreview)
             {
+                GetContext().Clients.All.InitMainDiv();
                 _viewType = ViewType.OneMachine;
-                MessageController.LoadTreeView();
+                LoadTreeView();
             }
             else
             {

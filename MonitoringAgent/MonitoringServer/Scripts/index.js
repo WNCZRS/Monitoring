@@ -27,7 +27,6 @@
     hub.client.activateTree = function (clientOutput) {
         console.log("activateTree");
 
-        InitMainDiv();
         var treeview = document.getElementById("treeview");
         if (treeview === null) {
             var treeDiv = document.getElementById("treeDiv");
@@ -106,8 +105,6 @@
 
     hub.client.pluginsMessage = function (clientOutput) {
         console.log("pluginsMessage");
-
-        InitMainDiv();
 
         var newResultTable = document.createElement('table');
         var pcName = document.createElement('tr');
@@ -189,35 +186,46 @@
     hub.client.previewCritical = function (criticalValues) {
         console.log("previewCritical");
 
-        InitMainDiv();
-        var newResultTable = document.createElement('table');
-        newResultTable.id = "resultTable";
-
         criticalValues.forEach(function (clientOutput) {
+            var newResultTable;
+            if (document.getElementById(clientOutput.Customer + "DIV") === null) {
+                var newResultDiv = document.createElement("div");
+                newResultDiv.id = clientOutput.Customer + "DIV";
+                var headerText = document.createElement("h1");
+                headerText.textContent = clientOutput.Customer;
+                newResultTable = document.createElement("table");
+                newResultTable.id = clientOutput.Customer + "TABLE";
+                newResultDiv.appendChild(headerText);
+                newResultDiv.appendChild(newResultTable);
+                document.getElementById("tableDiv").appendChild(newResultDiv);
+            }
+            
+            newResultTable = document.getElementById(clientOutput.Customer + "TABLE");
+            console.log(newResultTable);
 
-            var pcName = document.createElement('tr');
-            var nameCell = document.createElement('th');
-            var lastUpdate = document.createElement('td');
+            var pcName = document.createElement("tr");
+            var nameCell = document.createElement("th");
+            var lastUpdate = document.createElement("td");
             nameCell.textContent = clientOutput.PCName;
             pcName.appendChild(nameCell);
             newResultTable.appendChild(pcName);
 
             clientOutput.CollectionList.forEach(function (plugin) {
-                var headRow = document.createElement('tr');
-                var headCell = document.createElement('th');
+                var headRow = document.createElement("tr");
+                var headCell = document.createElement("th");
                 headCell.textContent = plugin.PluginName;
                 headCell.setAttribute("colspan", "100");
                 headRow.appendChild(headCell);
                 newResultTable.appendChild(headRow);
            
                 plugin.PluginOutputList.forEach(function (pluginElement) {
-                    var row = document.createElement('tr');
-                    var cellName = document.createElement('td');
+                    var row = document.createElement("tr");
+                    var cellName = document.createElement("td");
                     cellName.textContent = pluginElement.PropertyName;
                     row.appendChild(cellName);
 
                     pluginElement.Values.forEach(function (simplePluginElement) {
-                        var cellValue = document.createElement('td');
+                        var cellValue = document.createElement("td");
                         cellValue.textContent = simplePluginElement.Value;
 
                         if (simplePluginElement.IsCritical) {
@@ -229,19 +237,32 @@
                 });
             });
         });
+    }
 
-        var tableDiv = document.getElementById("tableDiv");
+    hub.client.InitMainDiv = function () {
+        console.log("initMainDiv");
 
-        var originalResultTable = document.getElementById("resultTable");
-        if (originalResultTable === null) {
-            var newTable = document.createElement("table");
-            newTable.id = "resultTable";
-            tableDiv.appendChild(newResultTable);
+        newMainDiv = document.createElement("div");
+        newMainDiv.className = "grid";
+        newMainDiv.id = "mainDiv";
+        var rowCells4 = document.createElement('div');
+        rowCells4.className = "row cells4";
+        var cell = document.createElement('div');
+        cell.className = "cell";
+        cell.id = "treeDiv";
+        var cellcollspan3 = document.createElement('div');
+        cellcollspan3.className = "cell collspan3";
+        cellcollspan3.id = "tableDiv";
+        rowCells4.appendChild(cell);
+        rowCells4.appendChild(cellcollspan3);
+        newMainDiv.appendChild(rowCells4);
+
+        var mainDiv = document.getElementById("mainDiv");
+        if (mainDiv === null) {
+            document.body.appendChild(newMainDiv);
         }
         else {
-            var parent;
-            parent = originalResultTable.parentElement;
-            parent.replaceChild(newResultTable, originalResultTable);
+            document.body.replaceChild(newMainDiv, mainDiv);
         }
     }
 
@@ -250,34 +271,6 @@
         vm.connected(true);
     });
 });
-
-function InitMainDiv() {
-    console.log("initMainDiv");
-    var mainDiv = document.getElementById("mainDiv");
-    console.log(mainDiv);
-
-    if (mainDiv !== null) {
-        return;
-    }
-
-    mainDiv = document.createElement("div");
-    mainDiv.id = "mainDiv";
-    mainDiv.className = "grid";
-    var rowCells4 = document.createElement('div');
-    rowCells4.className = "row cells4";
-    var cell = document.createElement('div');
-    cell.className = "cell";
-    cell.id = "treeDiv";
-    var cellcollspan3 = document.createElement('div');
-    cellcollspan3.className = "cell collspan3";
-    cellcollspan3.id = "tableDiv";
-    rowCells4.appendChild(cell);
-    rowCells4.appendChild(cellcollspan3);   
-
-    mainDiv.appendChild(rowCells4);
-
-    document.appendChild(mainDiv);
-}
 
 function checkFirstVisit() {
 
