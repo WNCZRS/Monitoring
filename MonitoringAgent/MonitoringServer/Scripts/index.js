@@ -19,10 +19,9 @@
 
     console.log("before start connection");
     // Get a reference to our hub
-    $.connection.hub.url = "http://localhost:15123/signalr";
+    $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub
-  
 
     hub.client.activateTree = function (clientOutput) {
         console.log("activateTree");
@@ -266,6 +265,10 @@
         }
     }
 
+    hub.client.updateUsersOnlineCount = function (count) {
+        $('#usersCount').text(count);
+    }
+
     // Start the connection
     $.connection.hub.start().done(function () {
         vm.connected(true);
@@ -300,7 +303,7 @@ function onNodeClick(object) {
     console.log("onNodeClick");
     console.log(object);
 
-    $.connection.hub.url = "http://localhost:15123/signalr";
+    $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
 
@@ -311,7 +314,7 @@ function onNodeClick(object) {
 function onSwitchClick() {
     console.log("onSwitchClick");
 
-    $.connection.hub.url = "http://localhost:15123/signalr";
+    $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
 
@@ -321,7 +324,7 @@ function onSwitchClick() {
 function onLoadClick() {
     console.log("onLoadClick");
 
-    $.connection.hub.url = "http://localhost:15123/signalr";
+    $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
 

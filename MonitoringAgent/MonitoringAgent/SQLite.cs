@@ -66,11 +66,11 @@ namespace MonitoringAgent
             m_dbConnection = new SQLiteConnection(connectionString);
             m_dbConnection.Open();
 
-            using (SQLiteCommand fmd1 = m_dbConnection.CreateCommand())
+            using (SQLiteCommand cmd = m_dbConnection.CreateCommand())
             {
-                fmd1.CommandText = @"SELECT Id, Result FROM MonitoringAgentCache WHERE Sync = 0 ORDER BY Datetime";
-                fmd1.CommandType = CommandType.Text;
-                SQLiteDataReader r = fmd1.ExecuteReader();
+                cmd.CommandText = @"SELECT Id, Result FROM MonitoringAgentCache WHERE Sync = 0 ORDER BY Datetime";
+                cmd.CommandType = CommandType.Text;
+                SQLiteDataReader r = cmd.ExecuteReader();
                 while (r.Read())
                 {
                     dbValues.Add(Convert.ToInt32(r["Id"]), Convert.ToString(r["Result"]));
@@ -114,22 +114,22 @@ namespace MonitoringAgent
             m_dbConnection = new SQLiteConnection(connectionString);
             m_dbConnection.Open();
 
-            using (SQLiteCommand fmd1 = m_dbConnection.CreateCommand())
+            using (SQLiteCommand cmd = m_dbConnection.CreateCommand())
             {
-                fmd1.CommandText = @"SELECT COUNT(Result) FROM MonitoringAgentCache";
-                fmd1.CommandType = CommandType.Text;
-                SQLiteDataReader r = fmd1.ExecuteReader();
+                cmd.CommandText = @"SELECT COUNT(Result) FROM MonitoringAgentCache";
+                cmd.CommandType = CommandType.Text;
+                SQLiteDataReader r = cmd.ExecuteReader();
                 while (r.Read())
                 {
                     dbValues1 = (Convert.ToString(r["FileName"]));
                 }
             }
 
-            using (SQLiteCommand fmd2 = m_dbConnection.CreateCommand())
+            using (SQLiteCommand cmd = m_dbConnection.CreateCommand())
             {
-                fmd2.CommandText = @"SELECT COUNT(Result) FROM MonitoringAgentCache WHERE sync = 0";
-                fmd2.CommandType = CommandType.Text;
-                SQLiteDataReader r = fmd2.ExecuteReader();
+                cmd.CommandText = @"SELECT COUNT(Result) FROM MonitoringAgentCache WHERE sync = 0";
+                cmd.CommandType = CommandType.Text;
+                SQLiteDataReader r = cmd.ExecuteReader();
                 while (r.Read())
                 {
                     dbValues2 = (Convert.ToString(r["FileName"]));

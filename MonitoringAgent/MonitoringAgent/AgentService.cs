@@ -75,27 +75,12 @@ namespace MonitoringAgent
             _log.Info("Started polling...");
 
             CreateDataBaseAndTable();
-            string serverIP = ConfigurationManager.AppSettings["ServerIP"];
-            HubConnection hubConnection = new HubConnection(serverIP);
-            IHubProxy monitoringHub = hubConnection.CreateHubProxy("MyHub");
+
             //hubConnection.Received += data => Console.WriteLine(data);
 
-            hubConnection.Start().ContinueWith(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    Console.WriteLine("There was an error opening the connection: {0}",
-                              task.Exception.GetBaseException());
-                }
-                else
-                {
-                    Console.WriteLine("Connected");
-                }
-            }).Wait();
-
-            TakeAndPostData(hubConnection, monitoringHub, true);
+            TakeAndPostData(true);
             Thread.Sleep(1000);
-            TakeAndPostData(hubConnection, monitoringHub, true);
+            TakeAndPostData(true);
 
             // Start the polling loop
             while (_running)
@@ -103,7 +88,7 @@ namespace MonitoringAgent
                 // Poll every 5 second
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 5000)
                 {
-                    TakeAndPostData(hubConnection, monitoringHub);
+                    TakeAndPostData();
                     
                     // Reset the poll time
                     lastPollTime = DateTime.Now;
@@ -112,17 +97,15 @@ namespace MonitoringAgent
                 {
                     Thread.Sleep(10);
                 }
-            }
-            hubConnection.Stop();
+            } 
         }
 
-        private void TakeAndPostData(HubConnection hubConnection, IHubProxy monitoringHub, bool initPost = false)
+        private void TakeAndPostData(bool initPost = false)
         {
             string json;
             string serverIP = ConfigurationManager.AppSettings["ServerIP"];
             string customerName = ConfigurationManager.AppSettings["CustomerName"];
             ClientOutput output = new ClientOutput(getPCName(), getMACAddress(), customerName);
-            WebClient client = new WebClient();
 
             PluginOutputCollection plugOutput = new PluginOutputCollection();
 
@@ -145,67 +128,68 @@ namespace MonitoringAgent
                 output.InitPost = true;
             }
 
-            json = JsonConvert.SerializeObject(output);
-            client.Headers.Add("Content-Type", "application/json");
-
-            bool connectionStatus = true;
-            //bool connectionStatus = false;
-            //connectionStatus = CheckConnection(serverIP, monitoringHub);
-
-            if (connectionStatus)
+            if (!SendPluginOutput(output))
             {
-                try
-                {                
-                    /*monitoringHub.Invoke<string>("Send", "test").ContinueWith(task => {
-                        if (task.IsFaulted)
-                        {
-                            Console.WriteLine("There was an error calling send: {0}",
-                                              task.Exception.GetBaseException());
-                        }
-                        else
-                        {
-                            Console.WriteLine(task.Result);
-                        }
-                    });*/
+                SaveOutputToDB(JsonConvert.SerializeObject(output));
+                return;
+            }
 
-                    /*monitoringHub.On<string>("addMessage", param => {
-                        Console.WriteLine(param);
-                    });*/
-
-                    //monitoringHub.Invoke<string>("DoSome", "I'm doing something!!!").Wait();
-
-                    monitoringHub.Invoke<ClientOutput>("SendPluginOutput", output).Wait();
-
-                    //client.UploadString(serverIP, json);
-                }
-                catch (Exception err)
+            try
+            {
+                Dictionary<int, string> dbValues = new Dictionary<int, string>();
+                dbValues = SQLiteDB.GetStoredJson(_dbName);
+                foreach (var item in dbValues)
                 {
-                    _log.Error("Upload string ERROR: ", err);
-                    hubConnection.Stop();
-                    SaveOutputToDB(json);
-                    return;
-                }
-                try
-                {
-                    Dictionary<int, string> dbValues = new Dictionary<int, string>();
-                    dbValues = SQLiteDB.GetStoredJson(_dbName);
-                    foreach (var item in dbValues)
+                    ClientOutput clientOutputDB = JsonConvert.DeserializeObject<ClientOutput>(item.Value);
+                    if (SendPluginOutput(output))
                     {
-                        string jsonDB = item.Value;
-                        client.UploadString(serverIP, jsonDB);
                         SQLiteDB.UpdateStatus(_dbName, item.Key);
                     }
                 }
-                catch (Exception err)
-                {
-                    _log.Error("Read stored values from database", err);
-                    return;
-                }
             }
-            else
+            catch (Exception err)
             {
-                SaveOutputToDB(json);
+                _log.Error("Read stored values from database", err);
+                return;
             }
+            
+        }
+
+        private bool SendPluginOutput(ClientOutput output)
+        {
+            bool sended = true;
+            string serverIP = ConfigurationManager.AppSettings["ServerIP"];
+            HubConnection hubConnection = new HubConnection(serverIP);
+            IHubProxy monitoringHub = hubConnection.CreateHubProxy("MyHub");
+
+            try
+            {
+                hubConnection.Start().ContinueWith(task =>
+                {
+                    if (task.IsFaulted)
+                    {
+                        Console.WriteLine($"There was an error opening the connection: {task.Exception.GetBaseException()}");
+                        sended = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Connected");
+                    }
+                }).Wait();
+
+                monitoringHub.Invoke<ClientOutput>("SendPluginOutput", output).Wait();
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Upload string Exception: ", ex);
+                sended = false;
+                throw ex;                
+            }
+            finally
+            {
+                hubConnection.Stop();
+            }
+            return sended;
         }
 
         private void CreateDataBaseAndTable()
@@ -240,30 +224,6 @@ namespace MonitoringAgent
             {
                 return Environment.MachineName;
             }
-        }
-
-        private bool CheckConnection( String URL, IHubProxy monitoringHub )
-        {
-            bool result = false;
-            try
-            {
-                monitoringHub.On<string>("addMessage", param => {
-                    result = true;
-                });
-
-                monitoringHub.Invoke<string>("DoSome", "I'm doing something!!!").Wait();
-
-                monitoringHub.Invoke("CheckConnection", "test").ContinueWith((task) => 
-                {
-                    result = task.IsCompleted;
-                });
-            }
-            catch (Exception ex)
-            {
-                _log.Error("Server connection fail.", ex);
-                throw ex;
-            }
-            return result;
         }
     }
 }
