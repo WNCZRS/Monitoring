@@ -40,11 +40,11 @@ namespace MonitoringServer.Controllers
                         CREATE TABLE IF NOT EXISTS [MonitoringServerStorage] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32), [JSON] TEXT)", dbConnection);
                     cmd.ExecuteNonQuery();
 
-                    cmd = new SQLiteCommand(@"CREATE UNIQUE INDEX IF NOT EXISTS Computer_Unique_ID ON Machines (ComputerID ASC);",
-                        dbConnection);
+                    cmd = new SQLiteCommand(@"CREATE TABLE IF NOT EXISTS [Machines] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32))", dbConnection);
                     cmd.ExecuteNonQuery();
 
-                    cmd = new SQLiteCommand(@"CREATE TABLE IF NOT EXISTS [Machines] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32))", dbConnection);
+                    cmd = new SQLiteCommand(@"CREATE UNIQUE INDEX IF NOT EXISTS Computer_Unique_ID ON Machines (ComputerID ASC);",
+                        dbConnection);
                     cmd.ExecuteNonQuery();
                 }
             }
