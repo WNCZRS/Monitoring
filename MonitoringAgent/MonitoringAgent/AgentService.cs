@@ -29,7 +29,7 @@ namespace MonitoringAgent
 
             // Load Plugins
             _plugins = new PluginLoader();
-            _plugins.Loader();
+            _plugins.Load();
 
             StartThread();
             // write code here that runs when the Windows Service starts up.  
@@ -114,7 +114,7 @@ namespace MonitoringAgent
 
             if (!initPost)
             {
-                foreach (var plugin in _plugins.pluginList)
+                foreach (var plugin in _plugins.PluginList)
                 {
                     plugOutput = plugin.Output();
                     if (plugOutput != null)

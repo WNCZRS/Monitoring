@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.ServiceProcess;
+using System.Xml;
 
 namespace PluginsCollection
 {
@@ -23,21 +26,13 @@ namespace PluginsCollection
 
         public PluginOutputCollection Output()
         {
-            List<String> services = new List<string>();
-            services.Add("DRS.CaseService");
-            services.Add("TPNIServer");
-            services.Add("TPNI.Services");
-            services.Add("TPOMM.LogService");
-            services.Add("MSSQLSERVER");
-            services.Add("SQLSERVERAGENT");
-            services.Add("ReportServer");
-            services.Add("OpenVPNService");
-            services.Add("MpsSvc");      
-            services.Add("IISADMIN");  
-
-            string serviceName, serviceStatus = string.Empty;
-
+            List<string> services = LoadServicesFromConfig();
             _pluginOutputs.PluginOutputList.Clear();
+
+            if (services == null)
+            {
+                _log.Error("No services loaded");
+            }
 
             foreach (var service in services)
             {
@@ -48,21 +43,43 @@ namespace PluginsCollection
                 {
                     try
                     {
-                        serviceName = service.ToString();
-                        serviceStatus = sc.Status.ToString();
+                        string serviceStatus = sc.Status.ToString();
                         listSPO.Add(new SimplePluginOutput(serviceStatus, false));
-
-                        _pluginOutputs.NewPluginOutput(serviceName, listSPO);
                     }
                     catch (Exception ex)
                     {
-                        //_log.Error(String.Format("Exeption in service: {0} \n {1}", service, ex));
-                        continue;
+                        _log.Warn($"Service: {service} is unavailable");
+                        listSPO.Add(new SimplePluginOutput("Unavailable", true));
                     }
-
+                    _pluginOutputs.NewPluginOutput(service.ToString(), listSPO);
                 }
             }
             return _pluginOutputs;
+        }
+
+        private List<string> LoadServicesFromConfig()
+        {
+            List<string> services = new List<string>();
+            XmlDocument xmlDoc = new XmlDocument();
+
+            try
+            {
+                xmlDoc.Load($"{Directory.GetCurrentDirectory()}\\pluginsConfig.xml");
+                XmlNode node = xmlDoc.DocumentElement.SelectSingleNode("/pluginSettings/ServiceControl/ListOfServiseToCheck");
+
+                foreach (XmlNode item in node.ChildNodes)
+                {
+                    if (item.Name == "service")
+                    {
+                        services.Add(item.InnerText);    
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Load from xml configuration failed: {ex.Message} {Environment.NewLine} {ex.StackTrace}");
+            }
+            return services;
         }
     }
 }

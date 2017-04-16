@@ -16,13 +16,14 @@ namespace MonitoringServer.Hubs
         public void SendCount(int count)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<MonitoringHub>();
-            context.Clients.All.updateUsersOnlineCount(count);
+            context.Clients.Group("Clients").UpdateUsersOnlineCount(count);
         }
 
         public void SendPluginOutput(ClientOutput clientOutput)
         {
             if (clientOutput.InitPost)
             {
+                Groups.Add(Context.ConnectionId, "Agents");
                 SQLiteController.SaveBasicInfo(clientOutput);
                 MessageController.LoadTreeView();
             }
@@ -46,7 +47,7 @@ namespace MonitoringServer.Hubs
 
         public void OnRefresh()
         {
-            Clients.All.activateTree();
+            Clients.Group("Clients").activateTree();
             MessageController.SetNodeID("");
         }
 
@@ -65,7 +66,11 @@ namespace MonitoringServer.Hubs
             {
                 Users.Add(clientID);
                 SendCount(Users.Count);
-            }               
+            }
+            else
+            {
+                Groups.Add(Context.ConnectionId, "Clients");
+            }
 
             return base.OnConnected();
         }

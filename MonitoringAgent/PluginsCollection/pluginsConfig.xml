@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pluginSettings>
+  <ServiceControl>
+      <ListOfServiseToCheck>
+        <service>DRS.CaseService</service>
+        <service>DRS.PosflowServer</service>
+        <service>TPOMM.LogService</service>
+        <service>TPNIServer</service>
+        <service>TPNI.Services</service>
+        <service>MSSQLSERVER</service>
+        <service>SQLSERVERAGENT</service>
+        <service>ReportServer</service>
+        <service>OpenVPNService</service>
+        <service>MpsSvc</service>
+        <service>IISADMIN</service>
+      </ListOfServiseToCheck>
+    </ServiceControl>
+</pluginSettings>

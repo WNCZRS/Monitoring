@@ -265,7 +265,7 @@
         }
     }
 
-    hub.client.updateUsersOnlineCount = function (count) {
+    hub.client.UpdateUsersOnlineCount = function (count) {
         $('#usersCount').text(count);
     }
 

@@ -94,7 +94,7 @@ namespace MonitoringServer.Controllers
 
         private static void CriticalPreview()
         {
-            GetContext().Clients.All.InitMainDiv();
+            GetContext().Clients.Group("Clients").InitMainDiv();
             try
             {
                 List<ClientOutput> clientOutputList = SQLiteController.LastValuesFromDB();
@@ -103,7 +103,7 @@ namespace MonitoringServer.Controllers
                     List<ClientOutput> criticalValues = GetCriticalValues(clientOutputList);
                     if (criticalValues.Count > 0)
                     {
-                        GetContext().Clients.All.previewCritical(criticalValues);
+                        GetContext().Clients.Group("Clients").previewCritical(criticalValues);
                     }
                 }
             }
@@ -149,7 +149,7 @@ namespace MonitoringServer.Controllers
                 ClientOutput clientOutput = SQLiteController.JSONFromSQL(_customer, _nodeID, _pcName);
                 if (clientOutput != null)
                 {
-                    GetContext().Clients.All.pluginsMessage(clientOutput);
+                    GetContext().Clients.Group("Clients").pluginsMessage(clientOutput);
                 }
             }
             catch (Exception ex)
@@ -190,14 +190,14 @@ namespace MonitoringServer.Controllers
         {
             if (_viewType == ViewType.CriticalPreview)
             {
-                GetContext().Clients.All.InitMainDiv();
+                GetContext().Clients.Group("Clients").InitMainDiv();
                 _viewType = ViewType.OneMachine;
                 LoadTreeView();
             }
             else
             {
                 _viewType = ViewType.CriticalPreview;
-                GetContext().Clients.All.deactivateTree();
+                GetContext().Clients.Group("Clients").deactivateTree();
             }
             _changed = true;
         }
@@ -209,7 +209,7 @@ namespace MonitoringServer.Controllers
                 List<ClientOutput> treeInfo = SQLiteController.GetBasicInfo();
                 foreach (ClientOutput node in treeInfo)
                 {
-                    GetContext().Clients.All.activateTree(node);
+                    GetContext().Clients.Group("Clients").activateTree(node);
                 }
             }
         }

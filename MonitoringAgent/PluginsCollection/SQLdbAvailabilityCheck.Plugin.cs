@@ -15,13 +15,13 @@
 //        {
 //            get
 //            {
-//                return "SQL";
+//                return "SQLAvailability";
 //            }
 //        }
 
 //        public string connString = TPOMM.Tools.Config.Current.cfConnectionString.ToString();
 
-//        public SQLdbAvailabilityCheck ()
+//        public SQLdbAvailabilityCheck()
 //        {
 //            _pluginOutputs = new PluginOutputCollection(Name);
 //        }
@@ -44,15 +44,19 @@
 
 //        public PluginOutputCollection Output()
 //        {
+//            List<SimplePluginOutput> listSPO = new List<SimplePluginOutput>();
 //            _pluginOutputs.PluginOutputList.Clear();
+
 //            if (IsServerConnected(connString))
 //            {
-//                _pluginOutputs.NewPluginOutput("SQL Status", "Connected", true);
+//                listSPO.Add(new SimplePluginOutput("Connnected", false));
 //            }
 //            else
 //            {
-//                _pluginOutputs.NewPluginOutput("SQL Status", "Disconnected", false);
+//                listSPO.Add(new SimplePluginOutput("Disconnnected", true));
 //            }
+//            _pluginOutputs.PluginOutputList.Add(new PluginOutput("SQL Status", listSPO));
+
 //            return _pluginOutputs;
 //        }
 //    }

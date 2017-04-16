@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace PluginsCollection
 {
     public class Performance : IPlugin
     {
+        private PluginOutputCollection _pluginOutputs;
         private static PerformanceCounter avgCounter64Sample;
         private static PerformanceCounter avgCounter64SampleBase;
 
@@ -19,24 +21,41 @@ namespace PluginsCollection
 
         public Performance()
         {
-                
+            _pluginOutputs = new PluginOutputCollection(Name);
         }
-        public void Output()
-        {
 
-            ArrayList samplesList = new ArrayList();
+        public PluginOutputCollection Output()
+        {
+            bool isHightValue = false;
+            PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            List<SimplePluginOutput> listSPO = new List<SimplePluginOutput>();
+            _pluginOutputs.PluginOutputList.Clear();
+
+            cpuCounter.NextValue();
+            System.Threading.Thread.Sleep(500);
+            double cpuUsage = Math.Round(Convert.ToDouble(cpuCounter.NextValue()), 0);
+
+            if (cpuUsage > 95)
+            {
+                isHightValue = true;
+            }
+
+            listSPO.Add(new SimplePluginOutput($"{cpuUsage} %", isHightValue));
+            _pluginOutputs.PluginOutputList.Add(new PluginOutput("CPU Usage", listSPO));
 
             // If the category does not exist, create the category and exit.
             // Performance counters should not be created and immediately used.
             // There is a latency time to enable the counters, they should be created
             // prior to executing the application that uses the counters.
             // Execute this sample a second time to use the category.
-            if (SetupCategory())
-                return;
+
+            /*if (SetupCategory())
+                return null;
             CreateCounters();
             CollectSamples(samplesList);
-            CalculateResults(samplesList);
+            CalculateResults(samplesList);  */
 
+            return _pluginOutputs;
         }
 
         private static bool SetupCategory()
@@ -174,11 +193,6 @@ namespace PluginsCollection
             Console.WriteLine("   TimeStamp        = " + s.TimeStamp);
             Console.WriteLine("   TimeStamp100nSec = " + s.TimeStamp100nSec);
             Console.WriteLine("++++++++++++++++++++++");
-        }
-
-        PluginOutputCollection IPlugin.Output()
-        {
-            return null;
         }
     }
 }
