@@ -1,0 +1,10 @@
+﻿<Application x:Class="WpfTestApp.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             StartupUri="MainWindow.xaml" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:WpfTestApp.ViewModel">
+  <Application.Resources>
+        <vm:ViewModelLocator x:Key="Locator"/>
+    </Application.Resources>
+</Application>
