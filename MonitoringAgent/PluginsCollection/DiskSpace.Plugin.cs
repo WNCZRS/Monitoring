@@ -35,7 +35,7 @@ namespace PluginsCollection
             headListSPO.Add(new SimplePluginOutput("Free Space (GB)", false));
             headListSPO.Add(new SimplePluginOutput("Free Space (%)", false));
             headListSPO.Add(new SimplePluginOutput("Total Space (GB)", false));
-            _pluginOutputs.NewPluginOutput("", headListSPO);
+            _pluginOutputs.PluginOutputList.Add(new PluginOutput("", headListSPO));
             
             foreach (DriveInfo drive in allDrives)
             {
@@ -50,7 +50,7 @@ namespace PluginsCollection
 
                     totalSpace = Math.Round((drive.TotalSize / Math.Pow(1024, 3)), 2).ToString() + " GB";
                     listSPO.Add(new SimplePluginOutput(totalSpace, false));
-                    _pluginOutputs.NewPluginOutput(drive.Name, listSPO);
+                    _pluginOutputs.PluginOutputList.Add(new PluginOutput(drive.Name, listSPO));
                 }
             }
             return _pluginOutputs;

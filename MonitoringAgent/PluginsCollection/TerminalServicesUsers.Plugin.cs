@@ -38,7 +38,7 @@ namespace PluginsCollection
                     {
                         listSPO.Add(new SimplePluginOutput(account.ToString(), false));
 
-                        _pluginOutputs.NewPluginOutput("User", listSPO);
+                        _pluginOutputs.PluginOutputList.Add(new PluginOutput("User", listSPO));
                     }
                 }
             }

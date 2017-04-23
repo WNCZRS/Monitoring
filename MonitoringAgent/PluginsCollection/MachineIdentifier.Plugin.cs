@@ -31,7 +31,7 @@ namespace PluginsCollection
             {
                 cpuInfo = mo.Properties["processorID"].Value.ToString();
                 listSPO.Add(new SimplePluginOutput(cpuInfo, false));
-                _pluginOutputs.NewPluginOutput("CPU ID", listSPO);
+                _pluginOutputs.PluginOutputList.Add(new PluginOutput("CPU ID", listSPO));
             }
             return _pluginOutputs;
         }

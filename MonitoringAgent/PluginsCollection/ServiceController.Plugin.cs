@@ -51,7 +51,7 @@ namespace PluginsCollection
                         _log.Warn($"Service: {service} is unavailable");
                         listSPO.Add(new SimplePluginOutput("Unavailable", true));
                     }
-                    _pluginOutputs.NewPluginOutput(service.ToString(), listSPO);
+                    _pluginOutputs.PluginOutputList.Add(new PluginOutput(service.ToString(), listSPO));
                 }
             }
             return _pluginOutputs;

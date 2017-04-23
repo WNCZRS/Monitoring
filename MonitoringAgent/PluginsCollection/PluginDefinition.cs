@@ -39,7 +39,7 @@ namespace PluginsCollection
     public class PluginOutputCollection
     {
         public string PluginName { get; set; }
-        public List<PluginOutput> PluginOutputList { get; }
+        public List<PluginOutput> PluginOutputList { get; set; }
 
         public PluginOutputCollection(string name = "")
         {
@@ -47,10 +47,10 @@ namespace PluginsCollection
             PluginOutputList = new List<PluginOutput>();
         }
 
-        public void NewPluginOutput(string name, List<SimplePluginOutput> listOfSimplePluginOutput)
+        /*public void NewPluginOutput(string name, List<SimplePluginOutput> listOfSimplePluginOutput)
         {
             PluginOutputList.Add(new PluginOutput(name, listOfSimplePluginOutput));
-        }
+        }*/
     }
 
     public class ClientOutput
