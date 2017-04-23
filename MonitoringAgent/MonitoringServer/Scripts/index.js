@@ -18,6 +18,7 @@
     ko.applyBindings(vm, $("#computerInfo")[0]);
 
     console.log("before start connection");
+    console.log($.connection);
     // Get a reference to our hub
     $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
@@ -145,41 +146,41 @@
 
         console.log("resultTable: ");
         console.log(newResultTable);
-        var originalResultTable = document.getElementById("resultTable");
-        if (originalResultTable === null) {
-            var newTable = document.createElement("table");
-            newTable.id = "resultTable";
-            document.getElementById("tableDiv").appendChild(newTable);
-        }
-        var parent;
-        var noResult;
-        var activeNode = document.body.getElementsByClassName("active")[0];
+        //var originalResultTable = document.getElementById("resultTable");
+        //if (originalResultTable === null) {
+        //    var newTable = document.createElement("table");
+        //    newTable.id = "resultTable";
+        //    document.getElementById("tableDiv").appendChild(newTable);
+        //}
+        //var parent;
+        //var noResult;
+        //var activeNode = document.body.getElementsByClassName("active")[0];
 
-        if (activeNode !== null) {
-            var activeNodeID = activeNode.firstChild.id;
+        //if (activeNode !== null) {
+        //    var activeNodeID = activeNode.firstChild.id;
 
-            if (activeNodeID === clientOutput.ID) {
-                originalResultTable = document.getElementById("resultTable");
-                parent = originalResultTable.parentElement;
-                parent.replaceChild(newResultTable, originalResultTable);
-            }
-            else {
-                noResult = document.createElement('p');
-                noResult.textContent = "No result for selected machine!";
-                noResult.id = "resultTable";
-                originalResultTable = document.getElementById("resultTable");
-                parent = originalResultTable.parentElement;
-                parent.replaceChild(noResult, originalResultTable);
-            }
-        }
-        else {
-            noResult = document.createElement('p');
-            noResult.textContent = "No result for selected machine!";
-            noResult.id = "resultTable";
-            originalResultTable = document.getElementById("resultTable");
-            parent = originalResultTable.parentElement;
-            parent.replaceChild(noResult, originalResultTable);
-        }
+        //    if (activeNodeID === clientOutput.ID) {
+        //        originalResultTable = document.getElementById("resultTable");
+        //        parent = originalResultTable.parentElement;
+        //        parent.replaceChild(newResultTable, originalResultTable);
+        //    }
+        //    else {
+        //        noResult = document.createElement('p');
+        //        noResult.textContent = "No result for selected machine!";
+        //        noResult.id = "resultTable";
+        //        originalResultTable = document.getElementById("resultTable");
+        //        parent = originalResultTable.parentElement;
+        //        parent.replaceChild(noResult, originalResultTable);
+        //    }
+        //}
+        //else {
+        //    noResult = document.createElement('p');
+        //    noResult.textContent = "No result for selected machine!";
+        //    noResult.id = "resultTable";
+        //    originalResultTable = document.getElementById("resultTable");
+        //    parent = originalResultTable.parentElement;
+        //    parent.replaceChild(noResult, originalResultTable);
+        //}
     }
 
     hub.client.previewCritical = function (criticalValues) {
@@ -249,11 +250,11 @@
         var cell = document.createElement('div');
         cell.className = "cell";
         cell.id = "treeDiv";
-        var cellcollspan3 = document.createElement('div');
-        cellcollspan3.className = "cell collspan3";
-        cellcollspan3.id = "tableDiv";
+        //var cellcollspan3 = document.createElement('div');
+        //cellcollspan3.className = "cell collspan3";
+        //cellcollspan3.id = "tableDiv";
         rowCells4.appendChild(cell);
-        rowCells4.appendChild(cellcollspan3);
+        //rowCells4.appendChild(cellcollspan3);
         newMainDiv.appendChild(rowCells4);
 
         var mainDiv = document.getElementById("mainDiv");
