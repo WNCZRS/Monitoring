@@ -123,6 +123,58 @@
         name="IPlugin"
         isAbstract="false"
         isLeaf="false">
+        <targetEnds>
+          <association
+            Id="4ee741ae-8fa1-495e-9e41-f2718cfc6b17"
+            isDerived="false"
+            sourceEndRoleName=""
+            targetEndRoleName=""
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="6231da22-8658-442f-ad44-b3dcf13f912f"
+              LastKnownName="PluginLoader"
+              LastKnownLocation="ApplicationDesign.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="f81e787f-bb9f-459e-940a-1b2bf52c2c0b"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="1054ff5e-72a5-4653-a575-4b1eb88e233d"
+                      name="Lower"
+                      value="1" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="32c4a824-0c55-4f55-ad72-361cb4f72bd3"
+                      name="Upper"
+                      value="*" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="8fee5b6e-b40c-4b50-b7b6-adacc7bce764"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
         <ownedAttributes>
           <property
             Id="75016441-12cd-405e-941b-c5ba84698825"
@@ -186,6 +238,15 @@
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="dd78c6d3-3fd3-4366-af90-66369c76686b">
+            <interfaceMoniker
+              Id="5ff46cee-fd56-4759-b5a0-ef14702bd04c"
+              LastKnownName="IPlugin"
+              LastKnownLocation="ApplicationDesign.uml" />
+          </interfaceRealization>
+        </suppliersInternal>
         <targetEnds>
           <association
             Id="c8f7c1ec-263f-4e4a-9201-dd87b8bdebd2"
@@ -278,8 +339,8 @@
         </ownedAttributesInternal>
         <ownedOperationsInternal>
           <operation
-            Id="fd4d44ad-d97a-4b61-814e-0120cecf5155"
-            name="NewPluginOutput"
+            Id="4beb3154-f617-41d9-a471-54bcad7be3ea"
+            name="Output"
             isLeaf="false"
             isStatic="false"
             isAbstract="false"
@@ -288,41 +349,13 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="360ef3fe-271c-4606-bbb8-a6e1c7661f2a"
+                  Id="84a7aa58-3d49-4464-973d-2bec8809e288"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
-                    <undefinedTypeMoniker
-                      Id="ba0adeb3-957c-4393-9dad-2817f7764696"
-                      LastKnownName="void"
-                      LastKnownLocation="ApplicationDesign.uml" />
-                  </type_NamedElement>
-                </parameter>
-              </operationHasOwnedParameters>
-              <operationHasOwnedParameters>
-                <parameter
-                  Id="f6b83f66-bfe3-414a-a129-92c86a6b3f41"
-                  name="name"
-                  direction="In"
-                  isUnique="false">
-                  <type_NamedElement>
-                    <undefinedTypeMoniker
-                      Id="e465b5e1-ae0e-4a3f-95cb-eb1c87af3be9"
-                      LastKnownName="string"
-                      LastKnownLocation="ApplicationDesign.uml" />
-                  </type_NamedElement>
-                </parameter>
-              </operationHasOwnedParameters>
-              <operationHasOwnedParameters>
-                <parameter
-                  Id="39b4f2e3-d807-4557-a1fc-fffbabec2374"
-                  name="listOfSimplePluginOutput"
-                  direction="In"
-                  isUnique="false">
-                  <type_NamedElement>
-                    <undefinedTypeMoniker
-                      Id="7f8afa04-f093-4c03-9e53-3c3617f7ab3f"
-                      LastKnownName="List&lt;SimplePluginOutput&gt;"
+                    <classMoniker
+                      Id="c939ade4-5d4e-4478-9159-aedec97c52b6"
+                      LastKnownName="PluginOutputCollection"
                       LastKnownLocation="ApplicationDesign.uml" />
                   </type_NamedElement>
                 </parameter>
