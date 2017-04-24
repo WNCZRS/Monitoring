@@ -12,6 +12,14 @@ namespace PluginsCollection
         PluginOutputCollection _pluginOutputs;
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("2d5a4274-5c67-477e-bd77-7d8d9a4d7090");
+            }
+        }
+
         public string Name
         {
             get
@@ -21,7 +29,9 @@ namespace PluginsCollection
         }
         public ServiceControl()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public PluginOutputCollection Output()

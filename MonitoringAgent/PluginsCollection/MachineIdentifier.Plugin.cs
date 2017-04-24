@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Management;
 
 namespace PluginsCollection
@@ -7,6 +8,14 @@ namespace PluginsCollection
     {
         PluginOutputCollection _pluginOutputs;
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("c03a6eb7-7b2d-48c7-a015-52f38821bdbe");
+            }
+        }
+
         public string Name
         {
             get
@@ -14,9 +23,12 @@ namespace PluginsCollection
                 return "Machine identifier";
             }
         }
+
         public MachineIdentifier()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public PluginOutputCollection Output()

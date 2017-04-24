@@ -8,6 +8,14 @@ namespace PluginsCollection
     {
         PluginOutputCollection _pluginOutputs;
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("416408c8-b579-4491-a0ea-680936e80ae9");
+            }
+        } 
+
         public string Name
         {
             get
@@ -18,7 +26,9 @@ namespace PluginsCollection
 
         public DiskSpace()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public PluginOutputCollection Output()

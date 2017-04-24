@@ -9,6 +9,7 @@ namespace PluginsCollection
     public interface IPlugin
     {
         string Name { get; }
+        Guid UID { get; }
         PluginOutputCollection Output();
     }
 
@@ -39,11 +40,11 @@ namespace PluginsCollection
     public class PluginOutputCollection
     {
         public string PluginName { get; set; }
+        public Guid PluginUID { get; set; }
         public List<PluginOutput> PluginOutputList { get; set; }
 
-        public PluginOutputCollection(string name = "")
+        public PluginOutputCollection()
         {
-            PluginName = name;
             PluginOutputList = new List<PluginOutput>();
         }
 

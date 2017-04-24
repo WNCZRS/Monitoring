@@ -121,7 +121,9 @@ namespace MonitoringServer.Controllers
                 ClientOutput newClientOutput = new ClientOutput(co.PCName, co.ID, co.Customer);
                 foreach (PluginOutputCollection pluginCollection in co.CollectionList)
                 {
-                    PluginOutputCollection newPluginCollection = new PluginOutputCollection(pluginCollection.PluginName);
+                    PluginOutputCollection newPluginCollection = new PluginOutputCollection();
+                    newPluginCollection.PluginName = pluginCollection.PluginName;
+                    newPluginCollection.PluginUID = pluginCollection.PluginUID;
                     foreach (PluginOutput pluginOutput in pluginCollection.PluginOutputList)
                     {
                         if (pluginOutput.Values.Any(item => item.IsCritical == true))
