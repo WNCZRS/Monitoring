@@ -18,14 +18,14 @@
     ko.applyBindings(vm, $("#computerInfo")[0]);
 
     console.log("before start connection");
-    console.log($.connection);
+    //console.log($.connection);
     // Get a reference to our hub
     $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub
 
     hub.client.activateTree = function (clientOutput) {
-        console.log("activateTree");
+        //console.log("activateTree");
 
         var treeview = document.getElementById("treeview");
         if (treeview === null) {
@@ -96,7 +96,7 @@
     }
 
     hub.client.deactivateTree = function () {
-        console.log("deactivateTree");
+        //console.log("deactivateTree");
         $(document).find('#treeview').remove();
         var tree = document.getElementById("treeDiv");
         //console.log(tree);
@@ -106,24 +106,38 @@
     hub.client.pluginsMessage = function (clientOutput) {
         console.log("pluginsMessage");
 
-        var newResultTable = document.createElement('table');
-        var pcName = document.createElement('tr');
-        var nameCell = document.createElement('th');
-        var lastUpdate = document.createElement('td');
-        lastUpdate.textContent = "Last Update: " + clientOutput.LastUpdate;
-        nameCell.textContent = clientOutput.PCName;
-        pcName.appendChild(nameCell);
-        pcName.appendChild(lastUpdate);
-        newResultTable.appendChild(pcName);
-        newResultTable.id = "resultTable";
+        //var newResultTable = document.createElement('table');
+        //var pcName = document.createElement('tr');
+        //var nameCell = document.createElement('th');
+        //var lastUpdate = document.createElement('td');
+        //lastUpdate.textContent = "Last Update: " + clientOutput.LastUpdate;
+        //nameCell.textContent = clientOutput.PCName;
+        //pcName.appendChild(nameCell);
+        //pcName.appendChild(lastUpdate);
+        //newResultTable.appendChild(pcName);
+        //newResultTable.id = "resultTable";
 
         clientOutput.CollectionList.forEach(function (plugin) {
-            var headRow = document.createElement('tr');
-            var headCell = document.createElement('th');
-            headCell.textContent = plugin.PluginName;
-            headCell.setAttribute("colspan", "100");
-            headRow.appendChild(headCell);
-            newResultTable.appendChild(headRow);
+            var plugDiv = document.createElement('div');
+            var frameDiv = document.createElement('div');
+            var table = document.createElement('table');
+            var title = document.createElement('h2');
+            frameDiv.style.padding = "10px";
+            plugDiv.classList.add("ui-widget-content");
+            plugDiv.classList.add("draggable");
+            plugDiv.id = plugin.PluginUID;
+            $(plugDiv).draggable({ containment: "#containment-wrapper", snap: true });
+            $(plugDiv).css('position', "absolute");
+            $(plugDiv).css('border-width', "0px");
+
+
+
+            //var headRow = document.createElement('tr');
+            //var headCell = document.createElement('th');
+            //headCell.textContent = plugin.PluginName;
+            //headCell.setAttribute("colspan", "100");
+            //headRow.appendChild(headCell);
+            //newResultTable.appendChild(headRow);
            
             plugin.PluginOutputList.forEach(function (pluginElement) {
                 var row = document.createElement('tr');
@@ -140,12 +154,31 @@
                     }
                     row.appendChild(cellValue);
                 });
-                newResultTable.appendChild(row);
+                table.appendChild(row);
             });
+
+            frameDiv.appendChild(title);
+            frameDiv.appendChild(table);
+            plugDiv.appendChild(frameDiv);
+
+            console.log(plugin.PluginUID);
+            console.log($("#containment-wrapper"));
+            console.log($("#" + plugin.PluginUID));
+
+            if ($("#" + plugin.PluginUID).length) {
+                console.log("replace");
+                $("#" + plugin.PluginUID).replaceWith(plugDiv);
+            }
+            else {
+                console.log("add");
+                $("#containment-wrapper").append(plugDiv);
+            }
         });
 
-        console.log("resultTable: ");
-        console.log(newResultTable);
+
+
+        //console.log("resultTable: ");
+        //console.log(newResultTable);
         //var originalResultTable = document.getElementById("resultTable");
         //if (originalResultTable === null) {
         //    var newTable = document.createElement("table");
@@ -184,7 +217,7 @@
     }
 
     hub.client.previewCritical = function (criticalValues) {
-        console.log("previewCritical");
+        //console.log("previewCritical");
 
         criticalValues.forEach(function (clientOutput) {
             var newResultTable;
@@ -201,7 +234,7 @@
             }
             
             newResultTable = document.getElementById(clientOutput.Customer + "TABLE");
-            console.log(newResultTable);
+            //console.log(newResultTable);
 
             var pcName = document.createElement("tr");
             var nameCell = document.createElement("th");
@@ -240,7 +273,7 @@
     }
 
     hub.client.InitMainDiv = function () {
-        console.log("initMainDiv");
+        //console.log("initMainDiv");
 
         newMainDiv = document.createElement("div");
         newMainDiv.className = "grid";
@@ -285,7 +318,7 @@ function checkFirstVisit() {
     else {
         // not first visit, so alert
         //alert('You refreshed!');
-        console.log('You refreshed!');
+        //console.log('You refreshed!');
 
         /*$.connection.hub.url = "http://localhost:15123/signalr";
         var hub = $.connection.MyHub;
@@ -301,19 +334,19 @@ function checkFirstVisit() {
 
 function onNodeClick(object) {
 
-    console.log("onNodeClick");
-    console.log(object);
+    //console.log("onNodeClick");
+    //console.log(object);
 
     $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
 
-    console.log(object.getAttribute('customer'));
+    //console.log(object.getAttribute('customer'));
     hub.server.nodeClick(object.id, object.textContent, object.getAttribute('customer'));
 }
 
 function onSwitchClick() {
-    console.log("onSwitchClick");
+    //console.log("onSwitchClick");
 
     $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
@@ -323,8 +356,7 @@ function onSwitchClick() {
 }
 
 function onLoadClick() {
-    console.log("onLoadClick");
-
+    //console.log("onLoadClick");
     $.connection.hub.url = "signalr";
     //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;

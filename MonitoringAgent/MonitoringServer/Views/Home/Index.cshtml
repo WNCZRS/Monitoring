@@ -8,16 +8,16 @@
     <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet"/>
     <script src="~/Scripts/jquery-3.1.1.js" type="text/javascript"></script>
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js" type="text/javascript"></script>
-    <script src="~/Scripts/jquery.ui.resizable.snap.ext.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @*<script src="~/Scripts/jquery.ui.resizable.snap.ext.js"></script>*@
     <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/knockout-3.4.0.js" type="text/javascript"></script>
     <script src="~/Scripts/knockout.mapping-latest.js" type="text/javascript"></script>
     <script src="~/Scripts/metro.js" type="text/javascript"></script>
     <script src="~/Scripts/index.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <style type="text/css">
-        table {
+         table {
             color: #333;
             font-family: Helvetica, Arial, sans-serif;
             width: auto;
@@ -72,42 +72,40 @@
         #containment-wrapper {
             margin-left: 10px;
             min-height: 500px;
-            width: 55%;
+            width: 95%;
             height: 95%;
             padding: 10px;
         }
+               
     </style>
-
-
-    @*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
-
+    
     <script>
-        $(document).ready(function () {
+    /*    $(document).ready(function () {
             $('.draggable').each(function () {
-                $(this)./*resizable({ containment: "#containment-wrapper", snap: true }).*/draggable({ containment: "#containment-wrapper", snap: true });
+                $(this).draggable({ containment: "#containment-wrapper", snap: true });
                 $(this).css('position', "absolute");
                 $(this).css('border-width', "0px");
             });
+        });*/
 
-            $('.resizable').each(function () {
-                $(this).resizable({ containment: "#containment-wrapper", snap: true });
-            });
+        $(document).ready(function () {
+            $("#containment-wrapper").resizable();
         });
-
     </script>
 </head>
+
 <body onload="checkFirstVisit()">
     <button onclick="onSwitchClick()" id="switchView">SwitchView</button>
     <button onclick="onLoadClick()" id="loadTree">LoadTree</button>
     <div id="usersCount"></div>
     <div class="grid" id="mainDiv">
         <div class="row cells4">
-            <div class="cell" id="treeDiv">
+            <div class="cell" id="treeDiv" style="width: 250px">
 
             </div>
             <div id="containment-wrapper" class="cell ui-widget-header">
                 <div id="draggable3" class="ui-widget-content draggable ">
-                    <div class="ui-widget-content innerDiv" style="padding: 10px">
+                    <div style="padding: 10px">
                         <h2>Plugin Name</h2>
                         <table>
                             <tr>
@@ -128,9 +126,6 @@
                     <p>I'm contained within the box</p>
                 </div>
             </div>
-            @*<div class="cell collspan3" id="tableDiv">
-
-            </div>*@
         </div>
     </div>
 </body>
