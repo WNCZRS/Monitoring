@@ -118,102 +118,74 @@
         //newResultTable.id = "resultTable";
 
         clientOutput.CollectionList.forEach(function (plugin) {
-            var plugDiv = document.createElement('div');
-            var frameDiv = document.createElement('div');
-            var table = document.createElement('table');
-            var title = document.createElement('h2');
-            frameDiv.style.padding = "10px";
-            plugDiv.classList.add("ui-widget-content");
-            plugDiv.classList.add("draggable");
-            plugDiv.id = plugin.PluginUID;
-            $(plugDiv).draggable({ containment: "#containment-wrapper", snap: true });
-            $(plugDiv).css('position', "absolute");
-            $(plugDiv).css('border-width', "0px");
-
-
-
-            //var headRow = document.createElement('tr');
-            //var headCell = document.createElement('th');
-            //headCell.textContent = plugin.PluginName;
-            //headCell.setAttribute("colspan", "100");
-            //headRow.appendChild(headCell);
-            //newResultTable.appendChild(headRow);
-           
-            plugin.PluginOutputList.forEach(function (pluginElement) {
-                var row = document.createElement('tr');
-                var cellName = document.createElement('td');
-                cellName.textContent = pluginElement.PropertyName;
-                row.appendChild(cellName);
-
-                pluginElement.Values.forEach(function (simplePluginElement) {
-                    var cellValue = document.createElement('td');
-                    cellValue.textContent = simplePluginElement.Value;
-
-                    if (simplePluginElement.IsCritical) {
-                        cellValue.className = "alertRow";
-                    }
-                    row.appendChild(cellValue);
-                });
-                table.appendChild(row);
-            });
-
-            frameDiv.appendChild(title);
-            frameDiv.appendChild(table);
-            plugDiv.appendChild(frameDiv);
-
-            console.log(plugin.PluginUID);
-            console.log($("#containment-wrapper"));
-            console.log($("#" + plugin.PluginUID));
 
             if ($("#" + plugin.PluginUID).length) {
-                console.log("replace");
-                $("#" + plugin.PluginUID).replaceWith(plugDiv);
+                //$("#" + plugin.PluginUID).replaceWith(plugDiv);
+
+                var table = document.createElement('table');
+
+                plugin.PluginOutputList.forEach(function (pluginElement) {
+                    var row = document.createElement('tr');
+                    var cellName = document.createElement('td');
+                    cellName.textContent = pluginElement.PropertyName;
+                    row.appendChild(cellName);
+
+                    pluginElement.Values.forEach(function (simplePluginElement) {
+                        var cellValue = document.createElement('td');
+                        cellValue.textContent = simplePluginElement.Value;
+
+                        if (simplePluginElement.IsCritical) {
+                            cellValue.className = "alertRow";
+                        }
+                        row.appendChild(cellValue);
+                    });
+                    table.appendChild(row);
+                });
+
+                $("#" + plugin.PluginUID).find('table').replaceWith(table);
             }
             else {
-                console.log("add");
+
+                var plugDiv = document.createElement('div');
+                var frameDiv = document.createElement('div');
+                table = document.createElement('table');
+                var title = document.createElement('h2');
+                frameDiv.style.padding = "10px";
+                plugDiv.classList.add("ui-widget-content");
+                plugDiv.classList.add("draggable");
+                plugDiv.id = plugin.PluginUID;
+                //$(plugDiv).draggable({ containment: "#containment-wrapper", snap: true });
+                $(plugDiv).css({ position: "absolute" });
+                //$(plugDiv).css({ left: "100px" });
+                //$(plugDiv).css({ top: "100px" });
+                $(plugDiv).css("border-width", "0px");
+
+                plugin.PluginOutputList.forEach(function (pluginElement) {
+                    var row = document.createElement('tr');
+                    var cellName = document.createElement('td');
+                    cellName.textContent = pluginElement.PropertyName;
+                    row.appendChild(cellName);
+
+                    pluginElement.Values.forEach(function (simplePluginElement) {
+                        var cellValue = document.createElement('td');
+                        cellValue.textContent = simplePluginElement.Value;
+
+                        if (simplePluginElement.IsCritical) {
+                            cellValue.className = "alertRow";
+                        }
+                        row.appendChild(cellValue);
+                    });
+                    table.appendChild(row);
+                });
+
+                frameDiv.appendChild(title);
+                frameDiv.appendChild(table);
+                plugDiv.appendChild(frameDiv);
+
                 $("#containment-wrapper").append(plugDiv);
             }
+
         });
-
-
-
-        //console.log("resultTable: ");
-        //console.log(newResultTable);
-        //var originalResultTable = document.getElementById("resultTable");
-        //if (originalResultTable === null) {
-        //    var newTable = document.createElement("table");
-        //    newTable.id = "resultTable";
-        //    document.getElementById("tableDiv").appendChild(newTable);
-        //}
-        //var parent;
-        //var noResult;
-        //var activeNode = document.body.getElementsByClassName("active")[0];
-
-        //if (activeNode !== null) {
-        //    var activeNodeID = activeNode.firstChild.id;
-
-        //    if (activeNodeID === clientOutput.ID) {
-        //        originalResultTable = document.getElementById("resultTable");
-        //        parent = originalResultTable.parentElement;
-        //        parent.replaceChild(newResultTable, originalResultTable);
-        //    }
-        //    else {
-        //        noResult = document.createElement('p');
-        //        noResult.textContent = "No result for selected machine!";
-        //        noResult.id = "resultTable";
-        //        originalResultTable = document.getElementById("resultTable");
-        //        parent = originalResultTable.parentElement;
-        //        parent.replaceChild(noResult, originalResultTable);
-        //    }
-        //}
-        //else {
-        //    noResult = document.createElement('p');
-        //    noResult.textContent = "No result for selected machine!";
-        //    noResult.id = "resultTable";
-        //    originalResultTable = document.getElementById("resultTable");
-        //    parent = originalResultTable.parentElement;
-        //    parent.replaceChild(noResult, originalResultTable);
-        //}
     }
 
     hub.client.previewCritical = function (criticalValues) {
@@ -363,3 +335,22 @@ function onLoadClick() {
 
     hub.server.onLoadClick();
 }
+
+$(document).ready(function () {
+    $('.toggle').on('toggle', function () {
+        console.log("onToggle()");
+        if ($('.toggle-on').hasClass('active')) {
+            console.log("toggle-on active");
+            $('.draggable').each(function () {
+                $(this).draggable({ disabled: false });
+                $(this).draggable({ containment: "#containment-wrapper", snap: true });
+            });
+        }
+        else {
+            console.log("toggle-off active");
+            $('.draggable').each(function () {
+                $(this).draggable({ disabled: true });
+            });
+        }
+    });
+});
