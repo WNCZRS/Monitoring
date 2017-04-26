@@ -54,12 +54,19 @@ namespace PluginsCollection
                     try
                     {
                         string serviceStatus = sc.Status.ToString();
-                        listSPO.Add(new SimplePluginOutput(serviceStatus, false));
+                        if (sc.Status == ServiceControllerStatus.Stopped)
+                        {
+                            listSPO.Add(new SimplePluginOutput(serviceStatus, true));
+                        }
+                        else
+                        {
+                            listSPO.Add(new SimplePluginOutput(serviceStatus, false));
+                        }
                     }
                     catch (Exception ex)
                     {
                         _log.Warn($"Service: {service} is unavailable");
-                        listSPO.Add(new SimplePluginOutput("Unavailable", true));
+                        listSPO.Add(new SimplePluginOutput("Unavailable", false));
                     }
                     _pluginOutputs.PluginOutputList.Add(new PluginOutput(service.ToString(), listSPO));
                 }

@@ -94,7 +94,7 @@ namespace MonitoringServer.Controllers
 
         private static void CriticalPreview()
         {
-            GetContext().Clients.Group("Clients").InitMainDiv();
+            //GetContext().Clients.Group("Clients").InitMainDiv();
             try
             {
                 List<ClientOutput> clientOutputList = SQLiteController.LastValuesFromDB();
@@ -192,14 +192,14 @@ namespace MonitoringServer.Controllers
         {
             if (_viewType == ViewType.CriticalPreview)
             {
-                GetContext().Clients.Group("Clients").InitMainDiv();
+                //GetContext().Clients.Group("Clients").InitMainDiv();
                 _viewType = ViewType.OneMachine;
-                LoadTreeView();
+                //LoadTreeView();
             }
             else
             {
                 _viewType = ViewType.CriticalPreview;
-                GetContext().Clients.Group("Clients").deactivateTree();
+                //GetContext().Clients.Group("Clients").deactivateTree();
             }
             _changed = true;
         }
