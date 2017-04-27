@@ -186,6 +186,7 @@ namespace MonitoringServer.Controllers
         public static void SetView(ViewType viewType)
         {
             _viewType = viewType;
+            _changed = true;
         }
 
         public static void SwitchView()

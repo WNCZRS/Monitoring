@@ -104,17 +104,6 @@
     hub.client.pluginsMessage = function (clientOutput) {
         console.log("pluginsMessage");
 
-        //var newResultTable = document.createElement('table');
-        //var pcName = document.createElement('tr');
-        //var nameCell = document.createElement('th');
-        //var lastUpdate = document.createElement('td');
-        //lastUpdate.textContent = "Last Update: " + clientOutput.LastUpdate;
-        //nameCell.textContent = clientOutput.PCName;
-        //pcName.appendChild(nameCell);
-        //pcName.appendChild(lastUpdate);
-        //newResultTable.appendChild(pcName);
-        //newResultTable.id = "resultTable";
-
         clientOutput.CollectionList.forEach(function (plugin) {
 
             if ($("#" + plugin.PluginUID).length) {
@@ -189,58 +178,63 @@
 
     hub.client.previewCritical = function (criticalValues) {
         console.log("previewCritical");
+        $("#containment-wrapper").empty();
 
-        //criticalValues.forEach(function (clientOutput) {
-        //    var newResultTable;
-        //    if (document.getElementById(clientOutput.Customer + "DIV") === null) {
-        //        var newResultDiv = document.createElement("div");
-        //        newResultDiv.id = clientOutput.Customer + "DIV";
-        //        var headerText = document.createElement("h1");
-        //        headerText.textContent = clientOutput.Customer;
-        //        newResultTable = document.createElement("table");
-        //        newResultTable.id = clientOutput.Customer + "TABLE";
-        //        newResultDiv.appendChild(headerText);
-        //        newResultDiv.appendChild(newResultTable);
-        //        document.getElementById("tableDiv").appendChild(newResultDiv);
-        //    }
-            
-        //    newResultTable = document.getElementById(clientOutput.Customer + "TABLE");
-        //    //console.log(newResultTable);
+        var newResultTable;
+        newResultTable = document.createElement("table");
 
-        //    var pcName = document.createElement("tr");
-        //    var nameCell = document.createElement("th");
-        //    var lastUpdate = document.createElement("td");
-        //    nameCell.textContent = clientOutput.PCName;
-        //    pcName.appendChild(nameCell);
-        //    newResultTable.appendChild(pcName);
+        //make table header
+        var headerRow = document.createElement("tr");
+        var groupHead = document.createElement("th");
+        groupHead.textContent = "Group";
+        headerRow.appendChild(groupHead);
+        var stationHead = document.createElement("th");
+        stationHead.textContent = "Station";
+        headerRow.appendChild(stationHead);
+        var pluginHead = document.createElement("th");
+        pluginHead.textContent = "Plugin";
+        headerRow.appendChild(pluginHead);
+        var valueHead = document.createElement("th");
+        valueHead.textContent = "Value";
+        headerRow.appendChild(valueHead);
+        newResultTable.appendChild(headerRow);
 
-        //    clientOutput.CollectionList.forEach(function (plugin) {
-        //        var headRow = document.createElement("tr");
-        //        var headCell = document.createElement("th");
-        //        headCell.textContent = plugin.PluginName;
-        //        headCell.setAttribute("colspan", "100");
-        //        headRow.appendChild(headCell);
-        //        newResultTable.appendChild(headRow);
-           
-        //        plugin.PluginOutputList.forEach(function (pluginElement) {
-        //            var row = document.createElement("tr");
-        //            var cellName = document.createElement("td");
-        //            cellName.textContent = pluginElement.PropertyName;
-        //            row.appendChild(cellName);
 
-        //            pluginElement.Values.forEach(function (simplePluginElement) {
-        //                var cellValue = document.createElement("td");
-        //                cellValue.textContent = simplePluginElement.Value;
+        criticalValues.forEach(function (clientOutput) {
 
-        //                if (simplePluginElement.IsCritical) {
-        //                    cellValue.className = "alertRow";
-        //                }
-        //                row.appendChild(cellValue);
-        //            });
-        //            newResultTable.appendChild(row);
-        //        });
-        //    });
-        //});
+            clientOutput.CollectionList.forEach(function (plugin) {
+
+                plugin.PluginOutputList.forEach(function (pluginElement) {
+
+                    pluginElement.Values.forEach(function (simplePluginElement) {
+
+                        var row = document.createElement("tr");
+                        var group = document.createElement("td");
+                        group.textContent = clientOutput.Customer;
+                        row.appendChild(group);
+                        var station = document.createElement("td");
+                        station.textContent = clientOutput.PCName;
+                        row.appendChild(station);
+                        var pluginRow = document.createElement("td");
+                        pluginRow.textContent = plugin.PluginName;
+                        row.appendChild(pluginRow);
+                        var value = document.createElement("td");
+                        value.textContent = pluginElement.PropertyName + " - " + simplePluginElement.Value;
+                        if (simplePluginElement.IsCritical) {
+                            value.className = "alertRow";
+                        }
+                        //TODO warning
+                        /*if (simplePluginElement.IsWarning) {
+                            cellValue.className = "warningRow";
+                        }*/
+                        row.appendChild(value);
+                        newResultTable.appendChild(row);
+                    });
+                });
+            });
+        });
+
+        $("#containment-wrapper").append(newResultTable);
     }
 
     hub.client.InitMainDiv = function () {
@@ -304,42 +298,35 @@ function checkFirstVisit() {
     }
 }
 
+// call view with warnings only
 function onRootNodeClick() {
+    $("#mainTitle").html("Warnings");
+    $("#editableSwitch").hide();
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub;
-    hub.server.onSwitchClick();
+    hub.server.callWarningsView();
+    //hub.server.onSwitchClick();
 }
 
+// on node click change title to actual group / machine (station)
 function onNodeClick(object) {
-
-    //console.log("onNodeClick");
-    //console.log(object);   
-
-    $("#stationTitle").html(object.getAttribute('customer') + "/" + object.textContent);
+    $("#mainTitle").html(object.getAttribute('customer') + "/" + object.textContent);
+    $("#containment-wrapper").empty();
+    $("#editableSwitch").show();
     $.connection.hub.url = "signalr";
-    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
-
-    //console.log(object.getAttribute('customer'));
     hub.server.nodeClick(object.id, object.textContent, object.getAttribute('customer'));
 }
 
 function onSwitchClick() {
-    //console.log("onSwitchClick");
-
     $.connection.hub.url = "signalr";
-    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
-
     hub.server.onSwitchClick();
 }
 
 function onLoadClick() {
-    //console.log("onLoadClick");
     $.connection.hub.url = "signalr";
-    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
-
     hub.server.onLoadClick();
 }
 

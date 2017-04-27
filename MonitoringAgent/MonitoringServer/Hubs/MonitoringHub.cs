@@ -38,11 +38,22 @@ namespace MonitoringServer.Hubs
             MessageController.SetNodeID(nodeID);
             MessageController.SetPCName(pcName);
             MessageController.SetCustomer(customer);
+            CallOneMachineView();
         }
 
         public void OnSwitchClick()
         {
             MessageController.SwitchView();
+        }
+
+        public void CallWarningsView()
+        {
+            MessageController.SetView(ViewType.CriticalPreview);
+        }
+
+        public void CallOneMachineView()
+        {
+            MessageController.SetView(ViewType.OneMachine);
         }
 
         public void OnRefresh()
