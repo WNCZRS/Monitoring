@@ -37,10 +37,10 @@ namespace MonitoringServer.Controllers
                 {
                     dbConnection.Open();
                     SQLiteCommand cmd = new SQLiteCommand(@"
-                        CREATE TABLE IF NOT EXISTS [MonitoringServerStorage] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32), [JSON] TEXT)", dbConnection);
+                        CREATE TABLE IF NOT EXISTS [MonitoringServerStorage] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Group] VARCHAR(32), [JSON] TEXT)", dbConnection);
                     cmd.ExecuteNonQuery();
 
-                    cmd = new SQLiteCommand(@"CREATE TABLE IF NOT EXISTS [Machines] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Customer] VARCHAR(32))", dbConnection);
+                    cmd = new SQLiteCommand(@"CREATE TABLE IF NOT EXISTS [Machines] ([RecID] INTEGER PRIMARY KEY ASC ON CONFLICT FAIL AUTOINCREMENT NOT NULL, [RecCreated] DATETIME, [ComputerID] VARCHAR(32), [ComputerName] VARCHAR(32), [Group] VARCHAR(32))", dbConnection);
                     cmd.ExecuteNonQuery();
 
                     cmd = new SQLiteCommand(@"CREATE UNIQUE INDEX IF NOT EXISTS Computer_Unique_ID ON Machines (ComputerID ASC);",
@@ -64,7 +64,7 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, ComputerID, Customer FROM Machines", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, ComputerID, [Group] FROM Machines", dbConnection);
 
                     SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                     while (reader.Read())
@@ -91,12 +91,12 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT OR REPLACE INTO Machines (RecCreated, ComputerID, ComputerName, Customer) 
-                                                            SELECT @RecCreated, @ComputerID, @ComputerName, @Customer", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT OR REPLACE INTO Machines (RecCreated, ComputerID, ComputerName, [Group]) 
+                                                            SELECT @RecCreated, @ComputerID, @ComputerName, @Group", dbConnection);
                     cmd.Parameters.AddWithValue("@RecCreated", DateTime.Now);
                     cmd.Parameters.AddWithValue("@ComputerID", clientOutput.ID);
                     cmd.Parameters.AddWithValue("@ComputerName", clientOutput.PCName);
-                    cmd.Parameters.AddWithValue("@Customer", clientOutput.Customer);
+                    cmd.Parameters.AddWithValue("@Group", clientOutput.Group);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -118,11 +118,11 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT INTO MonitoringServerStorage (RecCreated, ComputerID, ComputerName, Customer, JSON) VALUES (@RecCreated, @ComputerID, @ComputerName, @Customer, @JSON)", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT INTO MonitoringServerStorage (RecCreated, ComputerID, ComputerName, [Group], JSON) VALUES (@RecCreated, @ComputerID, @ComputerName, @Group, @JSON)", dbConnection);
                     cmd.Parameters.AddWithValue("@RecCreated", DateTime.Now);
                     cmd.Parameters.AddWithValue("@ComputerID", clientOutput.ID);
                     cmd.Parameters.AddWithValue("@ComputerName", clientOutput.PCName);
-                    cmd.Parameters.AddWithValue("@Customer", clientOutput.Customer);
+                    cmd.Parameters.AddWithValue("@Group", clientOutput.Group);
                     cmd.Parameters.AddWithValue("@JSON", json);
 
                     cmd.ExecuteNonQuery();
@@ -134,10 +134,10 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static ClientOutput JSONFromSQL(string customer, string computerID, string computerName)
+        public static ClientOutput JSONFromSQL(string group, string computerID, string computerName)
         {
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
-            ClientOutput clientOutput = new ClientOutput(computerName, computerID, customer);
+            ClientOutput clientOutput = new ClientOutput(computerName, computerID, group);
 
             try
             {
@@ -145,8 +145,8 @@ namespace MonitoringServer.Controllers
                 {
                     dbConnection.Open();
                     SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, JSON, RecCreated FROM MonitoringServerStorage 
-                                                            WHERE Customer = @Customer and ComputerID = @ComputerID ORDER BY RecCreated desc LIMIT 1", dbConnection);
-                    cmd.Parameters.AddWithValue("@Customer", customer);
+                                                            WHERE [Group] = @Group and ComputerID = @ComputerID ORDER BY RecCreated desc LIMIT 1", dbConnection);
+                    cmd.Parameters.AddWithValue("@Group", group);
                     cmd.Parameters.AddWithValue("@ComputerID", computerID);
 
                     SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -175,7 +175,7 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT DISTINCT ComputerName, ComputerID, Customer, JSON FROM MonitoringServerStorage where RecCreated > DATETIME('now', '-' || @minutesBack || ' minutes', 'localtime') and ComputerName is not NULL and ComputerName not in ('') GROUP BY ComputerName ORDER BY RecCreated desc", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT DISTINCT ComputerName, ComputerID, [Group], JSON FROM MonitoringServerStorage where RecCreated > DATETIME('now', '-' || @minutesBack || ' minutes', 'localtime') and ComputerName is not NULL and ComputerName not in ('') GROUP BY ComputerName ORDER BY RecCreated desc", dbConnection);
                     cmd.Parameters.AddWithValue("@minutesBack", minutesBack);
 
                     SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);

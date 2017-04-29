@@ -1,4 +1,4 @@
-﻿$(function () {
+﻿$(document).ready(function () {
 
     // The view model that is bound to our view
     var ViewModel = function () {
@@ -66,33 +66,33 @@
         span3.setAttribute("onclick", "onNodeClick(this)");
         span3.textContent = clientOutput.PCName;
         span3.id = clientOutput.ID;
-        span3.setAttribute("customer", clientOutput.Customer);
+        span3.setAttribute("group", clientOutput.Group);
         li3.className = "node";
         li3.appendChild(span3);
         ul3.appendChild(li3);
 
-        if (clientOutput.Customer === null || clientOutput.Customer === "") {
+        if (clientOutput.Group === null || clientOutput.Group === "") {
             if (document.getElementById(clientOutput.ID) === null) {
                 document.getElementById("noCategory").appendChild(ul3);
             }
         }
-        else if (document.getElementById(clientOutput.Customer) === null) {
+        else if (document.getElementById(clientOutput.Group) === null) {
             var li2 = document.createElement('li');
             var span2 = document.createElement('span');
             span2.className = "leaf";
             var span2_ = document.createElement('span');
             span2_.className = "node-toggle";
-            span2.textContent = clientOutput.Customer;
+            span2.textContent = clientOutput.Group;
             li2.appendChild(span2);
             li2.appendChild(span2_);
-            li2.id = clientOutput.Customer;
+            li2.id = clientOutput.Group;
             li2.className = "node";
             document.getElementById("rootNode").appendChild(li2);
             if (document.getElementById(clientOutput.ID) === null) {
-                document.getElementById(clientOutput.Customer).appendChild(ul3);
+                document.getElementById(clientOutput.Group).appendChild(ul3);
             }
         } else if (document.getElementById(clientOutput.ID) === null) {
-            document.getElementById(clientOutput.Customer).appendChild(ul3);
+            document.getElementById(clientOutput.Group).appendChild(ul3);
         }
     }
 
@@ -174,6 +174,7 @@
             }
 
         });
+        refreshDraggable();
     }
 
     hub.client.previewCritical = function (criticalValues) {
@@ -210,7 +211,7 @@
 
                         var row = document.createElement("tr");
                         var group = document.createElement("td");
-                        group.textContent = clientOutput.Customer;
+                        group.textContent = clientOutput.Group;
                         row.appendChild(group);
                         var station = document.createElement("td");
                         station.textContent = clientOutput.PCName;
@@ -273,6 +274,9 @@
     $.connection.hub.start().done(function () {
         vm.connected(true);
     });
+
+    $('.toggle').toggles({ drag: false });
+    $('.toggle').on('toggle', refreshDraggable);
 });
 
 function checkFirstVisit() {
@@ -298,24 +302,28 @@ function checkFirstVisit() {
     }
 }
 
+
 // call view with warnings only
 function onRootNodeClick() {
     $("#mainTitle").html("Warnings");
+    if ($('.toggle-on').hasClass('active')){
+        $('.toggle').toggles({ drag: false });
+    }
     $("#editableSwitch").hide();
+
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub;
     hub.server.callWarningsView();
-    //hub.server.onSwitchClick();
 }
 
 // on node click change title to actual group / machine (station)
 function onNodeClick(object) {
-    $("#mainTitle").html(object.getAttribute('customer') + "/" + object.textContent);
+    $("#mainTitle").html(object.getAttribute('group') + "/" + object.textContent);
     $("#containment-wrapper").empty();
     $("#editableSwitch").show();
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub;
-    hub.server.nodeClick(object.id, object.textContent, object.getAttribute('customer'));
+    hub.server.nodeClick(object.id, object.textContent, object.getAttribute('group'));
 }
 
 function onSwitchClick() {
@@ -330,21 +338,17 @@ function onLoadClick() {
     hub.server.onLoadClick();
 }
 
-$(document).ready(function () {
-    $('.toggle').on('toggle', function () {
-        console.log("onToggle()");
-        if ($('.toggle-on').hasClass('active')) {
-            console.log("toggle-on active");
-            $('.draggable').each(function () {
-                $(this).draggable({ disabled: false });
-                $(this).draggable({ containment: "#containment-wrapper", snap: true });
-            });
-        }
-        else {
-            console.log("toggle-off active");
-            $('.draggable').each(function () {
-                $(this).draggable({ disabled: true });
-            });
-        }
-    });
-});
+function refreshDraggable() {
+    console.log("editDraggable()");
+    if ($('.toggle-on').hasClass('active')) {
+        $('.draggable').each(function () {
+            $(this).draggable({ disabled: false });
+            $(this).draggable({ containment: "#containment-wrapper", snap: true });
+        });
+    }
+    else {
+        $('.draggable').each(function () {
+            $(this).draggable({ disabled: true });
+        });
+    }
+}

@@ -18,7 +18,7 @@ namespace MonitoringServer.Controllers
     public class MessageController
     {
         private static string _nodeID;
-        private static string _customer;
+        private static string _group;
         private static string _pcName;
         private static bool _changed;
         private static ViewType _viewType;
@@ -37,7 +37,7 @@ namespace MonitoringServer.Controllers
 
         private MessageController()
         {
-            _customer = string.Empty;
+            _group = string.Empty;
             _nodeID = string.Empty;
             _pcName = string.Empty;
             _changed = false;
@@ -118,7 +118,7 @@ namespace MonitoringServer.Controllers
             List<ClientOutput> newClientOutputList = new List<ClientOutput>();
             foreach (ClientOutput co in clientOutputList)
             {
-                ClientOutput newClientOutput = new ClientOutput(co.PCName, co.ID, co.Customer);
+                ClientOutput newClientOutput = new ClientOutput(co.PCName, co.ID, co.Group);
                 foreach (PluginOutputCollection pluginCollection in co.CollectionList)
                 {
                     PluginOutputCollection newPluginCollection = new PluginOutputCollection();
@@ -148,7 +148,7 @@ namespace MonitoringServer.Controllers
         {
             try
             {
-                ClientOutput clientOutput = SQLiteController.JSONFromSQL(_customer, _nodeID, _pcName);
+                ClientOutput clientOutput = SQLiteController.JSONFromSQL(_group, _nodeID, _pcName);
                 if (clientOutput != null)
                 {
                     GetContext().Clients.Group("Clients").pluginsMessage(clientOutput);
@@ -177,9 +177,9 @@ namespace MonitoringServer.Controllers
             _changed = true;
         }
 
-        public static void SetCustomer(string customer)
+        public static void SetGroup(string group)
         {
-            _customer = customer;
+            _group = group;
             _changed = true;
         }
 

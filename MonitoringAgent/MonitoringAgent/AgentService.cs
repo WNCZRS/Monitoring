@@ -123,8 +123,8 @@ namespace MonitoringAgent
         {
             string json;
             string serverIP = ConfigurationManager.AppSettings["ServerIP"];
-            string customerName = ConfigurationManager.AppSettings["CustomerName"];
-            ClientOutput output = new ClientOutput(getPCName(), getCPUID(), customerName);
+            string groupName = ConfigurationManager.AppSettings["GroupName"];
+            ClientOutput output = new ClientOutput(getPCName(), getCPUID(), groupName);
 
             PluginOutputCollection plugOutput = new PluginOutputCollection();
 

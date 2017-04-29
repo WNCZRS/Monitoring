@@ -81,7 +81,15 @@
         }
 
         #mainDiv {
-            min-height: 93%;
+            height: 93%;
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer */
+            -webkit-user-select: none; /* Chrome, Safari, and Opera */
+            -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+        }
+
+        #mainDiv:hover {
+           cursor: default;
         }
 
         html, body {
@@ -89,26 +97,6 @@
         }
                
     </style>
-    
-    <script>
-    /*    $(document).ready(function () {
-            $('.draggable').each(function () {
-                $(this).draggable({ containment: "#containment-wrapper", snap: true });
-                $(this).css('position', "absolute");
-                $(this).css('border-width', "0px");
-            });
-        });*/
-
-        $(document).ready(function () {
-            //$("#containment-wrapper").resizable();
-            $('.toggle').toggles({ drag: false });
-
-
-        });
-        function onMouseOver() {
-            //$('#settings_btn').css('box-shadow', '10px 10px 5px #888');
-        }
-    </script>
 </head>
 
 <body onload="checkFirstVisit()">

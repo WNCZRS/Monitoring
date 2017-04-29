@@ -59,15 +59,15 @@ namespace PluginsCollection
         public List<PluginOutputCollection> CollectionList { get; set; }
         public string ID { get; }
         public string PCName { get; set; }
-        public string Customer { get; set; }
+        public string Group { get; set; }
         public bool InitPost { get; set; }
         public DateTime LastUpdate { get; set; }
 
-        public ClientOutput(string pcName, string id, string customer)
+        public ClientOutput(string pcName, string id, string group)
         {
             PCName = pcName;
             ID = id;
-            Customer = customer;
+            Group = group;
             CollectionList = new List<PluginOutputCollection>();
             InitPost = false;
             LastUpdate = DateTime.MinValue;

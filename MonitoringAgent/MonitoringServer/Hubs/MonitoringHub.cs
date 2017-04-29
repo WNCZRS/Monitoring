@@ -33,11 +33,11 @@ namespace MonitoringServer.Hubs
             }
         }
 
-        public void NodeClick(string nodeID, string pcName, string customer)
+        public void NodeClick(string nodeID, string pcName, string group)
         {
             MessageController.SetNodeID(nodeID);
             MessageController.SetPCName(pcName);
-            MessageController.SetCustomer(customer);
+            MessageController.SetGroup(group);
             CallOneMachineView();
         }
 
