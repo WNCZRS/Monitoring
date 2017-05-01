@@ -15,6 +15,7 @@ namespace MonitoringServer.Controllers
         OneMachine,
         CriticalPreview
     }
+
     public class MessageController
     {
         private static string _nodeID;
@@ -97,7 +98,8 @@ namespace MonitoringServer.Controllers
             //GetContext().Clients.Group("Clients").InitMainDiv();
             try
             {
-                List<ClientOutput> clientOutputList = SQLiteController.LastValuesFromDB();
+                SQLiteController sqlController = new SQLiteController();
+                List<ClientOutput> clientOutputList = sqlController.LastValuesFromDB();
                 if (clientOutputList != null || clientOutputList.Count != 0)
                 {
                     List<ClientOutput> criticalValues = GetCriticalValues(clientOutputList);
@@ -148,7 +150,8 @@ namespace MonitoringServer.Controllers
         {
             try
             {
-                ClientOutput clientOutput = SQLiteController.JSONFromSQL(_group, _nodeID, _pcName);
+                SQLiteController sqlController = new SQLiteController();
+                ClientOutput clientOutput = sqlController.JSONFromSQL(_group, _nodeID, _pcName);
                 if (clientOutput != null)
                 {
                     GetContext().Clients.Group("Clients").pluginsMessage(clientOutput);
@@ -207,13 +210,32 @@ namespace MonitoringServer.Controllers
 
         public static void LoadTreeView()
         {
-            if (_viewType == ViewType.OneMachine)
+            SQLiteController sqlConroller = new SQLiteController();
+            List<ClientOutput> treeInfo = sqlConroller.GetBasicInfo();
+            foreach (ClientOutput node in treeInfo)
             {
-                List<ClientOutput> treeInfo = SQLiteController.GetBasicInfo();
-                foreach (ClientOutput node in treeInfo)
+                GetContext().Clients.Group("Clients").activateTree(node);
+            }
+        }
+
+        public static void SendSavedPosition()
+        {
+            SQLiteController sqlConroller = new SQLiteController();
+
+            //var machineID = sqlConroller.GetMachineID(_nodeID);
+            List<PluginSettings> pluginPositions = sqlConroller.GetHTMLPositions(_nodeID);
+            if (pluginPositions != null && pluginPositions.Count > 0)
+            {
+                try
                 {
-                    GetContext().Clients.Group("Clients").activateTree(node);
+                    GetContext().Clients.Group("Clients").savePositionToCookies(pluginPositions.ToArray());
                 }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                //GetContext().Clients.Group("Clients").savePositionToCookies();
             }
         }
     }

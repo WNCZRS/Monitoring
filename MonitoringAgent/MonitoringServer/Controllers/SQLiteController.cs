@@ -11,7 +11,7 @@ namespace MonitoringServer.Controllers
 {
     public class SQLiteController
     {
-        public static void CreateDbFile()
+        public void CreateDbFile()
         {
             string fileName = ConfigurationManager.AppSettings["DatabasePath"];
 
@@ -28,7 +28,7 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static void CreateTables()
+        public void CreateTables()
         {
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
             try
@@ -54,7 +54,7 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static List<ClientOutput> GetBasicInfo()
+        public List<ClientOutput> GetBasicInfo()
         {
             List<ClientOutput> clientOutputList = new List<ClientOutput>();
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
@@ -64,7 +64,9 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, ComputerID, [Group] FROM Machines", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, ComputerID, [Group] 
+                                                            FROM Machines", 
+                                                            dbConnection);
 
                     SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                     while (reader.Read())
@@ -82,7 +84,7 @@ namespace MonitoringServer.Controllers
             return clientOutputList;
         }
 
-        public static void SaveBasicInfo(ClientOutput clientOutput)
+        public void SaveBasicInfo(ClientOutput clientOutput)
         {
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
 
@@ -91,8 +93,18 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT OR REPLACE INTO Machines (RecCreated, ComputerID, ComputerName, [Group]) 
-                                                            SELECT @RecCreated, @ComputerID, @ComputerName, @Group", dbConnection);
+                    /*SQLiteCommand cmd = new SQLiteCommand(@"INSERT OR REPLACE INTO Machines 
+                                                            (RecCreated, ComputerID, ComputerName, [Group]) 
+                                                            SELECT @RecCreated, @ComputerID, @ComputerName, @Group", 
+                                                            dbConnection);    */
+                    SQLiteCommand cmd = new SQLiteCommand(@"update Machines
+                                                            set [Group] = @Group,
+                                                            ComputerName = @ComputerName
+                                                            where ComputerID = @ComputerID;
+
+                                                            INSERT INTO Machines (RecCreated, ComputerID, ComputerName, [Group]) 
+                                                            SELECT @RecCreated, @ComputerID, @ComputerName, @Group                                                           
+                                                            WHERE (Select Changes() = 0);", dbConnection);
                     cmd.Parameters.AddWithValue("@RecCreated", DateTime.Now);
                     cmd.Parameters.AddWithValue("@ComputerID", clientOutput.ID);
                     cmd.Parameters.AddWithValue("@ComputerName", clientOutput.PCName);
@@ -107,7 +119,7 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static void JSONToSQL(ClientOutput clientOutput)
+        public void JSONToSQL(ClientOutput clientOutput)
         {
             string json;
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
@@ -118,7 +130,10 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT INTO MonitoringServerStorage (RecCreated, ComputerID, ComputerName, [Group], JSON) VALUES (@RecCreated, @ComputerID, @ComputerName, @Group, @JSON)", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT INTO MonitoringServerStorage 
+                                                            (RecCreated, ComputerID, ComputerName, [Group], JSON) VALUES 
+                                                            (@RecCreated, @ComputerID, @ComputerName, @Group, @JSON)", 
+                                                            dbConnection);
                     cmd.Parameters.AddWithValue("@RecCreated", DateTime.Now);
                     cmd.Parameters.AddWithValue("@ComputerID", clientOutput.ID);
                     cmd.Parameters.AddWithValue("@ComputerName", clientOutput.PCName);
@@ -134,7 +149,7 @@ namespace MonitoringServer.Controllers
             }
         }
 
-        public static ClientOutput JSONFromSQL(string group, string computerID, string computerName)
+        public ClientOutput JSONFromSQL(string group, string computerID, string computerName)
         {
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
             ClientOutput clientOutput = new ClientOutput(computerName, computerID, group);
@@ -144,8 +159,13 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, JSON, RecCreated FROM MonitoringServerStorage 
-                                                            WHERE [Group] = @Group and ComputerID = @ComputerID ORDER BY RecCreated desc LIMIT 1", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT ComputerName, JSON, RecCreated 
+                                                            FROM MonitoringServerStorage 
+                                                            WHERE [Group] = @Group 
+                                                            and ComputerID = @ComputerID 
+                                                            ORDER BY RecCreated desc 
+                                                            LIMIT 1", 
+                                                            dbConnection);
                     cmd.Parameters.AddWithValue("@Group", group);
                     cmd.Parameters.AddWithValue("@ComputerID", computerID);
 
@@ -165,7 +185,7 @@ namespace MonitoringServer.Controllers
             return clientOutput;
         }
 
-        public static List<ClientOutput> LastValuesFromDB()
+        public List<ClientOutput> LastValuesFromDB()
         {
             List<ClientOutput> clientOutputList = new List<ClientOutput>();
             string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
@@ -175,7 +195,14 @@ namespace MonitoringServer.Controllers
                 using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
                 {
                     dbConnection.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT DISTINCT ComputerName, ComputerID, [Group], JSON FROM MonitoringServerStorage where RecCreated > DATETIME('now', '-' || @minutesBack || ' minutes', 'localtime') and ComputerName is not NULL and ComputerName not in ('') GROUP BY ComputerName ORDER BY RecCreated desc", dbConnection);
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT DISTINCT ComputerName, ComputerID, [Group], JSON 
+                                                            FROM MonitoringServerStorage 
+                                                            where RecCreated > DATETIME('now', '-' || @minutesBack || ' minutes', 'localtime') 
+                                                            and ComputerName is not NULL 
+                                                            and ComputerName not in ('') 
+                                                            GROUP BY ComputerName 
+                                                            ORDER BY RecCreated desc", 
+                                                            dbConnection);
                     cmd.Parameters.AddWithValue("@minutesBack", minutesBack);
 
                     SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -192,6 +219,181 @@ namespace MonitoringServer.Controllers
                 throw ex;
             }
             return clientOutputList;
+        }
+
+        public PluginSettings GetPluginSettings(string pluginUID)
+        {
+            return GetPluginSettings(new Guid(pluginUID));
+        }
+
+        public PluginSettings GetPluginSettings(Guid pluginUID)
+        {
+            PluginSettings pluginSettings = new PluginSettings();
+            pluginSettings.PluginUID = pluginUID;
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
+
+            try
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
+                {
+                    dbConnection.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT PluginType, ShowPlugin, RefreshInterval, Position_html_top, 
+                                                            Position_html_left, CriticalValueLimit, WarningValueLimit 
+                                                            FROM PluginSettings 
+                                                            WHERE PluginUID = @PluginUID 
+                                                            LIMIT 1", 
+                                                            dbConnection);
+                    cmd.Parameters.AddWithValue("@PluginUID", pluginUID.ToString());
+
+                    SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    while (reader.Read())
+                    {
+                        pluginSettings.PluginType = (PluginType)reader.GetValue(0);
+                        pluginSettings.Show = reader.GetBoolean(1);
+                        pluginSettings.RefreshInterval = reader.GetInt32(2);
+                        pluginSettings.HTMLPosition = new HTMLPosition(reader.GetInt32(3), reader.GetInt32(4));
+                        pluginSettings.CriticalValueLimit = reader.GetDouble(5);
+                        pluginSettings.WarningValueLimit = reader.GetDouble(6);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return pluginSettings;
+        }
+
+        public void SetPluginSettings(PluginSettings pluginSettings)
+        {
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
+
+            try
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
+                {
+                    dbConnection.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT OR REPLACE INTO PluginSettings 
+                                                            (RecModified, PluginUID, PluginType, ShowPlugin, RefreshInterval, Position_html_top,
+                                                            Position_html_left, CriticalValueLimit, WarningValueLimit)
+                                                            VALUES (@RecModified, @PluginUID, @PluginType, @ShowPlugin, @RefreshInterval, 
+                                                            @Position_html_top, @Position_html_left, @CriticalValueLimit, @WarningValueLimit)",
+                                                            dbConnection);
+                    //SQLiteCommand cmd = new SQLiteCommand(@"UPDATE PluginSettings
+                    //                                        SET PluginUID = @PluginUID,
+                    //                                        PluginType = @PluginType,
+                    //                                        ShowPlugin = @ShowPlugin,
+                    //                                        RefreshInterval = @RefreshInterval,
+                    //                                        Position_html_top = @Position_html_top,
+                    //                                        Position_html_left = @Position_html_left,
+                    //                                        CriticalValueLimit = @CriticalValueLimit,
+                    //                                        WarningValueLimit = @WarningValueLimit
+
+
+                    cmd.Parameters.AddWithValue("@RecModified", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@PluginUID", pluginSettings.PluginUID);
+                    cmd.Parameters.AddWithValue("@PluginType", pluginSettings.PluginType);
+                    cmd.Parameters.AddWithValue("@ShowPugin", pluginSettings.Show);
+                    cmd.Parameters.AddWithValue("@RefreshInterval", pluginSettings.RefreshInterval);
+                    cmd.Parameters.AddWithValue("@Position_html_top", pluginSettings.HTMLPosition.Top);
+                    cmd.Parameters.AddWithValue("@Position_html_left", pluginSettings.HTMLPosition.Left);
+                    cmd.Parameters.AddWithValue("@CriticalValueLimit", pluginSettings.CriticalValueLimit);
+                    cmd.Parameters.AddWithValue("@WarningValueLimit", pluginSettings.WarningValueLimit);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<PluginSettings> GetHTMLPositions(string computerID)
+        {
+            List<PluginSettings> positions = new List<PluginSettings>();
+
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
+
+            try
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
+                {
+                    dbConnection.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT PluginUID, Position_html_top, Position_html_left 
+                                                            FROM PluginSettings 
+                                                            WHERE ComputerID = @ComputerID",
+                                                            dbConnection);
+                    cmd.Parameters.AddWithValue("@ComputerID", computerID);
+
+                    SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    while (reader.Read())
+                    {
+                        PluginSettings plugSet = new PluginSettings();
+                        plugSet.ComputerID = computerID;
+                        plugSet.PluginUID = reader.GetGuid(0);
+                        plugSet.HTMLPosition = new HTMLPosition(reader.GetInt32(1), reader.GetInt32(2));
+                        positions.Add(plugSet);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return positions;
+        }
+
+        public void SaveHTMLPosition(string computerID, string pluginUID, int posTop, int posLeft)
+        {
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
+
+            try
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
+                {
+                    dbConnection.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(@"INSERT OR REPLACE INTO PluginSettings 
+                                                            (RecModified, PluginUID, ComputerID, Position_html_top, Position_html_left)
+                                                            VALUES (@RecModified, @PluginUID, @ComputerID, @Position_html_top, @Position_html_left)",
+                                                            dbConnection);
+                    cmd.Parameters.AddWithValue("@RecModified", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@PluginUID", pluginUID);
+                    cmd.Parameters.AddWithValue("@ComputerID", computerID);
+                    cmd.Parameters.AddWithValue("@Position_html_top", posTop);
+                    cmd.Parameters.AddWithValue("@Position_html_left", posLeft);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int GetMachineID(string computerID)
+        {
+            string connectionString = string.Format("Data Source={0};Version=3;", ConfigurationManager.AppSettings["DatabasePath"]);
+
+            try
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(connectionString))
+                {
+                    dbConnection.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(@"SELECT RecID FROM Machines 
+                                                            WHERE ComputerID = @ComputerID",
+                                                            dbConnection);
+                    cmd.Parameters.AddWithValue("@ComputerID", computerID);
+
+                    return Convert.ToInt32(cmd.ExecuteScalar(CommandBehavior.CloseConnection));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

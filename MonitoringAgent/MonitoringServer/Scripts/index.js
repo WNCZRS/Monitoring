@@ -18,10 +18,8 @@
     ko.applyBindings(vm, $("#computerInfo")[0]);
 
     console.log("before start connection");
-    //console.log($.connection);
     // Get a reference to our hub
     $.connection.hub.url = "signalr";
-    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub
 
     hub.client.activateTree = function (clientOutput) {
@@ -94,12 +92,7 @@
         } else if (document.getElementById(clientOutput.ID) === null) {
             document.getElementById(clientOutput.Group).appendChild(ul3);
         }
-    }
-
-    hub.client.deactivateTree = function () {
-        //$(document).find('#treeview').remove();
-        //var tree = document.getElementById("treeDiv");
-    }
+    };
 
     hub.client.pluginsMessage = function (clientOutput) {
         console.log("pluginsMessage");
@@ -132,7 +125,7 @@
                 $("#" + plugin.PluginUID).find('table').replaceWith(table);
             }
             else {
-
+                var position = JSON.parse(localStorage.getItem(clientOutput.ID + '_' + plugin.PluginUID));
                 var plugDiv = document.createElement('div');
                 var frameDiv = document.createElement('div');
                 table = document.createElement('table');
@@ -142,11 +135,10 @@
                 plugDiv.classList.add("ui-widget-content");
                 plugDiv.classList.add("draggable");
                 plugDiv.id = plugin.PluginUID;
-                //$(plugDiv).draggable({ containment: "#containment-wrapper", snap: true });
                 $(plugDiv).css({ position: "absolute" });
-                //$(plugDiv).css({ left: "100px" });
-                //$(plugDiv).css({ top: "100px" });
-                $(plugDiv).css("border-width", "0px");
+                $(plugDiv).css("border-width", "1px");
+                $(plugDiv).css({ top: position.Top + "px"});
+                $(plugDiv).css({ left: position.Left + "px"});
 
                 plugin.PluginOutputList.forEach(function (pluginElement) {
                     var row = document.createElement('tr');
@@ -166,7 +158,13 @@
                     table.appendChild(row);
                 });
 
+                var separator = document.createElement('hr');
+                separator.style.marginTop = "0px";
+                separator.style.marginBottom = "0px";
+                separator.style.height = "1px";
+
                 frameDiv.appendChild(title);
+                frameDiv.appendChild(separator);
                 frameDiv.appendChild(table);
                 plugDiv.appendChild(frameDiv);
 
@@ -175,7 +173,7 @@
 
         });
         refreshDraggable();
-    }
+    };
 
     hub.client.previewCritical = function (criticalValues) {
         console.log("previewCritical");
@@ -236,7 +234,7 @@
         });
 
         $("#containment-wrapper").append(newResultTable);
-    }
+    };
 
     hub.client.InitMainDiv = function () {
         //console.log("initMainDiv");
@@ -264,11 +262,21 @@
         else {
             document.body.replaceChild(newMainDiv, mainDiv);
         }
-    }
+    };
 
     hub.client.UpdateUsersOnlineCount = function (count) {
         $('#usersCount').text(count);
-    }
+    };
+
+    hub.client.SavePositionToCookies = function (positions) {
+        console.log(positions);
+        positions.forEach(function (plugSettings) {
+
+            var pluginPositionID = plugSettings.ComputerID + '_' + plugSettings.PluginUID;
+            console.log(pluginPositionID);
+            localStorage.setItem(pluginPositionID, JSON.stringify(plugSettings.HTMLPosition));
+        });
+    };
 
     // Start the connection
     $.connection.hub.start().done(function () {
@@ -276,7 +284,7 @@
     });
 
     $('.toggle').toggles({ drag: false });
-    $('.toggle').on('toggle', refreshDraggable);
+    $('.toggle').on('toggle', refreshDraggable).on('toggle', savePositonOnToggleOff);
 });
 
 function checkFirstVisit() {
@@ -350,5 +358,21 @@ function refreshDraggable() {
         $('.draggable').each(function () {
             $(this).draggable({ disabled: true });
         });
+    }
+}
+
+function savePositonOnToggleOff() {
+
+    if ($('.toggle-off').hasClass('active')) {
+        $.connection.hub.url = "signalr";
+        var hub = $.connection.MyHub;
+        $('.draggable').each(function () {
+            var top = $(this).position().top;
+            var left = $(this).position().left;
+            var computerID = $('.node.active').find('span')[0].id;                
+            var pluginID = $(this)[0].id;
+            console.log($(this)[0].id);
+            hub.server.saveHTMLPostion(computerID, pluginID, top, left);
+        })
     }
 }
