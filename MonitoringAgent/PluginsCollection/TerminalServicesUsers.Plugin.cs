@@ -25,6 +25,14 @@ namespace PluginsCollection
             }
         }
 
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public TerminalServicesUsers()
         {
             _pluginOutputs = new PluginOutputCollection();

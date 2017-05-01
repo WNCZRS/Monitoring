@@ -27,6 +27,14 @@ namespace PluginsCollection
             }
         }
 
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public Performance()
         {
             _pluginOutputs = new PluginOutputCollection();

@@ -22,7 +22,20 @@
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub
 
-    hub.client.activateTree = function (clientOutput) {
+    $.connection.hub.logging = true;
+    // Start the connection
+    $.connection.hub.start().done(function () {
+        vm.connected(true);
+    });
+
+    $('.toggle').toggles({ drag: false });
+    $('.toggle').on('toggle', refreshDraggable).on('toggle', savePositonOnToggleOff);
+    $('.pluginLink').click(function () {
+        alert("dialog open");
+        //dialog.dialog("open");
+    });
+
+    hub.client.ActivateTree = function (clientOutput) {
         //console.log("activateTree");
 
         var treeview = document.getElementById("treeview");
@@ -94,7 +107,7 @@
         }
     };
 
-    hub.client.pluginsMessage = function (clientOutput) {
+    hub.client.PluginsMessage = function (clientOutput) {
         console.log("pluginsMessage");
 
         clientOutput.CollectionList.forEach(function (plugin) {
@@ -175,12 +188,11 @@
         refreshDraggable();
     };
 
-    hub.client.previewCritical = function (criticalValues) {
+    hub.client.PreviewCritical = function (criticalValues) {
         console.log("previewCritical");
         $("#containment-wrapper").empty();
 
-        var newResultTable;
-        newResultTable = document.createElement("table");
+        var newResultTable = document.createElement("table");
 
         //make table header
         var headerRow = document.createElement("tr");
@@ -268,8 +280,9 @@
         $('#usersCount').text(count);
     };
 
-    hub.client.SavePositionToCookies = function (positions) {
+    hub.client.SavePositionToLocalStorage = function (positions) {
         console.log(positions);
+
         positions.forEach(function (plugSettings) {
 
             var pluginPositionID = plugSettings.ComputerID + '_' + plugSettings.PluginUID;
@@ -278,13 +291,63 @@
         });
     };
 
-    // Start the connection
-    $.connection.hub.start().done(function () {
-        vm.connected(true);
-    });
+    hub.client.SaveSettingsToLocalStorage = function (pluginSettingsList) {
+        console.log(pluginSettingsList);
+       
+        var newSettingsTable = document.createElement("table");
+        newSettingsTable.id = "settingsTable";
 
-    $('.toggle').toggles({ drag: false });
-    $('.toggle').on('toggle', refreshDraggable).on('toggle', savePositonOnToggleOff);
+        //make table header
+        var headerRow = document.createElement("tr");
+        var groupHead = document.createElement("th");
+        groupHead.textContent = "Group";
+        headerRow.appendChild(groupHead);
+        var stationHead = document.createElement("th");
+        stationHead.textContent = "Station";
+        headerRow.appendChild(stationHead);
+        var pluginHead = document.createElement("th");
+        pluginHead.textContent = "Edit";
+        headerRow.appendChild(pluginHead);
+        newSettingsTable.appendChild(headerRow);
+
+        pluginSettingsList.forEach(function (pluginSettings) {
+            var pluginSettingsID = pluginSettings.ComputerID + '_' + pluginSettings.PluginUID;
+            //pluginSettings.data('pluginSettingsID', pluginSettingsID)
+            localStorage.setItem(pluginSettingsID, JSON.stringify(pluginSettings));
+
+
+            if ($(newSettingsTable).find("#" + pluginSettings.ComputerID).length) {
+                console.log("exist element with id: " + pluginSettings.ComputerID);
+                var link = document.createElement("a");
+                link.id = pluginSettings.PluginID;
+                link.className = "pluginLink";
+                link.textContent = pluginSettings.PluginName;
+                link.onclick = "OnLinkClick(this)";
+                $(newSettingsTable).find("#editCell").append(link);
+            } else {
+                var row = document.createElement("tr");
+                row.id = pluginSettings.ComputerID;
+                var group = document.createElement("td");
+                group.textContent = pluginSettings.GroupName;
+                row.appendChild(group);
+                var station = document.createElement("td");
+                station.textContent = pluginSettings.ComputerName;
+                row.appendChild(station);
+                var edit = document.createElement("td");
+                edit.id = "editCell";
+                var link = document.createElement("a");
+                link.id = pluginSettings.PluginUID;
+                link.className = "pluginLink";
+                link.textContent = pluginSettings.PluginName;
+                link.onclick = "OnLinkClick(this)";
+                edit.appendChild(link);
+                row.appendChild(edit);
+                newSettingsTable.appendChild(row);
+                
+            }
+        });
+        $("#containment-wrapper").append(newSettingsTable);
+    };
 });
 
 function checkFirstVisit() {
@@ -321,7 +384,15 @@ function onRootNodeClick() {
 
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub;
-    hub.server.callWarningsView();
+
+    if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+        $.connection.hub.start().done(function () {
+            hub.server.callWarningsView();
+        });
+    }
+    else {
+        hub.server.callWarningsView();
+    }
 }
 
 // on node click change title to actual group / machine (station)
@@ -331,19 +402,50 @@ function onNodeClick(object) {
     $("#editableSwitch").show();
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub;
-    hub.server.nodeClick(object.id, object.textContent, object.getAttribute('group'));
+    if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+        $.connection.hub.start().done(function () {
+            hub.server.nodeClick(object.id, object.textContent, object.getAttribute('group'));
+        });
+    }
+    else {
+        hub.server.nodeClick(object.id, object.textContent, object.getAttribute('group'));
+    }
 }
 
-function onSwitchClick() {
+function onSettingsClick() {
+    $("#mainTitle").html("Settings");
+    $("#containment-wrapper").empty();
+    if ($('.toggle-on').hasClass('active')) {
+        $('.toggle').toggles({ drag: false });
+    }
+    $("#editableSwitch").hide();
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub;
-    hub.server.onSwitchClick();
+    if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+        $.connection.hub.start().done(function () {
+            hub.server.callSettingsView();
+        });
+    }
+    else {
+        hub.server.callSettingsView();
+    }
+}
+
+function OnLinkClick(linkElement) {
+    alert("OnLinkClick")
 }
 
 function onLoadClick() {
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub;
-    hub.server.onLoadClick();
+    if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+        $.connection.hub.start().done(function () {
+            hub.server.onLoadClick();
+        });
+    }
+    else {
+        hub.server.onLoadClick();
+    }
 }
 
 function refreshDraggable() {
@@ -362,17 +464,32 @@ function refreshDraggable() {
 }
 
 function savePositonOnToggleOff() {
-
     if ($('.toggle-off').hasClass('active')) {
-        $.connection.hub.url = "signalr";
-        var hub = $.connection.MyHub;
+        var time = 0;
         $('.draggable').each(function () {
-            var top = $(this).position().top;
-            var left = $(this).position().left;
-            var computerID = $('.node.active').find('span')[0].id;                
-            var pluginID = $(this)[0].id;
-            console.log($(this)[0].id);
-            hub.server.saveHTMLPostion(computerID, pluginID, top, left);
-        })
+            var plugObj = $(this);
+            setTimeout(function () {
+                $.connection.hub.url = "signalr";
+                var hub = $.connection.MyHub;
+                var top = plugObj.position().top;
+                var left = plugObj.position().left;
+                var computerID = $('.node.active').find('span')[0].id;
+                var pluginID = plugObj[0].id;
+                console.log(plugObj[0].id);
+                console.log($.connection.hub.state);
+                if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+                    console.log("start again");
+                    time += 1000;
+                    $.connection.hub.start().done(function () {
+                        hub.server.saveHTMLPostion(computerID, pluginID, top, left);
+                    });
+                }
+                else {
+                    hub.server.saveHTMLPostion(computerID, pluginID, top, left);
+                }                
+            }, time);
+            time += 50;
+            console.log("time: " + time);
+        });
     }
 }

@@ -96,6 +96,19 @@
             margin-bottom: 10px;
         }
 
+        a {
+            color: #3c82ef !important;
+            text-decoration: underline;
+            font-weight: normal;
+            padding-right: 10px;
+        }
+
+        a:hover {
+            color: black !important;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
         html, body {
             height: 100%;
         }
@@ -104,7 +117,6 @@
 </head>
 
 <body onload="checkFirstVisit()">
-    <button onclick="onSwitchClick()" id="switchView">SwitchView</button>
     <button onclick="onLoadClick()" id="loadTree">LoadTree</button>
     <div id="usersCount"></div>
     <div class="grid" id="mainDiv">
@@ -115,7 +127,7 @@
             </div>
             <div class="cell" style="margin-left: 10px; width: 80%; height: 100%; padding: 0px 10px 0px;">
                 <h1 id="mainTitle" style="float: left; padding-left: 10px;"></h1>
-                <div id="settings_btn" style="float: right;" onmouseover="onMouseOver()">
+                <div id="settings_btn" style="float: right;" onclick="onSettingsClick()">
                     <img src="~/Content/images/settings.png" alt="Alternate Text" width="70"/>
                     <p align="center">Settings</p>
                 </div>

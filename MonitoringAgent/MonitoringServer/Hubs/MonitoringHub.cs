@@ -50,11 +50,6 @@ namespace MonitoringServer.Hubs
             CallOneMachineView();
         }
 
-        public void OnSwitchClick()
-        {
-            MessageController.SwitchView();
-        }
-
         public void CallWarningsView()
         {
             MessageController.SetView(ViewType.CriticalPreview);
@@ -65,6 +60,12 @@ namespace MonitoringServer.Hubs
             MessageController.SetView(ViewType.OneMachine);
             MessageController.SendSavedPosition();
 
+        }
+
+        public void CallSettingsView()
+        {
+            MessageController.SetView(ViewType.SettingsView);
+            MessageController.SendPluginSettings();
         }
 
         public void OnRefresh()
@@ -86,8 +87,9 @@ namespace MonitoringServer.Hubs
             }
 
             //var machineID = _sqlController.GetMachineID(computerID);
-
-            _sqlController.SaveHTMLPosition(computerID, pluginGuid, posTop, posLeft);
+            SQLiteController s = new SQLiteController();
+            s.SaveHTMLPosition(computerID, pluginGuid, posTop, posLeft);
+            //_sqlController.SaveHTMLPosition(computerID, pluginGuid, posTop, posLeft);
         }
 
         public override Task OnConnected()

@@ -24,6 +24,14 @@ namespace PluginsCollection
             }
         }
 
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public RAM()
         {
             _pluginOutputs = new PluginOutputCollection();

@@ -10,6 +10,7 @@ namespace PluginsCollection
     {
         string Name { get; }
         Guid UID { get; }
+        PluginType Type { get; }
         PluginOutputCollection Output();
     }
 
@@ -88,10 +89,10 @@ namespace PluginsCollection
             PluginList = new List<IPlugin>();
         }
 
-        public void Load()
+        public void Load(string pluginsPath = "")
         {
             LoadSystemPlugins();
-            LoadDllPlugins();
+            LoadDllPlugins(pluginsPath);
         }
 
         private void LoadSystemPlugins()
@@ -113,9 +114,13 @@ namespace PluginsCollection
             }
         }
 
-        private void LoadDllPlugins()
+        private void LoadDllPlugins(string pluginsPath = "")
         {
             string path = "Plugins";
+            if (!string.IsNullOrWhiteSpace(pluginsPath))
+            {
+                path = pluginsPath;
+            }
 
             if (!Directory.Exists(path))
             {

@@ -20,6 +20,7 @@ namespace MonitoringServer
 
             sqlLiteController.CreateDbFile();
             sqlLiteController.CreateTables();
+            sqlLiteController.InitPlugins();
             MessageController.StartMessageThread();
         }
     }

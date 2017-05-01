@@ -27,6 +27,15 @@ namespace PluginsCollection
                 return "Service status";
             }
         }
+
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public ServiceControl()
         {
             _pluginOutputs = new PluginOutputCollection();

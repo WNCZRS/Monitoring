@@ -20,6 +20,7 @@ namespace PluginsCollection
 
     public enum PluginType
     {
+        Unknown,
         Table,
         Graph
     }
@@ -27,7 +28,10 @@ namespace PluginsCollection
     public class PluginSettings
     {
         public Guid PluginUID { get; set; }
+        public string PluginName { get; set; }
         public string ComputerID { get; set; }
+        public string ComputerName { get; set; }
+        public string GroupName { get; set; }
         public PluginType PluginType { get; set; }
         public bool Show { get; set; }
         public int RefreshInterval { get; set; }

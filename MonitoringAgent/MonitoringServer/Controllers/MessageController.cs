@@ -13,7 +13,8 @@ namespace MonitoringServer.Controllers
     public enum ViewType
     {
         OneMachine,
-        CriticalPreview
+        CriticalPreview,
+        SettingsView
     }
 
     public class MessageController
@@ -81,6 +82,10 @@ namespace MonitoringServer.Controllers
                             CriticalPreview();
                             break;
 
+                        case ViewType.SettingsView:
+                            //nothing to sending periodically
+                            break;
+
                         default:
                             break;
                     }
@@ -105,7 +110,7 @@ namespace MonitoringServer.Controllers
                     List<ClientOutput> criticalValues = GetCriticalValues(clientOutputList);
                     if (criticalValues.Count > 0)
                     {
-                        GetContext().Clients.Group("Clients").previewCritical(criticalValues);
+                        GetContext().Clients.Group("Clients").PreviewCritical(criticalValues);
                     }
                 }
             }
@@ -154,7 +159,7 @@ namespace MonitoringServer.Controllers
                 ClientOutput clientOutput = sqlController.JSONFromSQL(_group, _nodeID, _pcName);
                 if (clientOutput != null)
                 {
-                    GetContext().Clients.Group("Clients").pluginsMessage(clientOutput);
+                    GetContext().Clients.Group("Clients").PluginsMessage(clientOutput);
                 }
             }
             catch (Exception ex)
@@ -192,50 +197,50 @@ namespace MonitoringServer.Controllers
             _changed = true;
         }
 
-        public static void SwitchView()
-        {
-            if (_viewType == ViewType.CriticalPreview)
-            {
-                //GetContext().Clients.Group("Clients").InitMainDiv();
-                _viewType = ViewType.OneMachine;
-                //LoadTreeView();
-            }
-            else
-            {
-                _viewType = ViewType.CriticalPreview;
-                //GetContext().Clients.Group("Clients").deactivateTree();
-            }
-            _changed = true;
-        }
-
         public static void LoadTreeView()
         {
             SQLiteController sqlConroller = new SQLiteController();
             List<ClientOutput> treeInfo = sqlConroller.GetBasicInfo();
             foreach (ClientOutput node in treeInfo)
             {
-                GetContext().Clients.Group("Clients").activateTree(node);
+                GetContext().Clients.Group("Clients").ActivateTree(node);
             }
         }
 
         public static void SendSavedPosition()
         {
-            SQLiteController sqlConroller = new SQLiteController();
+            SQLiteController sqlController = new SQLiteController();
 
             //var machineID = sqlConroller.GetMachineID(_nodeID);
-            List<PluginSettings> pluginPositions = sqlConroller.GetHTMLPositions(_nodeID);
+            List<PluginSettings> pluginPositions = sqlController.GetHTMLPositions(_nodeID);
             if (pluginPositions != null && pluginPositions.Count > 0)
             {
                 try
                 {
-                    GetContext().Clients.Group("Clients").savePositionToCookies(pluginPositions.ToArray());
+                    GetContext().Clients.Group("Clients").SavePositionToLocalStorage(pluginPositions.ToArray());
                 }
                 catch (Exception ex)
                 {
                     throw ex;
                 }
+            }
+        }
 
-                //GetContext().Clients.Group("Clients").savePositionToCookies();
+        public static void SendPluginSettings()
+        {
+            SQLiteController sqlController = new SQLiteController();
+
+            List<PluginSettings> pluginSettingsList = sqlController.GetAllPluginSettings();
+            if (pluginSettingsList != null && pluginSettingsList.Count > 0)
+            {
+                try
+                {
+                    GetContext().Clients.Group("Clients").SaveSettingsToLocalStorage(pluginSettingsList.ToArray());
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }
