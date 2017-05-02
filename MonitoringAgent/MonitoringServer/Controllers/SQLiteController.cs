@@ -86,9 +86,9 @@ namespace MonitoringServer.Controllers
                     cmd.ExecuteNonQuery();
 
                     cmd = new SQLiteCommand(@"CREATE TABLE IF NOT EXISTS Plugins (
-                                                PluginUID TEXT UNIQUE ON CONFLICT FAIL
-                                                               PRIMARY KEY
-                                                               NOT NULL,
+                                                RecID     INTEGER PRIMARY KEY,
+                                                PluginUID TEXT    UNIQUE ON CONFLICT FAIL
+                                                                  NOT NULL,
                                                 Name      TEXT,
                                                 Type      INTEGER
                                             );", dbConnection);

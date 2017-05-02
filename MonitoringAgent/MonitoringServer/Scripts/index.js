@@ -22,7 +22,7 @@
     $.connection.hub.url = "signalr";
     var hub = $.connection.MyHub
 
-    $.connection.hub.logging = true;
+    //$.connection.hub.logging = true;
     // Start the connection
     $.connection.hub.start().done(function () {
         vm.connected(true);
@@ -35,6 +35,17 @@
         //dialog.dialog("open");
     });
 
+    $("#testButton").click(function () {
+        alert("dialog open testButton");
+        //dialog.dialog("open");
+    });
+
+    $("#testButton").button().on("click", function () {
+        alert("dialog open testButton");
+        //dialog.dialog("open");
+    });
+    
+    //draw tree view
     hub.client.ActivateTree = function (clientOutput) {
         //console.log("activateTree");
 
@@ -106,9 +117,9 @@
             document.getElementById(clientOutput.Group).appendChild(ul3);
         }
     };
-
+    
     hub.client.PluginsMessage = function (clientOutput) {
-        console.log("pluginsMessage");
+        //console.log("pluginsMessage");
 
         clientOutput.CollectionList.forEach(function (plugin) {
 
@@ -138,7 +149,9 @@
                 $("#" + plugin.PluginUID).find('table').replaceWith(table);
             }
             else {
-                var position = JSON.parse(localStorage.getItem(clientOutput.ID + '_' + plugin.PluginUID));
+                var pluginSettings = JSON.parse(localStorage.getItem(clientOutput.ID + '_' + plugin.PluginUID));
+                //console.log("pluginSettings");
+                //console.log(pluginSettings);
                 var plugDiv = document.createElement('div');
                 var frameDiv = document.createElement('div');
                 table = document.createElement('table');
@@ -150,8 +163,8 @@
                 plugDiv.id = plugin.PluginUID;
                 $(plugDiv).css({ position: "absolute" });
                 $(plugDiv).css("border-width", "1px");
-                $(plugDiv).css({ top: position.Top + "px"});
-                $(plugDiv).css({ left: position.Left + "px"});
+                $(plugDiv).css({ top: pluginSettings.HTMLPosition.Top + "px" });
+                $(plugDiv).css({ left: pluginSettings.HTMLPosition.Left + "px" });
 
                 plugin.PluginOutputList.forEach(function (pluginElement) {
                     var row = document.createElement('tr');
@@ -281,19 +294,30 @@
     };
 
     hub.client.SavePositionToLocalStorage = function (positions) {
-        console.log(positions);
+        positions.forEach(function (pluginSettingsFromDB) {
+            /*console.log("pluginSettingsFromDB");
+            console.log(pluginSettingsFromDB);
+            var pluginPositionID = pluginSettingsFromDB.ComputerID + '_' + pluginSettingsFromDB.PluginUID;
 
-        positions.forEach(function (plugSettings) {
-
-            var pluginPositionID = plugSettings.ComputerID + '_' + plugSettings.PluginUID;
-            console.log(pluginPositionID);
-            localStorage.setItem(pluginPositionID, JSON.stringify(plugSettings.HTMLPosition));
+            var pluginSettings = JSON.parse(localStorage.getItem(pluginPositionID));
+            console.log("pluginSettings_cache");
+            console.log(pluginSettings);
+            if (pluginSettings == null) {
+                localStorage.setItem(pluginPositionID, JSON.stringify(pluginSettingsFromDB));
+            }
+            else {
+                pluginSettings.HTMLPosition.left = pluginSettingsFromDB.HTMLPosition.left;
+                pluginSettings.HTMLPosition.top = pluginSettingsFromDB.HTMLPosition.top;
+                localStorage.setItem(pluginPositionID, JSON.stringify(pluginSettings))
+            }*/
+            var pluginPositionID = pluginSettingsFromDB.ComputerID + '_' + pluginSettingsFromDB.PluginUID;
+            localStorage.setItem(pluginPositionID, JSON.stringify(pluginSettingsFromDB));
         });
     };
 
     hub.client.SaveSettingsToLocalStorage = function (pluginSettingsList) {
-        console.log(pluginSettingsList);
-       
+        //console.log(pluginSettingsList);
+
         var newSettingsTable = document.createElement("table");
         newSettingsTable.id = "settingsTable";
 
@@ -311,20 +335,24 @@
         newSettingsTable.appendChild(headerRow);
 
         pluginSettingsList.forEach(function (pluginSettings) {
+
+            // save pluginSettins into local storage
             var pluginSettingsID = pluginSettings.ComputerID + '_' + pluginSettings.PluginUID;
             //pluginSettings.data('pluginSettingsID', pluginSettingsID)
             localStorage.setItem(pluginSettingsID, JSON.stringify(pluginSettings));
 
 
             if ($(newSettingsTable).find("#" + pluginSettings.ComputerID).length) {
-                console.log("exist element with id: " + pluginSettings.ComputerID);
-                var link = document.createElement("a");
+                //add plugin link button to exist cell in table
+                var link = document.createElement("button");
                 link.id = pluginSettings.PluginID;
                 link.className = "pluginLink";
                 link.textContent = pluginSettings.PluginName;
-                link.onclick = "OnLinkClick(this)";
+                //link.onclick = "OnLinkClick";
+                //link.setAttribute("onclick", "OnLinkClick(this)");
                 $(newSettingsTable).find("#editCell").append(link);
             } else {
+                //create new row for one computer
                 var row = document.createElement("tr");
                 row.id = pluginSettings.ComputerID;
                 var group = document.createElement("td");
@@ -335,15 +363,17 @@
                 row.appendChild(station);
                 var edit = document.createElement("td");
                 edit.id = "editCell";
-                var link = document.createElement("a");
+                var link = document.createElement("button");
                 link.id = pluginSettings.PluginUID;
                 link.className = "pluginLink";
                 link.textContent = pluginSettings.PluginName;
-                link.onclick = "OnLinkClick(this)";
+                link.id = "testButton";
+                //link.onclick = OnLinkClick();
+                //link.setAttribute("onclick", "OnLinkClick(this)");
                 edit.appendChild(link);
                 row.appendChild(edit);
                 newSettingsTable.appendChild(row);
-                
+
             }
         });
         $("#containment-wrapper").append(newSettingsTable);
@@ -431,9 +461,31 @@ function onSettingsClick() {
     }
 }
 
-function OnLinkClick(linkElement) {
-    alert("OnLinkClick")
-}
+//function OnLinkClick(linkElement) {
+
+//    alert("OnLinkClick(linkElement)");
+//    //dialog.dialog("open");
+
+//    //console.log(linkElement);
+//}
+
+$(function () {
+    $("#dialog").dialog({
+        autoOpen: false,
+        //show: {
+        //    effect: "blind",
+        //    duration: 500
+        //},
+        //hide: {
+        //    effect: "explode",
+        //    duration: 500
+        //}
+    });
+
+    $(".pluginLink").on("click", function () {
+        $("#dialog").dialog("open");
+    });
+});
 
 function onLoadClick() {
     $.connection.hub.url = "signalr";
@@ -449,7 +501,7 @@ function onLoadClick() {
 }
 
 function refreshDraggable() {
-    console.log("editDraggable()");
+    //console.log("editDraggable()");
     if ($('.toggle-on').hasClass('active')) {
         $('.draggable').each(function () {
             $(this).draggable({ disabled: false });
@@ -475,10 +527,10 @@ function savePositonOnToggleOff() {
                 var left = plugObj.position().left;
                 var computerID = $('.node.active').find('span')[0].id;
                 var pluginID = plugObj[0].id;
-                console.log(plugObj[0].id);
-                console.log($.connection.hub.state);
+                //console.log(plugObj[0].id);
+                //console.log($.connection.hub.state);
                 if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
-                    console.log("start again");
+                    //console.log("start again");
                     time += 1000;
                     $.connection.hub.start().done(function () {
                         hub.server.saveHTMLPostion(computerID, pluginID, top, left);
@@ -489,7 +541,7 @@ function savePositonOnToggleOff() {
                 }                
             }, time);
             time += 50;
-            console.log("time: " + time);
+            //console.log("time: " + time);
         });
     }
 }
