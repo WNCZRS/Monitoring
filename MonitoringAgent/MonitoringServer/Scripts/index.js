@@ -30,20 +30,6 @@
 
     $('.toggle').toggles({ drag: false });
     $('.toggle').on('toggle', refreshDraggable).on('toggle', savePositonOnToggleOff);
-    $('.pluginLink').click(function () {
-        alert("dialog open");
-        //dialog.dialog("open");
-    });
-
-    $("#testButton").click(function () {
-        alert("dialog open testButton");
-        //dialog.dialog("open");
-    });
-
-    $("#testButton").button().on("click", function () {
-        alert("dialog open testButton");
-        //dialog.dialog("open");
-    });
     
     //draw tree view
     hub.client.ActivateTree = function (clientOutput) {
@@ -341,15 +327,14 @@
             //pluginSettings.data('pluginSettingsID', pluginSettingsID)
             localStorage.setItem(pluginSettingsID, JSON.stringify(pluginSettings));
 
+            var link = document.createElement("button");
+            link.id = pluginSettings.PluginUID;
+            link.className = "pluginLink";
+            link.textContent = pluginSettings.PluginName;
+            link.setAttribute("onclick", "OnLinkClick(this)");
 
             if ($(newSettingsTable).find("#" + pluginSettings.ComputerID).length) {
                 //add plugin link button to exist cell in table
-                var link = document.createElement("button");
-                link.id = pluginSettings.PluginID;
-                link.className = "pluginLink";
-                link.textContent = pluginSettings.PluginName;
-                //link.onclick = "OnLinkClick";
-                //link.setAttribute("onclick", "OnLinkClick(this)");
                 $(newSettingsTable).find("#editCell").append(link);
             } else {
                 //create new row for one computer
@@ -363,13 +348,6 @@
                 row.appendChild(station);
                 var edit = document.createElement("td");
                 edit.id = "editCell";
-                var link = document.createElement("button");
-                link.id = pluginSettings.PluginUID;
-                link.className = "pluginLink";
-                link.textContent = pluginSettings.PluginName;
-                link.id = "testButton";
-                //link.onclick = OnLinkClick();
-                //link.setAttribute("onclick", "OnLinkClick(this)");
                 edit.appendChild(link);
                 row.appendChild(edit);
                 newSettingsTable.appendChild(row);
@@ -461,31 +439,69 @@ function onSettingsClick() {
     }
 }
 
-//function OnLinkClick(linkElement) {
+function OnLinkClick(pluginLink) {
 
-//    alert("OnLinkClick(linkElement)");
-//    //dialog.dialog("open");
+    if ($("#dialog").length)
+    {
+        console.log("$(#dialog).length " + $("#dialog").length);
+    }
+    else {
+        var newDialog = document.createElement("div");
+        newDialog.id = "dialog";
+        newDialog.title = pluginLink.textContent;
+        var form = document.createElement("form");
+        var activeCheckBox = document.createElement("input");
+        activeCheckBox.type = "checkbox";
+        var labelCheckBox = document.createElement("label");
+        labelCheckBox.appendChild(document.createTextNode("Active"));
+        form.appendChild(activeCheckBox);
+        form.appendChild(labelCheckBox);
+        form.appendChild(document.createElement("br"));
+        var textBoxCritLimit = document.createElement("input");
+        textBoxCritLimit.type = "text";
+        var labelCritLimit = document.createElement("p");
+        labelCritLimit.id = "dialog_p";
+        labelCritLimit.textContent = "Critical value limit (%): ";
+        form.appendChild(labelCritLimit);
+        form.appendChild(textBoxCritLimit);
+        form.appendChild(document.createElement("br"));
+        var textBoxTimeSpan = document.createElement("input");
+        textBoxTimeSpan.type = "text";
+        var labelTimeSpan = document.createElement("p");
+        labelTimeSpan.id = "dialog_p";
+        labelTimeSpan.textContent = "Time span (minutes): ";
+        form.appendChild(labelTimeSpan);
+        form.appendChild(textBoxTimeSpan);
+        form.appendChild(document.createElement("br"));
+        var textBoxRefresh = document.createElement("input");
+        textBoxRefresh.type = "text";
+        var labelRefresh = document.createElement("p");
+        labelRefresh.id = "dialog_p";
+        labelRefresh.textContent = "Refresh period (seconds): ";
+        form.appendChild(labelRefresh);
+        form.appendChild(textBoxRefresh);
+        form.appendChild(document.createElement("br"));
+        form.appendChild(document.createElement("hr"));
+        var saveBotton = document.createElement("button");
+        saveBotton.textContent = "Save";
+        var cancelBotton = document.createElement("button");
+        cancelBotton.textContent = "Cancel";
+        form.appendChild(saveBotton);
+        form.appendChild(cancelBotton);
 
-//    //console.log(linkElement);
-//}
+        console.log(form);
+        console.log($("body"));
+        newDialog.appendChild(form);
+        $("body").append(newDialog);
 
-$(function () {
+    }
     $("#dialog").dialog({
-        autoOpen: false,
-        //show: {
-        //    effect: "blind",
-        //    duration: 500
-        //},
-        //hide: {
-        //    effect: "explode",
-        //    duration: 500
-        //}
+        autoOpen: false
     });
 
-    $(".pluginLink").on("click", function () {
-        $("#dialog").dialog("open");
-    });
-});
+    $("#dialog").dialog("open");
+}
+
 
 function onLoadClick() {
     $.connection.hub.url = "signalr";

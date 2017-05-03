@@ -108,39 +108,26 @@
             font-weight: bold;
         }
 
+        input {
+            margin: 5px 5px !important;        
+        }
+
+        label {
+            margin: 5px 5px;
+        }
+
+        #dialog_p {
+            margin: 10px 5px 0px !important;
+        }
+
         html, body {
             height: 100%;
         }   
            
     </style>
-
-    <script>
-          //$(function () {
-          //    $("#dialog").dialog({
-          //        autoOpen: false,
-          //        //show: {
-          //        //    effect: "blind",
-          //        //    duration: 500
-          //        //},
-          //        //hide: {
-          //        //    effect: "explode",
-          //        //    duration: 500
-          //        //}
-          //    });
-
-          //    $("#opener").on("click", function () {
-          //        $("#dialog").dialog("open");
-          //    });
-          //});
-    </script>
 </head>
 
 <body onload="checkFirstVisit()">
-    <div id="dialog" title="Basic dialog">
-        <p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
-    </div>
-
-    <button id="opener" class="myClass">Open Dialog</button>
 
     <button onclick="onLoadClick()" id="loadTree">LoadTree</button>
     <div id="usersCount"></div>
