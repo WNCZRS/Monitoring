@@ -149,8 +149,10 @@
                 plugDiv.id = plugin.PluginUID;
                 $(plugDiv).css({ position: "absolute" });
                 $(plugDiv).css("border-width", "1px");
-                $(plugDiv).css({ top: pluginSettings.HTMLPosition.Top + "px" });
-                $(plugDiv).css({ left: pluginSettings.HTMLPosition.Left + "px" });
+                if (pluginSettings !== null && pluginSettings.HTMLPosition !== null) {
+                    $(plugDiv).css({ top: pluginSettings.HTMLPosition.Top + "px" });
+                    $(plugDiv).css({ left: pluginSettings.HTMLPosition.Left + "px" });
+                }
 
                 plugin.PluginOutputList.forEach(function (pluginElement) {
                     var row = document.createElement('tr');
@@ -281,21 +283,6 @@
 
     hub.client.SavePositionToLocalStorage = function (positions) {
         positions.forEach(function (pluginSettingsFromDB) {
-            /*console.log("pluginSettingsFromDB");
-            console.log(pluginSettingsFromDB);
-            var pluginPositionID = pluginSettingsFromDB.ComputerID + '_' + pluginSettingsFromDB.PluginUID;
-
-            var pluginSettings = JSON.parse(localStorage.getItem(pluginPositionID));
-            console.log("pluginSettings_cache");
-            console.log(pluginSettings);
-            if (pluginSettings == null) {
-                localStorage.setItem(pluginPositionID, JSON.stringify(pluginSettingsFromDB));
-            }
-            else {
-                pluginSettings.HTMLPosition.left = pluginSettingsFromDB.HTMLPosition.left;
-                pluginSettings.HTMLPosition.top = pluginSettingsFromDB.HTMLPosition.top;
-                localStorage.setItem(pluginPositionID, JSON.stringify(pluginSettings))
-            }*/
             var pluginPositionID = pluginSettingsFromDB.ComputerID + '_' + pluginSettingsFromDB.PluginUID;
             localStorage.setItem(pluginPositionID, JSON.stringify(pluginSettingsFromDB));
         });
@@ -327,7 +314,7 @@
             //pluginSettings.data('pluginSettingsID', pluginSettingsID)
             localStorage.setItem(pluginSettingsID, JSON.stringify(pluginSettings));
 
-            var link = document.createElement("button");
+            var link = document.createElement("a");
             link.id = pluginSettings.PluginUID;
             link.className = "pluginLink";
             link.textContent = pluginSettings.PluginName;
@@ -365,6 +352,24 @@ function checkFirstVisit() {
         document.cookie = 'checkRefresh=1';
     }
     else {
+        setTimeout(function () {
+            $.connection.hub.url = "signalr";
+            var hub = $.connection.MyHub;
+            if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+                $.connection.hub.start().done(function () {
+                    $("#containment-wrapper").empty();
+                    hub.server.onRefresh();
+                    onRootNodeClick();
+                });
+            }
+            else {
+                $("#containment-wrapper").empty();
+                hub.server.onRefresh();
+                onRootNodeClick();
+            }
+        }, 500);
+
+
         // not first visit, so alert
         //alert('You refreshed!');
         //console.log('You refreshed!');
@@ -441,15 +446,13 @@ function onSettingsClick() {
 
 function OnLinkClick(pluginLink) {
 
-    if ($("#dialog").length)
+    if (!$("#dialog").length)
     {
-        console.log("$(#dialog).length " + $("#dialog").length);
-    }
-    else {
         var newDialog = document.createElement("div");
         newDialog.id = "dialog";
         newDialog.title = pluginLink.textContent;
         var form = document.createElement("form");
+
         var activeCheckBox = document.createElement("input");
         activeCheckBox.type = "checkbox";
         var labelCheckBox = document.createElement("label");
@@ -457,6 +460,7 @@ function OnLinkClick(pluginLink) {
         form.appendChild(activeCheckBox);
         form.appendChild(labelCheckBox);
         form.appendChild(document.createElement("br"));
+
         var textBoxCritLimit = document.createElement("input");
         textBoxCritLimit.type = "text";
         var labelCritLimit = document.createElement("p");
@@ -465,14 +469,31 @@ function OnLinkClick(pluginLink) {
         form.appendChild(labelCritLimit);
         form.appendChild(textBoxCritLimit);
         form.appendChild(document.createElement("br"));
-        var textBoxTimeSpan = document.createElement("input");
-        textBoxTimeSpan.type = "text";
-        var labelTimeSpan = document.createElement("p");
-        labelTimeSpan.id = "dialog_p";
-        labelTimeSpan.textContent = "Time span (minutes): ";
-        form.appendChild(labelTimeSpan);
-        form.appendChild(textBoxTimeSpan);
+        
+        var textBoxWarnLimit = document.createElement("input");
+        textBoxWarnLimit.type = "text";
+        var labelWarnLimit = document.createElement("p");
+        labelWarnLimit.id = "dialog_p";
+        labelWarnLimit.textContent = "Warning value limit (%): ";
+        form.appendChild(labelWarnLimit);
+        form.appendChild(textBoxWarnLimit);
         form.appendChild(document.createElement("br"));
+
+        var clientID = $("#" + pluginLink.id).parent().parent()[0].id;
+        if (clientID !== null) {
+            var pluginSettings = JSON.parse(localStorage.getItem(clientID + '_' + pluginLink.id));
+            if (pluginSettings.PluginType === 0) {
+                var textBoxTimeSpan = document.createElement("input");
+                textBoxTimeSpan.type = "text";
+                var labelTimeSpan = document.createElement("p");
+                labelTimeSpan.id = "dialog_p";
+                labelTimeSpan.textContent = "Graph time span (minutes): ";
+                form.appendChild(labelTimeSpan);
+                form.appendChild(textBoxTimeSpan);
+                form.appendChild(document.createElement("br"));
+            }
+        }
+
         var textBoxRefresh = document.createElement("input");
         textBoxRefresh.type = "text";
         var labelRefresh = document.createElement("p");
@@ -480,28 +501,35 @@ function OnLinkClick(pluginLink) {
         labelRefresh.textContent = "Refresh period (seconds): ";
         form.appendChild(labelRefresh);
         form.appendChild(textBoxRefresh);
-        form.appendChild(document.createElement("br"));
-        form.appendChild(document.createElement("hr"));
-        var saveBotton = document.createElement("button");
-        saveBotton.textContent = "Save";
-        var cancelBotton = document.createElement("button");
-        cancelBotton.textContent = "Cancel";
-        form.appendChild(saveBotton);
-        form.appendChild(cancelBotton);
 
-        console.log(form);
-        console.log($("body"));
         newDialog.appendChild(form);
         $("body").append(newDialog);
-
     }
-    $("#dialog").dialog({
-        autoOpen: false
+
+    dialog = $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        height: "auto",
+        width: "auto",
+        resizable: false,
+        buttons: {
+            "Save": saveSettings,
+            "Cancel": function () {
+                dialog.dialog("close");
+            }
+        }
+        //close: function () {
+        //    form[0].reset();
+        //    allFields.removeClass("ui-state-error");
+        //}
     });
 
     $("#dialog").dialog("open");
 }
 
+function saveSettings() {
+    dialog.dialog("close");
+}
 
 function onLoadClick() {
     $.connection.hub.url = "signalr";
@@ -522,11 +550,13 @@ function refreshDraggable() {
         $('.draggable').each(function () {
             $(this).draggable({ disabled: false });
             $(this).draggable({ containment: "#containment-wrapper", snap: true });
+            $(this).css("cursor", "move");
         });
     }
     else {
         $('.draggable').each(function () {
             $(this).draggable({ disabled: true });
+            $(this).css("cursor", "default");
         });
     }
 }

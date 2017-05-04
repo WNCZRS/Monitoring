@@ -43,7 +43,7 @@ namespace MonitoringServer.Controllers
             _nodeID = string.Empty;
             _pcName = string.Empty;
             _changed = false;
-            _viewType = ViewType.OneMachine;
+            _viewType = ViewType.CriticalPreview;
         }
 
         public static void StartMessageThread()

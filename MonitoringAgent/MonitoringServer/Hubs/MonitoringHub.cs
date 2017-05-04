@@ -70,8 +70,9 @@ namespace MonitoringServer.Hubs
 
         public void OnRefresh()
         {
-            Clients.Group("Clients").activateTree();
             MessageController.SetNodeID("");
+            MessageController.SetView(ViewType.CriticalPreview);
+            MessageController.LoadTreeView();
         }
 
         public void OnLoadClick()
@@ -107,6 +108,7 @@ namespace MonitoringServer.Hubs
             {
                 Groups.Add(Context.ConnectionId, "Clients");
             }
+            MessageController.LoadTreeView();
 
             return base.OnConnected();
         }

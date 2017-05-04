@@ -99,13 +99,14 @@
         a {
             color: #3c82ef !important;
             text-decoration: underline;
-            padding-right: 10px;
+            padding-right: 10px;          
         }
 
         a:hover {
             color: black !important;
             text-decoration: none;
             font-weight: bold;
+            cursor: pointer;
         }
 
         input {
@@ -120,6 +121,15 @@
             margin: 10px 5px 0px !important;
         }
 
+        #settings_btn {
+            cursor: pointer;
+            float: right;
+        }
+
+        ui-widget-content.draggable.ui-draggable.ui-draggable-handle {
+            cursor: pointer !important;
+        }
+
         html, body {
             height: 100%;
         }   
@@ -129,25 +139,26 @@
 
 <body onload="checkFirstVisit()">
 
-    <button onclick="onLoadClick()" id="loadTree">LoadTree</button>
-    <div id="usersCount"></div>
+    @*<button onclick="onLoadClick()" id="loadTree">LoadTree</button>*@
+    @* for debug: count of connected client *@
+    @*<div id="usersCount"></div>*@
     <div class="grid" id="mainDiv">
 
         <div class="row cells2" style="margin-bottom: 5px">
             <div class="cell" style="width:15%;">
-                <img src="#" alt="Alternate Text" />
+                <img src="~/Content/images/logo_notfound.png" alt="Not found" style="height: 62px"/>
             </div>
             <div class="cell" style="margin-left: 10px; width: 80%; height: 100%; padding: 0px 10px 0px;">
                 <h1 id="mainTitle" style="float: left; padding-left: 10px;"></h1>
-                <div id="settings_btn" style="float: right;" onclick="onSettingsClick()">
-                    <img src="~/Content/images/settings.png" alt="Alternate Text" width="70"/>
+                <div id="settings_btn" onclick="onSettingsClick()">
+                    <img src="~/Content/images/settings.png" alt="Not found" width="70"/>
                     <p align="center">Settings</p>
                 </div>
             </div>
         </div>
 
         <div class="row cells2" style="height: 95%;">
-            <div class="cell ui-widget-header" id="treeDiv" style="width: 15%; height: 95%; margin-left: 10px">
+            <div class="cell ui-widget-header" id="treeDiv" style="width: 15%; height: 100%; margin-left: 10px">
 
             </div>
             <div id="containment-wrapper-main" class="cell ui-widget-header" style="height: 95%;">
