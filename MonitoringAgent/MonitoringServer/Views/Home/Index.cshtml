@@ -5,19 +5,25 @@
     <title>Real-time Resource Monitor</title>
     <link href="~/Content/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="~/Content/metro.css" type="text/css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui.css" rel="stylesheet"/>
+    <link href="~/Content/toggles-full.css" rel="stylesheet"/>
+    <link href="~/Content/toggles-modern.css" rel="stylesheet"/>
     <script src="~/Scripts/jquery-3.1.1.js" type="text/javascript"></script>
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js" type="text/javascript"></script>
+    @*<script src="~/Scripts/jquery.ui.resizable.snap.ext.js"></script>*@
     <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/knockout-3.4.0.js" type="text/javascript"></script>
     <script src="~/Scripts/knockout.mapping-latest.js" type="text/javascript"></script>
     <script src="~/Scripts/metro.js" type="text/javascript"></script>
+    <script src="~/Scripts/toggles.min.js" type="text/javascript"></script>
     <script src="~/Scripts/index.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery-ui.js" type="text/javascript"></script>
 
     <style type="text/css">
-        table {
+         table {
             color: #333;
             font-family: Helvetica, Arial, sans-serif;
-            width: 640px;
+            width: 100%;
             border-collapse: collapse;
             border-spacing: 0;
         }
@@ -26,6 +32,8 @@
             border: 1px solid transparent; /* No more visible border */
             height: 30px;
             transition: all 0.3s; /* Simple transition for hover effect */
+            padding-left: 10px;
+            padding-right: 10px;
         }
 
         th {
@@ -35,7 +43,7 @@
 
         td {
             background: #FAFAFA;
-            text-align: center;
+            text-align: left;
         }
 
         /* Cells in even rows (2,4,6...) are one color */
@@ -49,63 +57,129 @@
         }
 
         /* Hover cell effect! */
-        tr td:hover {
-            background: #666;
+        /*tr:hover td{
+            background: #666 !important;
             color: #FFF;
-        }
+        }*/
 
         .alertRow {
-            background: #ff0000 !important;
-            color: #ffffff !important;
+            /*background: #ff0000 !important;*/
+            color: #ff0000;
+        } 
+
+        #containment-wrapper-main {
+            margin-left: 10px;
+            width: 80%;
+            min-height: 100%;
+            padding: 10px 10px 10px;
+        }
+         
+        #containment-wrapper {
+            width: 100%;
+            min-height: 95%;
+            border: none;
         }
 
-        div.hidden {
-            /*display: none;*/
-            visibility: hidden;
+        #mainDiv {
+            height: 93%;
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer */
+            -webkit-user-select: none; /* Chrome, Safari, and Opera */
+            -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
         }
+
+        #mainDiv:hover {
+           cursor: default;
+        }
+
+        #separator {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #3c82ef !important;
+            text-decoration: underline;
+            padding-right: 10px;          
+        }
+
+        a:hover {
+            color: black !important;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        input {
+            margin: 5px 5px !important;        
+        }
+
+        label {
+            margin: 5px 5px;
+        }
+
+        #dialog_p {
+            margin: 10px 5px 0px !important;
+        }
+
+        #settings_btn {
+            cursor: pointer;
+            float: right;
+        }
+
+        ui-widget-content.draggable.ui-draggable.ui-draggable-handle {
+            cursor: pointer !important;
+        }
+
+        html, body {
+            height: 100%;
+        }   
+           
     </style>
 </head>
+
 <body onload="checkFirstVisit()">
-    <button onclick="onSwitchClick()" id="switchView">SwitchView</button>
-    <button onclick="onLoadClick()" id="loadTree">LoadTree</button>
-    <div id="usersCount"></div>
+
+    @*<button onclick="onLoadClick()" id="loadTree">LoadTree</button>*@
+    @* for debug: count of connected client *@
+    @*<div id="usersCount"></div>*@
     <div class="grid" id="mainDiv">
-        <div class="row cells4">
-            <div class="cell" id="treeDiv">
-                @*<div class="treeview" data-role="treeview" id="treeview">
-                    <ul>
-                        <li class="node active">
-                            <span class="leaf">
-                                <img src="" class="icon">Machines
-                            </span>
-                            <span class="node-toggle"></span>
-                            <ul id="rootNode">
-                                <li>
-                                    <span class="leaf">Customer1</span>
-                                    <span class="node-toggle"></span>
-                                </li>
-                                <li>
-                                    <span class="leaf" id="noCategory">No category</span>
-                                    <span class="node-toggle"></span>
-                                    <ul>
-                                        <li>
-                                            <span class="leaf" onclick="onNodeClick(this)">test</span>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>*@
+
+        <div class="row cells2" style="margin-bottom: 5px">
+            <div class="cell" style="width:15%;">
+                <img src="~/Content/images/logo_notfound.png" alt="Not found" style="height: 62px"/>
             </div>
-            <div class="cell collspan3" id="tableDiv">
-                @*<table id="resultTable">
-                    <tr>
-                        <th>
-                            initTable
-                        </th>
-                    </tr>
-                </table>*@
+            <div class="cell" style="margin-left: 10px; width: 80%; height: 100%; padding: 0px 10px 0px;">
+                <h1 id="mainTitle" style="float: left; padding-left: 10px;"></h1>
+                <div id="settings_btn" onclick="onSettingsClick()">
+                    <img src="~/Content/images/settings.png" alt="Not found" width="70"/>
+                    <p align="center">Settings</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row cells2" style="height: 95%;">
+            <div class="cell ui-widget-header" id="treeDiv" style="width: 15%; height: 100%; margin-left: 10px">
+
+            </div>
+            <div id="containment-wrapper-main" class="cell ui-widget-header" style="height: 95%;">
+                <div id="editableSwitch">
+                    <p style="position: absolute; top: 7px; right: 90px">Editable</p>
+                    <div class="toggle-modern" style="position: absolute; top: 5px; right: 10px">
+                        <div class="toggle nodrag" style="height: 22px; width: 70px;">
+                            <div class="toggle-slide">
+                                <div class="toggle-inner" style="width: 118px; margin-left: 0px;">
+                                    <div class="toggle-on" style="height: 22px; width: 59px; text-indent: -7.33333px; line-height: 22px;">ON</div>
+                                    <div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>
+                                    <div class="toggle-off active" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 7.33333px; line-height: 22px;">OFF</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr id="separator"/>
+                <div id="containment-wrapper" class="ui-widget-header">
+
+                </div>
             </div>
         </div>
     </div>

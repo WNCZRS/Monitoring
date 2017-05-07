@@ -13,12 +13,14 @@ namespace MonitoringServer.Controllers
     public enum ViewType
     {
         OneMachine,
-        CriticalPreview
+        CriticalPreview,
+        SettingsView
     }
+
     public class MessageController
     {
         private static string _nodeID;
-        private static string _customer;
+        private static string _group;
         private static string _pcName;
         private static bool _changed;
         private static ViewType _viewType;
@@ -37,11 +39,11 @@ namespace MonitoringServer.Controllers
 
         private MessageController()
         {
-            _customer = string.Empty;
+            _group = string.Empty;
             _nodeID = string.Empty;
             _pcName = string.Empty;
             _changed = false;
-            _viewType = ViewType.OneMachine;
+            _viewType = ViewType.CriticalPreview;
         }
 
         public static void StartMessageThread()
@@ -80,6 +82,10 @@ namespace MonitoringServer.Controllers
                             CriticalPreview();
                             break;
 
+                        case ViewType.SettingsView:
+                            //nothing to sending periodically
+                            break;
+
                         default:
                             break;
                     }
@@ -94,16 +100,17 @@ namespace MonitoringServer.Controllers
 
         private static void CriticalPreview()
         {
-            GetContext().Clients.Group("Clients").InitMainDiv();
+            //GetContext().Clients.Group("Clients").InitMainDiv();
             try
             {
-                List<ClientOutput> clientOutputList = SQLiteController.LastValuesFromDB();
+                SQLiteController sqlController = new SQLiteController();
+                List<ClientOutput> clientOutputList = sqlController.LastValuesFromDB();
                 if (clientOutputList != null || clientOutputList.Count != 0)
                 {
                     List<ClientOutput> criticalValues = GetCriticalValues(clientOutputList);
                     if (criticalValues.Count > 0)
                     {
-                        GetContext().Clients.Group("Clients").previewCritical(criticalValues);
+                        GetContext().Clients.Group("Clients").PreviewCritical(criticalValues);
                     }
                 }
             }
@@ -118,10 +125,12 @@ namespace MonitoringServer.Controllers
             List<ClientOutput> newClientOutputList = new List<ClientOutput>();
             foreach (ClientOutput co in clientOutputList)
             {
-                ClientOutput newClientOutput = new ClientOutput(co.PCName, co.ID, co.Customer);
+                ClientOutput newClientOutput = new ClientOutput(co.PCName, co.ID, co.Group);
                 foreach (PluginOutputCollection pluginCollection in co.CollectionList)
                 {
-                    PluginOutputCollection newPluginCollection = new PluginOutputCollection(pluginCollection.PluginName);
+                    PluginOutputCollection newPluginCollection = new PluginOutputCollection();
+                    newPluginCollection.PluginName = pluginCollection.PluginName;
+                    newPluginCollection.PluginUID = pluginCollection.PluginUID;
                     foreach (PluginOutput pluginOutput in pluginCollection.PluginOutputList)
                     {
                         if (pluginOutput.Values.Any(item => item.IsCritical == true))
@@ -146,10 +155,11 @@ namespace MonitoringServer.Controllers
         {
             try
             {
-                ClientOutput clientOutput = SQLiteController.JSONFromSQL(_customer, _nodeID, _pcName);
+                SQLiteController sqlController = new SQLiteController();
+                ClientOutput clientOutput = sqlController.JSONFromSQL(_group, _nodeID, _pcName);
                 if (clientOutput != null)
                 {
-                    GetContext().Clients.Group("Clients").pluginsMessage(clientOutput);
+                    GetContext().Clients.Group("Clients").PluginsMessage(clientOutput);
                 }
             }
             catch (Exception ex)
@@ -175,41 +185,61 @@ namespace MonitoringServer.Controllers
             _changed = true;
         }
 
-        public static void SetCustomer(string customer)
+        public static void SetGroup(string group)
         {
-            _customer = customer;
+            _group = group;
             _changed = true;
         }
 
         public static void SetView(ViewType viewType)
         {
             _viewType = viewType;
-        }
-
-        public static void SwitchView()
-        {
-            if (_viewType == ViewType.CriticalPreview)
-            {
-                GetContext().Clients.Group("Clients").InitMainDiv();
-                _viewType = ViewType.OneMachine;
-                LoadTreeView();
-            }
-            else
-            {
-                _viewType = ViewType.CriticalPreview;
-                GetContext().Clients.Group("Clients").deactivateTree();
-            }
             _changed = true;
         }
 
         public static void LoadTreeView()
         {
-            if (_viewType == ViewType.OneMachine)
+            SQLiteController sqlConroller = new SQLiteController();
+            List<ClientOutput> treeInfo = sqlConroller.GetBasicInfo();
+            foreach (ClientOutput node in treeInfo)
             {
-                List<ClientOutput> treeInfo = SQLiteController.GetBasicInfo();
-                foreach (ClientOutput node in treeInfo)
+                GetContext().Clients.Group("Clients").ActivateTree(node);
+            }
+        }
+
+        public static void SendSavedPosition()
+        {
+            SQLiteController sqlController = new SQLiteController();
+
+            //var machineID = sqlConroller.GetMachineID(_nodeID);
+            List<PluginSettings> pluginPositions = sqlController.GetHTMLPositions(_nodeID);
+            if (pluginPositions != null && pluginPositions.Count > 0)
+            {
+                try
                 {
-                    GetContext().Clients.Group("Clients").activateTree(node);
+                    GetContext().Clients.Group("Clients").SavePositionToLocalStorage(pluginPositions.ToArray());
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public static void SendPluginSettings()
+        {
+            SQLiteController sqlController = new SQLiteController();
+
+            List<PluginSettings> pluginSettingsList = sqlController.GetAllPluginSettings();
+            if (pluginSettingsList != null && pluginSettingsList.Count > 0)
+            {
+                try
+                {
+                    GetContext().Clients.Group("Clients").SaveSettingsToLocalStorage(pluginSettingsList.ToArray());
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
             }
         }

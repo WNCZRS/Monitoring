@@ -10,8 +10,16 @@ namespace MonitoringServer.Hubs
     [HubName("MyHub")]
     public class MonitoringHub : Hub
     {
+        private static List<HubCallerContext> _connections;
+        private SQLiteController _sqlController;
+
         public static List<string> Users = new List<string>();
-        private static List<HubCallerContext> connections = new List<HubCallerContext>();
+
+        public MonitoringHub()
+        {
+            _connections = new List<HubCallerContext>();
+            _sqlController = new SQLiteController();
+        }
 
         public void SendCount(int count)
         {
@@ -21,34 +29,50 @@ namespace MonitoringServer.Hubs
 
         public void SendPluginOutput(ClientOutput clientOutput)
         {
+            _sqlController = new SQLiteController();
             if (clientOutput.InitPost)
             {
                 Groups.Add(Context.ConnectionId, "Agents");
-                SQLiteController.SaveBasicInfo(clientOutput);
+                _sqlController.SaveBasicInfo(clientOutput);
                 MessageController.LoadTreeView();
             }
             else
             {
-                SQLiteController.JSONToSQL(clientOutput);
+                _sqlController.JSONToSQL(clientOutput);
             }
         }
 
-        public void NodeClick(string nodeID, string pcName, string customer)
+        public void NodeClick(string nodeID, string pcName, string group)
         {
             MessageController.SetNodeID(nodeID);
             MessageController.SetPCName(pcName);
-            MessageController.SetCustomer(customer);
+            MessageController.SetGroup(group);
+            CallOneMachineView();
         }
 
-        public void OnSwitchClick()
+        public void CallWarningsView()
         {
-            MessageController.SwitchView();
+            MessageController.SetView(ViewType.CriticalPreview);
+        }
+
+        public void CallOneMachineView()
+        {
+            MessageController.SetView(ViewType.OneMachine);
+            MessageController.SendSavedPosition();
+
+        }
+
+        public void CallSettingsView()
+        {
+            MessageController.SetView(ViewType.SettingsView);
+            MessageController.SendPluginSettings();
         }
 
         public void OnRefresh()
         {
-            Clients.Group("Clients").activateTree();
             MessageController.SetNodeID("");
+            MessageController.SetView(ViewType.CriticalPreview);
+            MessageController.LoadTreeView();
         }
 
         public void OnLoadClick()
@@ -56,9 +80,22 @@ namespace MonitoringServer.Hubs
             MessageController.LoadTreeView();
         }
 
+        public void SaveHTMLPostion(string computerID, string pluginGuid, int posTop, int posLeft)
+        {
+            if (string.IsNullOrWhiteSpace(computerID) || string.IsNullOrWhiteSpace(pluginGuid))
+            {
+                return;                                            
+            }
+
+            //var machineID = _sqlController.GetMachineID(computerID);
+            SQLiteController s = new SQLiteController();
+            s.SaveHTMLPosition(computerID, pluginGuid, posTop, posLeft);
+            //_sqlController.SaveHTMLPosition(computerID, pluginGuid, posTop, posLeft);
+        }
+
         public override Task OnConnected()
         {
-            connections.Add(Context);
+            _connections.Add(Context);
 
             string clientID = GetClientId();
 
@@ -71,6 +108,7 @@ namespace MonitoringServer.Hubs
             {
                 Groups.Add(Context.ConnectionId, "Clients");
             }
+            MessageController.LoadTreeView();
 
             return base.OnConnected();
         }

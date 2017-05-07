@@ -9,6 +9,14 @@ namespace PluginsCollection
     {
         PluginOutputCollection _pluginOutputs;
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("736c0953-d609-438a-833f-9a7914e43756");
+            }
+        }
+
         public string Name
         {
             get
@@ -17,9 +25,19 @@ namespace PluginsCollection
             }
         }
 
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public TerminalServicesUsers()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public PluginOutputCollection Output()
@@ -38,7 +56,7 @@ namespace PluginsCollection
                     {
                         listSPO.Add(new SimplePluginOutput(account.ToString(), false));
 
-                        _pluginOutputs.NewPluginOutput("User", listSPO);
+                        _pluginOutputs.PluginOutputList.Add(new PluginOutput("User", listSPO));
                     }
                 }
             }

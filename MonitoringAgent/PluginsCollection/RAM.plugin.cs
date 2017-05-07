@@ -8,6 +8,14 @@ namespace PluginsCollection
     {
         PluginOutputCollection _pluginOutputs;
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("eaabddc4-d976-4e26-bed9-33772da99bfb");
+            }
+        }
+
         public string Name
         {
             get
@@ -16,9 +24,19 @@ namespace PluginsCollection
             }
         }
 
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public RAM()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public PluginOutputCollection Output()

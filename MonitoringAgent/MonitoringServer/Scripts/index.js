@@ -1,4 +1,4 @@
-﻿$(function () {
+﻿$(document).ready(function () {
 
     // The view model that is bound to our view
     var ViewModel = function () {
@@ -20,11 +20,20 @@
     console.log("before start connection");
     // Get a reference to our hub
     $.connection.hub.url = "signalr";
-    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub
 
-    hub.client.activateTree = function (clientOutput) {
-        console.log("activateTree");
+    //$.connection.hub.logging = true;
+    // Start the connection
+    $.connection.hub.start().done(function () {
+        vm.connected(true);
+    });
+
+    $('.toggle').toggles({ drag: false });
+    $('.toggle').on('toggle', refreshDraggable).on('toggle', savePositonOnToggleOff);
+    
+    //draw tree view
+    hub.client.ActivateTree = function (clientOutput) {
+        //console.log("activateTree");
 
         var treeview = document.getElementById("treeview");
         if (treeview === null) {
@@ -43,6 +52,7 @@
             li.className = "node active";
             spanTmp1.className = "leaf";
             img.className = "icon";
+            spanTmp1.setAttribute("onclick", "onRootNodeClick()");
             spanTmp1.appendChild(img);
             spanTmp1.textContent = "Machines";
             spanTmp2.className = "node-toggle";
@@ -64,167 +74,54 @@
         span3.setAttribute("onclick", "onNodeClick(this)");
         span3.textContent = clientOutput.PCName;
         span3.id = clientOutput.ID;
-        span3.setAttribute("customer", clientOutput.Customer);
+        span3.setAttribute("group", clientOutput.Group);
         li3.className = "node";
         li3.appendChild(span3);
         ul3.appendChild(li3);
 
-        if (clientOutput.Customer === null || clientOutput.Customer === "") {
+        if (clientOutput.Group === null || clientOutput.Group === "") {
             if (document.getElementById(clientOutput.ID) === null) {
                 document.getElementById("noCategory").appendChild(ul3);
             }
         }
-        else if (document.getElementById(clientOutput.Customer) === null) {
+        else if (document.getElementById(clientOutput.Group) === null) {
             var li2 = document.createElement('li');
             var span2 = document.createElement('span');
             span2.className = "leaf";
             var span2_ = document.createElement('span');
             span2_.className = "node-toggle";
-            span2.textContent = clientOutput.Customer;
+            span2.textContent = clientOutput.Group;
             li2.appendChild(span2);
             li2.appendChild(span2_);
-            li2.id = clientOutput.Customer;
+            li2.id = clientOutput.Group;
             li2.className = "node";
             document.getElementById("rootNode").appendChild(li2);
             if (document.getElementById(clientOutput.ID) === null) {
-                document.getElementById(clientOutput.Customer).appendChild(ul3);
+                document.getElementById(clientOutput.Group).appendChild(ul3);
             }
         } else if (document.getElementById(clientOutput.ID) === null) {
-            document.getElementById(clientOutput.Customer).appendChild(ul3);
+            document.getElementById(clientOutput.Group).appendChild(ul3);
         }
-    }
-
-    hub.client.deactivateTree = function () {
-        console.log("deactivateTree");
-        $(document).find('#treeview').remove();
-        var tree = document.getElementById("treeDiv");
-        //console.log(tree);
-        //document.removeChild(tree);
-    }
-
-    hub.client.pluginsMessage = function (clientOutput) {
-        console.log("pluginsMessage");
-
-        var newResultTable = document.createElement('table');
-        var pcName = document.createElement('tr');
-        var nameCell = document.createElement('th');
-        var lastUpdate = document.createElement('td');
-        lastUpdate.textContent = "Last Update: " + clientOutput.LastUpdate;
-        nameCell.textContent = clientOutput.PCName;
-        pcName.appendChild(nameCell);
-        pcName.appendChild(lastUpdate);
-        newResultTable.appendChild(pcName);
-        newResultTable.id = "resultTable";
+    };
+    
+    hub.client.PluginsMessage = function (clientOutput) {
+        //console.log("pluginsMessage");
 
         clientOutput.CollectionList.forEach(function (plugin) {
-            var headRow = document.createElement('tr');
-            var headCell = document.createElement('th');
-            headCell.textContent = plugin.PluginName;
-            headCell.setAttribute("colspan", "100");
-            headRow.appendChild(headCell);
-            newResultTable.appendChild(headRow);
-           
-            plugin.PluginOutputList.forEach(function (pluginElement) {
-                var row = document.createElement('tr');
-                var cellName = document.createElement('td');
-                cellName.textContent = pluginElement.PropertyName;
-                row.appendChild(cellName);
 
-                pluginElement.Values.forEach(function (simplePluginElement) {
-                    var cellValue = document.createElement('td');
-                    cellValue.textContent = simplePluginElement.Value;
+            if ($("#" + plugin.PluginUID).length) {
+                //$("#" + plugin.PluginUID).replaceWith(plugDiv);
 
-                    if (simplePluginElement.IsCritical) {
-                        cellValue.className = "alertRow";
-                    }
-                    row.appendChild(cellValue);
-                });
-                newResultTable.appendChild(row);
-            });
-        });
+                var table = document.createElement('table');
 
-        console.log("resultTable: ");
-        console.log(newResultTable);
-        var originalResultTable = document.getElementById("resultTable");
-        if (originalResultTable === null) {
-            var newTable = document.createElement("table");
-            newTable.id = "resultTable";
-            document.getElementById("tableDiv").appendChild(newTable);
-        }
-        var parent;
-        var noResult;
-        var activeNode = document.body.getElementsByClassName("active")[0];
-
-        if (activeNode !== null) {
-            var activeNodeID = activeNode.firstChild.id;
-
-            if (activeNodeID === clientOutput.ID) {
-                originalResultTable = document.getElementById("resultTable");
-                parent = originalResultTable.parentElement;
-                parent.replaceChild(newResultTable, originalResultTable);
-            }
-            else {
-                noResult = document.createElement('p');
-                noResult.textContent = "No result for selected machine!";
-                noResult.id = "resultTable";
-                originalResultTable = document.getElementById("resultTable");
-                parent = originalResultTable.parentElement;
-                parent.replaceChild(noResult, originalResultTable);
-            }
-        }
-        else {
-            noResult = document.createElement('p');
-            noResult.textContent = "No result for selected machine!";
-            noResult.id = "resultTable";
-            originalResultTable = document.getElementById("resultTable");
-            parent = originalResultTable.parentElement;
-            parent.replaceChild(noResult, originalResultTable);
-        }
-    }
-
-    hub.client.previewCritical = function (criticalValues) {
-        console.log("previewCritical");
-
-        criticalValues.forEach(function (clientOutput) {
-            var newResultTable;
-            if (document.getElementById(clientOutput.Customer + "DIV") === null) {
-                var newResultDiv = document.createElement("div");
-                newResultDiv.id = clientOutput.Customer + "DIV";
-                var headerText = document.createElement("h1");
-                headerText.textContent = clientOutput.Customer;
-                newResultTable = document.createElement("table");
-                newResultTable.id = clientOutput.Customer + "TABLE";
-                newResultDiv.appendChild(headerText);
-                newResultDiv.appendChild(newResultTable);
-                document.getElementById("tableDiv").appendChild(newResultDiv);
-            }
-            
-            newResultTable = document.getElementById(clientOutput.Customer + "TABLE");
-            console.log(newResultTable);
-
-            var pcName = document.createElement("tr");
-            var nameCell = document.createElement("th");
-            var lastUpdate = document.createElement("td");
-            nameCell.textContent = clientOutput.PCName;
-            pcName.appendChild(nameCell);
-            newResultTable.appendChild(pcName);
-
-            clientOutput.CollectionList.forEach(function (plugin) {
-                var headRow = document.createElement("tr");
-                var headCell = document.createElement("th");
-                headCell.textContent = plugin.PluginName;
-                headCell.setAttribute("colspan", "100");
-                headRow.appendChild(headCell);
-                newResultTable.appendChild(headRow);
-           
                 plugin.PluginOutputList.forEach(function (pluginElement) {
-                    var row = document.createElement("tr");
-                    var cellName = document.createElement("td");
+                    var row = document.createElement('tr');
+                    var cellName = document.createElement('td');
                     cellName.textContent = pluginElement.PropertyName;
                     row.appendChild(cellName);
 
                     pluginElement.Values.forEach(function (simplePluginElement) {
-                        var cellValue = document.createElement("td");
+                        var cellValue = document.createElement('td');
                         cellValue.textContent = simplePluginElement.Value;
 
                         if (simplePluginElement.IsCritical) {
@@ -232,14 +129,128 @@
                         }
                         row.appendChild(cellValue);
                     });
-                    newResultTable.appendChild(row);
+                    table.appendChild(row);
+                });
+
+                $("#" + plugin.PluginUID).find('table').replaceWith(table);
+            }
+            else {
+                var pluginSettings = JSON.parse(localStorage.getItem(clientOutput.ID + '_' + plugin.PluginUID));
+                //console.log("pluginSettings");
+                //console.log(pluginSettings);
+                var plugDiv = document.createElement('div');
+                var frameDiv = document.createElement('div');
+                table = document.createElement('table');
+                var title = document.createElement('h2');
+                title.innerHTML = plugin.PluginName;
+                frameDiv.style.padding = "10px";
+                plugDiv.classList.add("ui-widget-content");
+                plugDiv.classList.add("draggable");
+                plugDiv.id = plugin.PluginUID;
+                $(plugDiv).css({ position: "absolute" });
+                $(plugDiv).css("border-width", "1px");
+                if (pluginSettings !== null && pluginSettings.HTMLPosition !== null) {
+                    $(plugDiv).css({ top: pluginSettings.HTMLPosition.Top + "px" });
+                    $(plugDiv).css({ left: pluginSettings.HTMLPosition.Left + "px" });
+                }
+
+                plugin.PluginOutputList.forEach(function (pluginElement) {
+                    var row = document.createElement('tr');
+                    var cellName = document.createElement('td');
+                    cellName.textContent = pluginElement.PropertyName;
+                    row.appendChild(cellName);
+
+                    pluginElement.Values.forEach(function (simplePluginElement) {
+                        var cellValue = document.createElement('td');
+                        cellValue.textContent = simplePluginElement.Value;
+
+                        if (simplePluginElement.IsCritical) {
+                            cellValue.className = "alertRow";
+                        }
+                        row.appendChild(cellValue);
+                    });
+                    table.appendChild(row);
+                });
+
+                var separator = document.createElement('hr');
+                separator.style.marginTop = "0px";
+                separator.style.marginBottom = "0px";
+                separator.style.height = "1px";
+
+                frameDiv.appendChild(title);
+                frameDiv.appendChild(separator);
+                frameDiv.appendChild(table);
+                plugDiv.appendChild(frameDiv);
+
+                $("#containment-wrapper").append(plugDiv);
+            }
+
+        });
+        refreshDraggable();
+    };
+
+    hub.client.PreviewCritical = function (criticalValues) {
+        console.log("previewCritical");
+        $("#containment-wrapper").empty();
+
+        var newResultTable = document.createElement("table");
+
+        //make table header
+        var headerRow = document.createElement("tr");
+        var groupHead = document.createElement("th");
+        groupHead.textContent = "Group";
+        headerRow.appendChild(groupHead);
+        var stationHead = document.createElement("th");
+        stationHead.textContent = "Station";
+        headerRow.appendChild(stationHead);
+        var pluginHead = document.createElement("th");
+        pluginHead.textContent = "Plugin";
+        headerRow.appendChild(pluginHead);
+        var valueHead = document.createElement("th");
+        valueHead.textContent = "Value";
+        headerRow.appendChild(valueHead);
+        newResultTable.appendChild(headerRow);
+
+
+        criticalValues.forEach(function (clientOutput) {
+
+            clientOutput.CollectionList.forEach(function (plugin) {
+
+                plugin.PluginOutputList.forEach(function (pluginElement) {
+
+                    pluginElement.Values.forEach(function (simplePluginElement) {
+
+                        var row = document.createElement("tr");
+                        var group = document.createElement("td");
+                        group.textContent = clientOutput.Group;
+                        row.appendChild(group);
+                        var station = document.createElement("td");
+                        station.textContent = clientOutput.PCName;
+                        row.appendChild(station);
+                        var pluginRow = document.createElement("td");
+                        pluginRow.textContent = plugin.PluginName;
+                        row.appendChild(pluginRow);
+                        var value = document.createElement("td");
+                        value.textContent = pluginElement.PropertyName + " - " + simplePluginElement.Value;
+                        if (simplePluginElement.IsCritical) {
+                            value.className = "alertRow";
+                        }
+                        //TODO warning
+                        /*if (simplePluginElement.IsWarning) {
+                            cellValue.className = "warningRow";
+                        }*/
+                        row.appendChild(value);
+                        newResultTable.appendChild(row);
+                    });
                 });
             });
         });
-    }
+
+        $("#containment-wrapper").append(newResultTable);
+    };
 
     hub.client.InitMainDiv = function () {
-        console.log("initMainDiv");
+        //console.log("initMainDiv");
 
         newMainDiv = document.createElement("div");
         newMainDiv.className = "grid";
@@ -247,13 +258,14 @@
         var rowCells4 = document.createElement('div');
         rowCells4.className = "row cells4";
         var cell = document.createElement('div');
-        cell.className = "cell";
+        cell.classList.add("cell");
+        cell.classList.add("ui-widget-header");
         cell.id = "treeDiv";
-        var cellcollspan3 = document.createElement('div');
-        cellcollspan3.className = "cell collspan3";
-        cellcollspan3.id = "tableDiv";
+        //var cellcollspan3 = document.createElement('div');
+        //cellcollspan3.className = "cell collspan3";
+        //cellcollspan3.id = "tableDiv";
         rowCells4.appendChild(cell);
-        rowCells4.appendChild(cellcollspan3);
+        //rowCells4.appendChild(cellcollspan3);
         newMainDiv.appendChild(rowCells4);
 
         var mainDiv = document.getElementById("mainDiv");
@@ -263,16 +275,74 @@
         else {
             document.body.replaceChild(newMainDiv, mainDiv);
         }
-    }
+    };
 
     hub.client.UpdateUsersOnlineCount = function (count) {
         $('#usersCount').text(count);
-    }
+    };
 
-    // Start the connection
-    $.connection.hub.start().done(function () {
-        vm.connected(true);
-    });
+    hub.client.SavePositionToLocalStorage = function (positions) {
+        positions.forEach(function (pluginSettingsFromDB) {
+            var pluginPositionID = pluginSettingsFromDB.ComputerID + '_' + pluginSettingsFromDB.PluginUID;
+            localStorage.setItem(pluginPositionID, JSON.stringify(pluginSettingsFromDB));
+        });
+    };
+
+    hub.client.SaveSettingsToLocalStorage = function (pluginSettingsList) {
+        //console.log(pluginSettingsList);
+
+        var newSettingsTable = document.createElement("table");
+        newSettingsTable.id = "settingsTable";
+
+        //make table header
+        var headerRow = document.createElement("tr");
+        var groupHead = document.createElement("th");
+        groupHead.textContent = "Group";
+        headerRow.appendChild(groupHead);
+        var stationHead = document.createElement("th");
+        stationHead.textContent = "Station";
+        headerRow.appendChild(stationHead);
+        var pluginHead = document.createElement("th");
+        pluginHead.textContent = "Edit";
+        headerRow.appendChild(pluginHead);
+        newSettingsTable.appendChild(headerRow);
+
+        pluginSettingsList.forEach(function (pluginSettings) {
+
+            // save pluginSettins into local storage
+            var pluginSettingsID = pluginSettings.ComputerID + '_' + pluginSettings.PluginUID;
+            //pluginSettings.data('pluginSettingsID', pluginSettingsID)
+            localStorage.setItem(pluginSettingsID, JSON.stringify(pluginSettings));
+
+            var link = document.createElement("a");
+            link.id = pluginSettings.PluginUID;
+            link.className = "pluginLink";
+            link.textContent = pluginSettings.PluginName;
+            link.setAttribute("onclick", "OnLinkClick(this)");
+
+            if ($(newSettingsTable).find("#" + pluginSettings.ComputerID).length) {
+                //add plugin link button to exist cell in table
+                $(newSettingsTable).find("#editCell").append(link);
+            } else {
+                //create new row for one computer
+                var row = document.createElement("tr");
+                row.id = pluginSettings.ComputerID;
+                var group = document.createElement("td");
+                group.textContent = pluginSettings.GroupName;
+                row.appendChild(group);
+                var station = document.createElement("td");
+                station.textContent = pluginSettings.ComputerName;
+                row.appendChild(station);
+                var edit = document.createElement("td");
+                edit.id = "editCell";
+                edit.appendChild(link);
+                row.appendChild(edit);
+                newSettingsTable.appendChild(row);
+
+            }
+        });
+        $("#containment-wrapper").append(newSettingsTable);
+    };
 });
 
 function checkFirstVisit() {
@@ -282,9 +352,27 @@ function checkFirstVisit() {
         document.cookie = 'checkRefresh=1';
     }
     else {
+        setTimeout(function () {
+            $.connection.hub.url = "signalr";
+            var hub = $.connection.MyHub;
+            if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+                $.connection.hub.start().done(function () {
+                    $("#containment-wrapper").empty();
+                    hub.server.onRefresh();
+                    onRootNodeClick();
+                });
+            }
+            else {
+                $("#containment-wrapper").empty();
+                hub.server.onRefresh();
+                onRootNodeClick();
+            }
+        }, 500);
+
+
         // not first visit, so alert
         //alert('You refreshed!');
-        console.log('You refreshed!');
+        //console.log('You refreshed!');
 
         /*$.connection.hub.url = "http://localhost:15123/signalr";
         var hub = $.connection.MyHub;
@@ -298,35 +386,208 @@ function checkFirstVisit() {
     }
 }
 
-function onNodeClick(object) {
 
-    console.log("onNodeClick");
-    console.log(object);
+// call view with warnings only
+function onRootNodeClick() {
+    $("#mainTitle").html("Warnings");
+    if ($('.toggle-on').hasClass('active')){
+        $('.toggle').toggles({ drag: false });
+    }
+    $("#editableSwitch").hide();
 
     $.connection.hub.url = "signalr";
-    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
 
-    console.log(object.getAttribute('customer'));
-    hub.server.nodeClick(object.id, object.textContent, object.getAttribute('customer'));
+    if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+        $.connection.hub.start().done(function () {
+            hub.server.callWarningsView();
+        });
+    }
+    else {
+        hub.server.callWarningsView();
+    }
 }
 
-function onSwitchClick() {
-    console.log("onSwitchClick");
-
+// on node click change title to actual group / machine (station)
+function onNodeClick(object) {
+    $("#mainTitle").html(object.getAttribute('group') + "/" + object.textContent);
+    $("#containment-wrapper").empty();
+    $("#editableSwitch").show();
     $.connection.hub.url = "signalr";
-    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
+    if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+        $.connection.hub.start().done(function () {
+            hub.server.nodeClick(object.id, object.textContent, object.getAttribute('group'));
+        });
+    }
+    else {
+        hub.server.nodeClick(object.id, object.textContent, object.getAttribute('group'));
+    }
+}
 
-    hub.server.onSwitchClick();
+function onSettingsClick() {
+    $("#mainTitle").html("Settings");
+    $("#containment-wrapper").empty();
+    if ($('.toggle-on').hasClass('active')) {
+        $('.toggle').toggles({ drag: false });
+    }
+    $("#editableSwitch").hide();
+    $.connection.hub.url = "signalr";
+    var hub = $.connection.MyHub;
+    if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+        $.connection.hub.start().done(function () {
+            hub.server.callSettingsView();
+        });
+    }
+    else {
+        hub.server.callSettingsView();
+    }
+}
+
+function OnLinkClick(pluginLink) {
+
+    if (!$("#dialog").length)
+    {
+        var newDialog = document.createElement("div");
+        newDialog.id = "dialog";
+        newDialog.title = pluginLink.textContent;
+        var form = document.createElement("form");
+
+        var activeCheckBox = document.createElement("input");
+        activeCheckBox.type = "checkbox";
+        var labelCheckBox = document.createElement("label");
+        labelCheckBox.appendChild(document.createTextNode("Active"));
+        form.appendChild(activeCheckBox);
+        form.appendChild(labelCheckBox);
+        form.appendChild(document.createElement("br"));
+
+        var textBoxCritLimit = document.createElement("input");
+        textBoxCritLimit.type = "text";
+        var labelCritLimit = document.createElement("p");
+        labelCritLimit.id = "dialog_p";
+        labelCritLimit.textContent = "Critical value limit (%): ";
+        form.appendChild(labelCritLimit);
+        form.appendChild(textBoxCritLimit);
+        form.appendChild(document.createElement("br"));
+        
+        var textBoxWarnLimit = document.createElement("input");
+        textBoxWarnLimit.type = "text";
+        var labelWarnLimit = document.createElement("p");
+        labelWarnLimit.id = "dialog_p";
+        labelWarnLimit.textContent = "Warning value limit (%): ";
+        form.appendChild(labelWarnLimit);
+        form.appendChild(textBoxWarnLimit);
+        form.appendChild(document.createElement("br"));
+
+        var clientID = $("#" + pluginLink.id).parent().parent()[0].id;
+        if (clientID !== null) {
+            var pluginSettings = JSON.parse(localStorage.getItem(clientID + '_' + pluginLink.id));
+            if (pluginSettings.PluginType === 0) {
+                var textBoxTimeSpan = document.createElement("input");
+                textBoxTimeSpan.type = "text";
+                var labelTimeSpan = document.createElement("p");
+                labelTimeSpan.id = "dialog_p";
+                labelTimeSpan.textContent = "Graph time span (minutes): ";
+                form.appendChild(labelTimeSpan);
+                form.appendChild(textBoxTimeSpan);
+                form.appendChild(document.createElement("br"));
+            }
+        }
+
+        var textBoxRefresh = document.createElement("input");
+        textBoxRefresh.type = "text";
+        var labelRefresh = document.createElement("p");
+        labelRefresh.id = "dialog_p";
+        labelRefresh.textContent = "Refresh period (seconds): ";
+        form.appendChild(labelRefresh);
+        form.appendChild(textBoxRefresh);
+
+        newDialog.appendChild(form);
+        $("body").append(newDialog);
+    }
+
+    dialog = $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        height: "auto",
+        width: "auto",
+        resizable: false,
+        buttons: {
+            "Save": saveSettings,
+            "Cancel": function () {
+                dialog.dialog("close");
+            }
+        }
+        //close: function () {
+        //    form[0].reset();
+        //    allFields.removeClass("ui-state-error");
+        //}
+    });
+
+    $("#dialog").dialog("open");
+}
+
+function saveSettings() {
+    dialog.dialog("close");
 }
 
 function onLoadClick() {
-    console.log("onLoadClick");
-
     $.connection.hub.url = "signalr";
-    //$.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
+    if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+        $.connection.hub.start().done(function () {
+            hub.server.onLoadClick();
+        });
+    }
+    else {
+        hub.server.onLoadClick();
+    }
+}
 
-    hub.server.onLoadClick();
+function refreshDraggable() {
+    //console.log("editDraggable()");
+    if ($('.toggle-on').hasClass('active')) {
+        $('.draggable').each(function () {
+            $(this).draggable({ disabled: false });
+            $(this).draggable({ containment: "#containment-wrapper", snap: true });
+            $(this).css("cursor", "move");
+        });
+    }
+    else {
+        $('.draggable').each(function () {
+            $(this).draggable({ disabled: true });
+            $(this).css("cursor", "default");
+        });
+    }
+}
+
+function savePositonOnToggleOff() {
+    if ($('.toggle-off').hasClass('active')) {
+        var time = 0;
+        $('.draggable').each(function () {
+            var plugObj = $(this);
+            setTimeout(function () {
+                $.connection.hub.url = "signalr";
+                var hub = $.connection.MyHub;
+                var top = plugObj.position().top;
+                var left = plugObj.position().left;
+                var computerID = $('.node.active').find('span')[0].id;
+                var pluginID = plugObj[0].id;
+                //console.log(plugObj[0].id);
+                //console.log($.connection.hub.state);
+                if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+                    //console.log("start again");
+                    time += 1000;
+                    $.connection.hub.start().done(function () {
+                        hub.server.saveHTMLPostion(computerID, pluginID, top, left);
+                    });
+                }
+                else {
+                    hub.server.saveHTMLPostion(computerID, pluginID, top, left);
+                }                
+            }, time);
+            time += 50;
+            //console.log("time: " + time);
+        });
+    }
 }

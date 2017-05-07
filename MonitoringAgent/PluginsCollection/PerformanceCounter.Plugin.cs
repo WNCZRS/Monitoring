@@ -11,6 +11,14 @@ namespace PluginsCollection
         private static PerformanceCounter avgCounter64Sample;
         private static PerformanceCounter avgCounter64SampleBase;
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("1bdf1a95-409b-42af-9922-5fb2aa66b9d1");
+            }
+        }
+
         public string Name
         {
             get
@@ -19,9 +27,19 @@ namespace PluginsCollection
             }
         }
 
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public Performance()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public PluginOutputCollection Output()

@@ -9,6 +9,8 @@ namespace PluginsCollection
     public interface IPlugin
     {
         string Name { get; }
+        Guid UID { get; }
+        PluginType Type { get; }
         PluginOutputCollection Output();
     }
 
@@ -39,18 +41,18 @@ namespace PluginsCollection
     public class PluginOutputCollection
     {
         public string PluginName { get; set; }
-        public List<PluginOutput> PluginOutputList { get; }
+        public Guid PluginUID { get; set; }
+        public List<PluginOutput> PluginOutputList { get; set; }
 
-        public PluginOutputCollection(string name = "")
+        public PluginOutputCollection()
         {
-            PluginName = name;
             PluginOutputList = new List<PluginOutput>();
         }
 
-        public void NewPluginOutput(string name, List<SimplePluginOutput> listOfSimplePluginOutput)
+        /*public void NewPluginOutput(string name, List<SimplePluginOutput> listOfSimplePluginOutput)
         {
             PluginOutputList.Add(new PluginOutput(name, listOfSimplePluginOutput));
-        }
+        }*/
     }
 
     public class ClientOutput
@@ -58,15 +60,15 @@ namespace PluginsCollection
         public List<PluginOutputCollection> CollectionList { get; set; }
         public string ID { get; }
         public string PCName { get; set; }
-        public string Customer { get; set; }
+        public string Group { get; set; }
         public bool InitPost { get; set; }
         public DateTime LastUpdate { get; set; }
 
-        public ClientOutput(string pcName, string id, string customer)
+        public ClientOutput(string pcName, string id, string group)
         {
             PCName = pcName;
             ID = id;
-            Customer = customer;
+            Group = group;
             CollectionList = new List<PluginOutputCollection>();
             InitPost = false;
             LastUpdate = DateTime.MinValue;
@@ -87,10 +89,10 @@ namespace PluginsCollection
             PluginList = new List<IPlugin>();
         }
 
-        public void Load()
+        public void Load(string pluginsPath = "")
         {
             LoadSystemPlugins();
-            LoadDllPlugins();
+            LoadDllPlugins(pluginsPath);
         }
 
         private void LoadSystemPlugins()
@@ -112,9 +114,13 @@ namespace PluginsCollection
             }
         }
 
-        private void LoadDllPlugins()
+        private void LoadDllPlugins(string pluginsPath = "")
         {
             string path = "Plugins";
+            if (!string.IsNullOrWhiteSpace(pluginsPath))
+            {
+                path = pluginsPath;
+            }
 
             if (!Directory.Exists(path))
             {

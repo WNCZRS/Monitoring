@@ -8,6 +8,14 @@ namespace PluginsCollection
     {
         PluginOutputCollection _pluginOutputs;
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("416408c8-b579-4491-a0ea-680936e80ae9");
+            }
+        } 
+
         public string Name
         {
             get
@@ -16,9 +24,19 @@ namespace PluginsCollection
             }
         }
 
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public DiskSpace()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public PluginOutputCollection Output()
@@ -35,7 +53,7 @@ namespace PluginsCollection
             headListSPO.Add(new SimplePluginOutput("Free Space (GB)", false));
             headListSPO.Add(new SimplePluginOutput("Free Space (%)", false));
             headListSPO.Add(new SimplePluginOutput("Total Space (GB)", false));
-            _pluginOutputs.NewPluginOutput("", headListSPO);
+            _pluginOutputs.PluginOutputList.Add(new PluginOutput("", headListSPO));
             
             foreach (DriveInfo drive in allDrives)
             {
@@ -50,7 +68,7 @@ namespace PluginsCollection
 
                     totalSpace = Math.Round((drive.TotalSize / Math.Pow(1024, 3)), 2).ToString() + " GB";
                     listSPO.Add(new SimplePluginOutput(totalSpace, false));
-                    _pluginOutputs.NewPluginOutput(drive.Name, listSPO);
+                    _pluginOutputs.PluginOutputList.Add(new PluginOutput(drive.Name, listSPO));
                 }
             }
             return _pluginOutputs;

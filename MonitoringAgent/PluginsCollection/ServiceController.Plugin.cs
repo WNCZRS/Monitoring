@@ -12,6 +12,14 @@ namespace PluginsCollection
         PluginOutputCollection _pluginOutputs;
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("2d5a4274-5c67-477e-bd77-7d8d9a4d7090");
+            }
+        }
+
         public string Name
         {
             get
@@ -19,9 +27,20 @@ namespace PluginsCollection
                 return "Service status";
             }
         }
+
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
+
         public ServiceControl()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public PluginOutputCollection Output()
@@ -44,14 +63,21 @@ namespace PluginsCollection
                     try
                     {
                         string serviceStatus = sc.Status.ToString();
-                        listSPO.Add(new SimplePluginOutput(serviceStatus, false));
+                        if (sc.Status == ServiceControllerStatus.Stopped)
+                        {
+                            listSPO.Add(new SimplePluginOutput(serviceStatus, true));
+                        }
+                        else
+                        {
+                            listSPO.Add(new SimplePluginOutput(serviceStatus, false));
+                        }
                     }
                     catch (Exception ex)
                     {
                         _log.Warn($"Service: {service} is unavailable");
-                        listSPO.Add(new SimplePluginOutput("Unavailable", true));
+                        listSPO.Add(new SimplePluginOutput("Unavailable", false));
                     }
-                    _pluginOutputs.NewPluginOutput(service.ToString(), listSPO);
+                    _pluginOutputs.PluginOutputList.Add(new PluginOutput(service.ToString(), listSPO));
                 }
             }
             return _pluginOutputs;
