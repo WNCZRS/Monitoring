@@ -15,15 +15,32 @@ namespace PluginsCollection
         {
             get
             {
-                return "SQLAvailability";
+                return "SQL db Availability";
             }
         }
 
         public string connString = TPOMM.Tools.Config.Current.cfConnectionString.ToString();
 
+        public Guid UID
+        {
+            get
+            {
+                return new Guid("2d5a4274-5c67-477e-bd77-7d8d9a4d0000");
+            }
+        }
+
+        public PluginType Type
+        {
+            get
+            {
+                return PluginType.Table;
+            }
+        }
         public SQLdbAvailabilityCheck()
         {
-            _pluginOutputs = new PluginOutputCollection(Name);
+            _pluginOutputs = new PluginOutputCollection();
+            _pluginOutputs.PluginUID = UID;
+            _pluginOutputs.PluginName = Name;
         }
 
         public static bool IsServerConnected(string connectionString)

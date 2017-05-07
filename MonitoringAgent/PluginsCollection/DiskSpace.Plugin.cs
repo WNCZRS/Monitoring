@@ -6,8 +6,10 @@ namespace PluginsCollection
 {
     public class DiskSpace : IPlugin
     {
+        // Create new plugin output collection
         PluginOutputCollection _pluginOutputs;
 
+        // Set plugin unique identifier (GUID)
         public Guid UID
         {
             get
@@ -16,6 +18,7 @@ namespace PluginsCollection
             }
         } 
 
+        // Set plugin Name
         public string Name
         {
             get
@@ -24,6 +27,7 @@ namespace PluginsCollection
             }
         }
 
+        // Set plugin Type
         public PluginType Type
         {
             get

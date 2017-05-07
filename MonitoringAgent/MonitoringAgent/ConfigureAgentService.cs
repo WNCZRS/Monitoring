@@ -8,9 +8,9 @@ namespace MonitoringAgent
         {
             HostFactory.Run(configure =>
             {
-                configure.Service<AgentService>(service =>
+                configure.Service<MonitoringAgentService>(service =>
                 {
-                    service.ConstructUsing(s => new AgentService());
+                    service.ConstructUsing(s => new MonitoringAgentService());
                     service.WhenStarted(s => s.Start());
                     service.WhenStopped(s => s.Stop());
                 });

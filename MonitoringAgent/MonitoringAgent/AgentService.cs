@@ -21,9 +21,11 @@ namespace MonitoringAgent
         // Logging initialization
         private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        // Plugin loader definition
         static PluginLoader _plugins;
         static bool _running = true;
         
+        // Get database path from configuration
         public string _dbName = ConfigurationManager.AppSettings["DatabasePath"];
 
         public void Start()
@@ -35,13 +37,20 @@ namespace MonitoringAgent
             _plugins = new PluginLoader();
             _plugins.Load();
 
+            // Start Thread
             StartThread();
+
             // write code here that runs when the Windows Service starts up.  
+            _log.Info("Service is RUNNING");
+
+            // Run application in Tray Menu
+            TrayMenu.Notify();
         }
 
         public void Stop()
         {
             // write code here that runs when the Windows Service stops.  
+            _log.Info("Service is STOPPED");
         }
 
         private void StartThread()
@@ -69,20 +78,22 @@ namespace MonitoringAgent
                 pollingThread = new Thread(new ThreadStart(RunPollingThread));
                 pollingThread.Start();
 
-                Console.WriteLine("Starting thread..");
+                Console.WriteLine("Starting thread...");
                 _log.Info("Starting thread...");
 
                 pollingThread.Join(5000);
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                // Polling Thread aborted, exception thrown.
                 pollingThread.Abort();
-                throw;
+                _log.Error("Polling Thread Aborted.\n\n"+ e.ToString());
+                throw e;
             }
 
             // Wait for key
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         private void RunPollingThread()
@@ -114,6 +125,7 @@ namespace MonitoringAgent
                 }
                 else
                 {
+                    // Thread sleeping for 10 seconds
                     Thread.Sleep(10);
                 }
             } 
@@ -128,6 +140,9 @@ namespace MonitoringAgent
 
             PluginOutputCollection plugOutput = new PluginOutputCollection();
 
+            _log.Debug("ServerIP: "+serverIP.ToString());
+            _log.Debug("GroupName: "+groupName.ToString());
+
             json = string.Empty;
             output.CollectionList.Clear();
 
@@ -139,6 +154,7 @@ namespace MonitoringAgent
                     if (plugOutput != null)
                     {
                         output.CollectionList.Add(plugOutput);
+                        _log.Debug("Plugin loaded: "+plugin.ToString());
                     }
                 }
             }
@@ -149,7 +165,10 @@ namespace MonitoringAgent
 
             if (!SendPluginOutput(output))
             {
+                // Save Output to SQLite database from JSON
                 SaveOutputToDB(JsonConvert.SerializeObject(output));
+                _log.Debug("Saving output to SQLite db.");
+
                 return;
             }
 
@@ -171,7 +190,6 @@ namespace MonitoringAgent
                 _log.Error("Read stored values from database", err);
                 return;
             }
-            
         }
 
         private bool SendPluginOutput(ClientOutput output)
@@ -188,11 +206,13 @@ namespace MonitoringAgent
                     if (task.IsFaulted)
                     {
                         Console.WriteLine($"There was an error opening the connection: {task.Exception.GetBaseException()}");
+                        _log.Error($"There was an error opening the connection: {task.Exception.GetBaseException()}");
                         sended = false;
                     }
                     else
                     {
                         Console.WriteLine("Connected");
+                        _log.Debug("Connected to HUB.");
                     }
                 }).Wait();
 
@@ -214,7 +234,9 @@ namespace MonitoringAgent
         private void CreateDataBaseAndTable()
         {
             SQLiteDB.CreateDbFile(_dbName);
+            _log.Debug("Database file created.");
             SQLiteDB.CreateTable(_dbName);
+            _log.Debug("Table created.");
         }
 
         private void SaveOutputToDB(string json)
@@ -226,6 +248,7 @@ namespace MonitoringAgent
 
         public string getMACAddress()
         {
+            // Getting MAC address using NetworkInterface
             NetworkInterface[] NI = NetworkInterface.GetAllNetworkInterfaces();
             NetworkInterface ni = NI.FirstOrDefault(x => x.OperationalStatus == OperationalStatus.Up);
             return ni.GetPhysicalAddress().ToString();
@@ -234,6 +257,7 @@ namespace MonitoringAgent
         public string getPCName()
         {
             string pcName = ConfigurationManager.AppSettings["PCName"];
+            _log.Debug("PC Name: "+pcName.ToString());
 
             if (pcName != null && pcName != string.Empty)
             {
@@ -254,6 +278,7 @@ namespace MonitoringAgent
             foreach (ManagementObject mo in moc)
             {
                 cpuID = mo.Properties["processorID"].Value.ToString();
+                _log.Debug("CPU ID: "+ cpuID.ToString());
             }
             return cpuID;
         }

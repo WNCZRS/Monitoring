@@ -1,62 +1,54 @@
-﻿using Microsoft.Owin.Hosting;
-using Owin;
+﻿using Topshelf;
 using System;
-using System.Web.Http;
-using Topshelf;
+using System.Runtime.InteropServices;
 
 namespace MonitoringAgent
 {
     class Program
     {
+        // Get Console Windows controls
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        // Windows visibility controls
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        // Methods to HIDE or SHOW application window
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+
         public static int Main(string[] args)
         {
+            var handle = GetConsoleWindow();
+
+            // Hide console window
+            //ShowWindow(handle, SW_HIDE);
+
+            // Show console window
+            ShowWindow(handle, SW_SHOW);
+
+            // Run application as a Windows service
             return (int)HostFactory.Run(x =>
             {
-                x.Service<OwinService>(s =>
+                x.Service<AgentService>(s =>
                 {
-                    s.ConstructUsing(() => new OwinService());
+                    s.ConstructUsing(() => new AgentService());
                     s.WhenStarted(service => service.Start());
                     s.WhenStopped(service => service.Stop());
                 });
             });
         }
     }
-    public class OwinService
+    public class MonitoringAgentService
     {
-        private IDisposable _webApp;
-
         public void Start()
         {
-            _webApp = WebApp.Start<StartOwin>("http://localhost:9000");
-            // Configure service using Topshelf dll
             ConfigureService.Configure();
         }
-
         public void Stop()
         {
-            _webApp.Dispose();
-        }
-    }
-
-    public class StartOwin
-    {
-        public void Configuration(IAppBuilder appBuilder)
-        {
-            var config = new HttpConfiguration();
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-                );
-
-            appBuilder.UseWebApi(config);
-        }
-    }
-    public class HelloWorldController : ApiController
-    {
-        public string Get()
-        {
-            return "Hello, World!";
+      
         }
     }
 }
