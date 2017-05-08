@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="UMLUseCaseDiagram1">
+  <useCaseModelRootMoniker Id="a425aaa3-1d6f-4fca-805e-6c0c37dc084b" />
+  <nestedChildShapes>
+    <actorShape Id="64d1db05-974f-4f87-9afb-c686bd077762" absoluteBounds="0.75, 2.75, 0.5, 0.5" isReference="false" heightOffset="0">
+      <actorMoniker Id="4d70ccd2-4124-41e9-b8e8-69477440d763" LastKnownName="Obsluha" />
+      <relativeChildShapes />
+    </actorShape>
+    <SubsystemShape Id="ba0dd4b6-542f-4e29-bcbd-57722e82f65f" absoluteBounds="2.25, 1, 4.375, 4.375" customColor="White">
+      <subsystemMoniker Id="d61d19ee-74bb-4c51-a462-5dd6ba70e242" LastKnownName="Webová aplikácia" />
+      <nestedChildShapes>
+        <useCaseShape Id="0e7341a4-ea13-4c8d-aa39-97a94403f4d2" absoluteBounds="2.5, 3, 1.5, 0.625" customColor="238, 237, 131" heightOffset="0">
+          <useCaseMoniker Id="45a22f4e-ac8e-4648-b3bf-87ddfab6eebe" LastKnownName="Otvoriť prehľad jedného zariadenia" />
+          <relativeChildShapes />
+        </useCaseShape>
+        <useCaseShape Id="8fb1074d-3573-4dd6-9af1-555649468bf7" absoluteBounds="2.5, 1.5, 1.5, 0.625" customColor="238, 237, 131" heightOffset="0">
+          <useCaseMoniker Id="6a5e2cf4-4bc9-4415-b96f-83e88aaa9c46" LastKnownName="Prihlásiť sa" />
+          <relativeChildShapes />
+        </useCaseShape>
+        <useCaseShape Id="d39c7c84-4bff-475a-9b4b-5729488096de" absoluteBounds="2.5, 2.25, 1.5, 0.625" customColor="238, 237, 131" heightOffset="0">
+          <useCaseMoniker Id="b10f8d88-1c34-4766-907a-cd930546f2e8" LastKnownName="Otvoriť prehľad hrozieb" />
+          <relativeChildShapes />
+        </useCaseShape>
+        <useCaseShape Id="3e04f608-76d6-4687-89c5-1f2fdba21c12" absoluteBounds="2.5, 3.75, 1.5, 0.625" customColor="238, 237, 131" heightOffset="0">
+          <useCaseMoniker Id="20dd5c65-5e69-4d4b-a01f-9fd3aab3552b" LastKnownName="Upravovať polohu pluginov" />
+          <relativeChildShapes />
+        </useCaseShape>
+        <useCaseShape Id="6b2c1745-8722-44d6-b846-12d2f4c269af" absoluteBounds="2.5, 4.5, 1.5, 0.625" customColor="238, 237, 131" heightOffset="0">
+          <useCaseMoniker Id="eac3db75-74ba-4125-8fa7-879022adcdb8" LastKnownName="Spravovať nastavenie pluginov" />
+          <relativeChildShapes />
+        </useCaseShape>
+        <useCaseShape Id="1453e2b4-eebe-44c5-8760-92c0967f7c13" absoluteBounds="5, 3.75, 1.5, 0.625" customColor="238, 237, 131" heightOffset="0">
+          <useCaseMoniker Id="4ca9593f-c2a5-4ccf-b259-5460801f4304" LastKnownName="Povoliť úpravu polohy" />
+          <relativeChildShapes />
+        </useCaseShape>
+      </nestedChildShapes>
+    </SubsystemShape>
+    <useCaseAssociationConnector edgePoints="[(1.25 : 2.86805555555556); (2.78526678356573 : 2.0577758642292)]" fixedFrom="NotFixed" fixedTo="NotFixed" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="bc703042-3472-404d-85cf-c35e0f7c297e" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="64d1db05-974f-4f87-9afb-c686bd077762" />
+        <useCaseShapeMoniker Id="8fb1074d-3573-4dd6-9af1-555649468bf7" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseAssociationConnector edgePoints="[(1.25 : 2.95138888888889); (2.57036264500355 : 2.69465170791598)]" fixedFrom="NotFixed" fixedTo="NotFixed" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="ad1edcc0-035e-4ebf-99e0-3a5f5f2765a8" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="64d1db05-974f-4f87-9afb-c686bd077762" />
+        <useCaseShapeMoniker Id="d39c7c84-4bff-475a-9b4b-5729488096de" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseAssociationConnector edgePoints="[(1.25 : 3.03472222222222); (2.53848752646212 : 3.21367882311974)]" fixedFrom="NotFixed" fixedTo="NotFixed" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="4336b3c6-e387-46db-8ed7-e5af76a8c14c" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="64d1db05-974f-4f87-9afb-c686bd077762" />
+        <useCaseShapeMoniker Id="0e7341a4-ea13-4c8d-aa39-97a94403f4d2" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseAssociationConnector edgePoints="[(1.25 : 3.11805555555556); (2.75378377218487 : 3.82817567019841)]" fixedFrom="NotFixed" fixedTo="NotFixed" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="ede4d97f-daeb-4279-940e-0880346d49b1" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="64d1db05-974f-4f87-9afb-c686bd077762" />
+        <useCaseShapeMoniker Id="3e04f608-76d6-4687-89c5-1f2fdba21c12" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <useCaseAssociationConnector edgePoints="[(1.25 : 3.20138888888889); (2.90543281084468 : 4.53493198651377)]" fixedFrom="NotFixed" fixedTo="NotFixed" customColor="113, 111, 110" sourceMultiplicity="" targetMultiplicity="">
+      <associationMoniker Id="7e4e984f-72da-4411-ba8c-c668aa1b1732" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="64d1db05-974f-4f87-9afb-c686bd077762" />
+        <useCaseShapeMoniker Id="6b2c1745-8722-44d6-b846-12d2f4c269af" />
+      </nodes>
+    </useCaseAssociationConnector>
+    <extendConnector edgePoints="[(5 : 4.0625); (4 : 4.0625)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«extend»">
+      <extendMoniker Id="2b4e2ee8-0588-41e9-888f-623f8c06faa7" />
+      <relativeChildShapes />
+      <moveableDecoratorHostShapes>
+        <moveableDecoratorHostShape manuallyPlaced="true" absoluteBounds="4.3125, 3.875, 0.51066982746124268, 0.14800345897674561" shapeFieldName="NameDecorator" />
+      </moveableDecoratorHostShapes>
+      <nodes>
+        <useCaseShapeMoniker Id="1453e2b4-eebe-44c5-8760-92c0967f7c13" />
+        <useCaseShapeMoniker Id="3e04f608-76d6-4687-89c5-1f2fdba21c12" />
+      </nodes>
+    </extendConnector>
+  </nestedChildShapes>
+</useCaseDiagram>

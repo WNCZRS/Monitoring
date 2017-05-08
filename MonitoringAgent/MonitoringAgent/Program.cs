@@ -52,11 +52,4 @@ namespace MonitoringAgent
             appBuilder.UseWebApi(config);
         }
     }
-    public class HelloWorldController : ApiController
-    {
-        public string Get()
-        {
-            return "Hello, World!";
-        }
-    }
 }

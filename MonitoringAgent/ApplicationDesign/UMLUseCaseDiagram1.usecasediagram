@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm11="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner" dslVersion="1.0.0.0" Id="a425aaa3-1d6f-4fca-805e-6c0c37dc084b" name="UMLUseCaseDiagram1" linkedPackageId="657d3d90-962a-4020-bc8a-e7bb3b833624" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="815a315c-39e2-4767-8e1c-bea771129322">
+      <profileInstance Id="eb7f8ab6-edd1-4e06-8d40-977a24d534b1" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="cac14147-54ba-4d7f-a0d4-1f9056bed0c9">
+      <profileInstance Id="84dc8115-9dcf-459a-9b3c-96ed3bc048bd" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="4d70ccd2-4124-41e9-b8e8-69477440d763" name="Obsluha" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="86385324-6112-48b7-9599-632a53888400" />
+        <targetEnds>
+          <association Id="bc703042-3472-404d-85cf-c35e0f7c297e" isDerived="false" sourceEndRoleName="Obsluha" targetEndRoleName="Prihlásiť sa" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="6a5e2cf4-4bc9-4415-b96f-83e88aaa9c46" LastKnownName="Prihlásiť sa" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="702de5b6-091b-4fa3-bd12-c1c6d6566e5b" name="Obsluha" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="654daedb-9beb-4654-adaf-65fb99e921ab" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="24109286-1bc8-4506-8c19-df4787ae66fa" name="Prihlásiť sa" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="ad8308ad-1b38-410f-b881-ae039077aa20" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="ed7626a6-8e1a-411b-b05f-46eed0ae347e" />
+          </association>
+          <association Id="ad1edcc0-035e-4ebf-99e0-3a5f5f2765a8" isDerived="false" sourceEndRoleName="Obsluha" targetEndRoleName="Otvoriť prehľad hrozieb" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="b10f8d88-1c34-4766-907a-cd930546f2e8" LastKnownName="Otvoriť prehľad hrozieb" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="cbca91a8-3b6e-4dc5-ab20-4f56149e5657" name="Obsluha" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="454c9da9-fbd8-4772-bcd5-25243a7a9c4c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="0e68e963-183c-4c6d-a8ed-6449e0c0a5ed" name="Otvoriť prehľad hrozieb" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="79ed1958-5907-43f0-906f-dc36f7a98933" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="6fea402c-ea1c-49ba-aa40-0e1925c106e6" />
+          </association>
+          <association Id="4336b3c6-e387-46db-8ed7-e5af76a8c14c" isDerived="false" sourceEndRoleName="Obsluha" targetEndRoleName="Otvoriť prehľad jedného zariadenia" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="45a22f4e-ac8e-4648-b3bf-87ddfab6eebe" LastKnownName="Otvoriť prehľad jedného zariadenia" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="06dcbb30-0760-4091-ad15-4770d9599367" name="Obsluha" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="aeb0bf29-c255-4870-ac4b-cc74d4efc113" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="e26e0f4c-82c7-4db6-b189-ec134278352c" name="Otvoriť prehľad jedného zariadenia" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="fa5b5283-e879-438f-87a7-073050054d59" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="fc769b36-0867-4cfe-844c-5df330b72dcc" />
+          </association>
+          <association Id="ede4d97f-daeb-4279-940e-0880346d49b1" isDerived="false" sourceEndRoleName="Obsluha" targetEndRoleName="Upravovať polohu pluginov" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="20dd5c65-5e69-4d4b-a01f-9fd3aab3552b" LastKnownName="Upravovať polohu pluginov" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8ef8b88c-43b4-4515-b395-adacf34c632f" name="Obsluha" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="98584d1c-56fd-4edb-9800-652eafa0e09d" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a61b13a6-8564-408d-8a69-64464993802f" name="Upravovať polohu pluginov" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="7ceade1b-db6b-4b0a-99c1-7cc28869287d" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5e2247f2-7d10-4994-9228-e4a24e1b39e5" />
+          </association>
+          <association Id="7e4e984f-72da-4411-ba8c-c668aa1b1732" isDerived="false" sourceEndRoleName="Obsluha" targetEndRoleName="Spravovať nastavenie pluginov" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="eac3db75-74ba-4125-8fa7-879022adcdb8" LastKnownName="Spravovať nastavenie pluginov" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="6c927bd1-8768-4951-a373-e078af4be2c1" name="Obsluha" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="15987ecd-8034-4797-b275-cb0d0fbc9632" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="deee6804-f063-4253-8b4f-0aa6368759a4" name="Spravovať nastavenie pluginov" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="8851327e-38a7-4dde-9212-226950c17fb4" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="7ae9cb42-ce63-4d4f-9239-dabdeb01b272" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <packageHasNamedElement>
+      <useCase Id="45a22f4e-ac8e-4648-b3bf-87ddfab6eebe" name="Otvoriť prehľad jedného zariadenia" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="5732ba60-0c92-4c79-b55a-063e6ff116f6" />
+        <subjects>
+          <subsystemMoniker Id="d61d19ee-74bb-4c51-a462-5dd6ba70e242" LastKnownName="Webová aplikácia" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="6a5e2cf4-4bc9-4415-b96f-83e88aaa9c46" name="Prihlásiť sa" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="8ccfe98d-78d2-486c-9865-8f0ea0cd9d83" />
+        <subjects>
+          <subsystemMoniker Id="d61d19ee-74bb-4c51-a462-5dd6ba70e242" LastKnownName="Webová aplikácia" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="b10f8d88-1c34-4766-907a-cd930546f2e8" name="Otvoriť prehľad hrozieb" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="937021f3-1bff-495f-b578-e56ee3869934" />
+        <subjects>
+          <subsystemMoniker Id="d61d19ee-74bb-4c51-a462-5dd6ba70e242" LastKnownName="Webová aplikácia" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <useCaseModelRootHasTypes>
+      <subsystem Id="d61d19ee-74bb-4c51-a462-5dd6ba70e242" name="Webová aplikácia" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="fafcaa31-8947-4b67-a95c-afb777822f41" />
+      </subsystem>
+    </useCaseModelRootHasTypes>
+    <packageHasNamedElement>
+      <useCase Id="20dd5c65-5e69-4d4b-a01f-9fd3aab3552b" name="Upravovať polohu pluginov" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="b36cf786-9f52-4452-904d-fa0b6505b6b7" />
+        <subjects>
+          <subsystemMoniker Id="d61d19ee-74bb-4c51-a462-5dd6ba70e242" LastKnownName="Webová aplikácia" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="eac3db75-74ba-4125-8fa7-879022adcdb8" name="Spravovať nastavenie pluginov" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="1d0c9c34-bda1-487a-b20b-928997844cb3" />
+        <subjects>
+          <subsystemMoniker Id="d61d19ee-74bb-4c51-a462-5dd6ba70e242" LastKnownName="Webová aplikácia" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="4ca9593f-c2a5-4ccf-b259-5460801f4304" name="Povoliť úpravu polohy" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c5102f77-8340-4d3f-b29f-5693790d5ae5" />
+        <extendedCases>
+          <extend Id="2b4e2ee8-0588-41e9-888f-623f8c06faa7">
+            <useCaseMoniker Id="20dd5c65-5e69-4d4b-a01f-9fd3aab3552b" LastKnownName="Upravovať polohu pluginov" />
+            <elementDefinition Id="be0e6417-897a-46ee-a95b-e8a1fec97d1c" />
+          </extend>
+        </extendedCases>
+        <subjects>
+          <subsystemMoniker Id="d61d19ee-74bb-4c51-a462-5dd6ba70e242" LastKnownName="Webová aplikácia" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+  </packagedElements>
+  <package Id="657d3d90-962a-4020-bc8a-e7bb3b833624" name="ApplicationDesign">
+    <elementDefinition Id="92d69785-d946-4932-ae82-9f320a843400" />
+  </package>
+</useCaseModelRoot>

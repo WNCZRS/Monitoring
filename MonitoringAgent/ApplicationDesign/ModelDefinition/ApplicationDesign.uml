@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm10="http://schemas.microsoft.com/dsltools/UseCaseModel" xmlns:dm11="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner"
   dslVersion="1.0.0.0"
   Id="92d69785-d946-4932-ae82-9f320a843400"
   name="ApplicationDesign" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
@@ -772,6 +772,327 @@
       <undefinedType
         Id="d7962287-fc47-40aa-afe2-5fdc025e0cd5"
         name="List&lt;IPlugin&gt;" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <actor
+        Id="86385324-6112-48b7-9599-632a53888400"
+        name="Obsluha"
+        isAbstract="false"
+        isLeaf="false">
+        <targetEnds>
+          <association
+            Id="ed7626a6-8e1a-411b-b05f-46eed0ae347e"
+            isDerived="false"
+            sourceEndRoleName="Obsluha"
+            targetEndRoleName="Prihlásiť sa"
+            isLeaf="false"
+            isAbstract="false">
+            <useCaseMoniker
+              Id="8ccfe98d-78d2-486c-9865-8f0ea0cd9d83"
+              LastKnownName="Prihlásiť sa"
+              LastKnownLocation="ApplicationDesign.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="654daedb-9beb-4654-adaf-65fb99e921ab"
+                  name="Obsluha"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="ad8308ad-1b38-410f-b881-ae039077aa20"
+                  name="Prihlásiť sa"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="6fea402c-ea1c-49ba-aa40-0e1925c106e6"
+            isDerived="false"
+            sourceEndRoleName="Obsluha"
+            targetEndRoleName="Otvoriť prehľad hrozieb"
+            isLeaf="false"
+            isAbstract="false">
+            <useCaseMoniker
+              Id="937021f3-1bff-495f-b578-e56ee3869934"
+              LastKnownName="Otvoriť prehľad hrozieb"
+              LastKnownLocation="ApplicationDesign.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="454c9da9-fbd8-4772-bcd5-25243a7a9c4c"
+                  name="Obsluha"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="79ed1958-5907-43f0-906f-dc36f7a98933"
+                  name="Otvoriť prehľad hrozieb"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="fc769b36-0867-4cfe-844c-5df330b72dcc"
+            isDerived="false"
+            sourceEndRoleName="Obsluha"
+            targetEndRoleName="Otvoriť prehľad jedného zariadenia"
+            isLeaf="false"
+            isAbstract="false">
+            <useCaseMoniker
+              Id="5732ba60-0c92-4c79-b55a-063e6ff116f6"
+              LastKnownName="Otvoriť prehľad jedného zariadenia"
+              LastKnownLocation="ApplicationDesign.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="aeb0bf29-c255-4870-ac4b-cc74d4efc113"
+                  name="Obsluha"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="fa5b5283-e879-438f-87a7-073050054d59"
+                  name="Otvoriť prehľad jedného zariadenia"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="5e2247f2-7d10-4994-9228-e4a24e1b39e5"
+            isDerived="false"
+            sourceEndRoleName="Obsluha"
+            targetEndRoleName="Upravovať polohu pluginov"
+            isLeaf="false"
+            isAbstract="false">
+            <useCaseMoniker
+              Id="b36cf786-9f52-4452-904d-fa0b6505b6b7"
+              LastKnownName="Upravovať polohu pluginov"
+              LastKnownLocation="ApplicationDesign.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="98584d1c-56fd-4edb-9800-652eafa0e09d"
+                  name="Obsluha"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="7ceade1b-db6b-4b0a-99c1-7cc28869287d"
+                  name="Upravovať polohu pluginov"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="7ae9cb42-ce63-4d4f-9239-dabdeb01b272"
+            isDerived="false"
+            sourceEndRoleName="Obsluha"
+            targetEndRoleName="Spravovať nastavenie pluginov"
+            isLeaf="false"
+            isAbstract="false">
+            <useCaseMoniker
+              Id="1d0c9c34-bda1-487a-b20b-928997844cb3"
+              LastKnownName="Spravovať nastavenie pluginov"
+              LastKnownLocation="ApplicationDesign.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="15987ecd-8034-4797-b275-cb0d0fbc9632"
+                  name="Obsluha"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="8851327e-38a7-4dde-9212-226950c17fb4"
+                  name="Spravovať nastavenie pluginov"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </actor>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <subsystem
+        Id="ba937846-f47d-4184-a290-e3929eab9ec6"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="5732ba60-0c92-4c79-b55a-063e6ff116f6"
+        name="Otvoriť prehľad jedného zariadenia"
+        isAbstract="false"
+        isLeaf="false">
+        <subjects>
+          <subsystemMoniker
+            Id="fafcaa31-8947-4b67-a95c-afb777822f41"
+            LastKnownName="Webová aplikácia"
+            LastKnownLocation="ApplicationDesign.uml" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="8ccfe98d-78d2-486c-9865-8f0ea0cd9d83"
+        name="Prihlásiť sa"
+        isAbstract="false"
+        isLeaf="false">
+        <subjects>
+          <subsystemMoniker
+            Id="fafcaa31-8947-4b67-a95c-afb777822f41"
+            LastKnownName="Webová aplikácia"
+            LastKnownLocation="ApplicationDesign.uml" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="937021f3-1bff-495f-b578-e56ee3869934"
+        name="Otvoriť prehľad hrozieb"
+        isAbstract="false"
+        isLeaf="false">
+        <subjects>
+          <subsystemMoniker
+            Id="fafcaa31-8947-4b67-a95c-afb777822f41"
+            LastKnownName="Webová aplikácia"
+            LastKnownLocation="ApplicationDesign.uml" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <subsystem
+        Id="fafcaa31-8947-4b67-a95c-afb777822f41"
+        name="Webová aplikácia"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="b36cf786-9f52-4452-904d-fa0b6505b6b7"
+        name="Upravovať polohu pluginov"
+        isAbstract="false"
+        isLeaf="false">
+        <subjects>
+          <subsystemMoniker
+            Id="fafcaa31-8947-4b67-a95c-afb777822f41"
+            LastKnownName="Webová aplikácia"
+            LastKnownLocation="ApplicationDesign.uml" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="1d0c9c34-bda1-487a-b20b-928997844cb3"
+        name="Spravovať nastavenie pluginov"
+        isAbstract="false"
+        isLeaf="false">
+        <subjects>
+          <subsystemMoniker
+            Id="fafcaa31-8947-4b67-a95c-afb777822f41"
+            LastKnownName="Webová aplikácia"
+            LastKnownLocation="ApplicationDesign.uml" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="994b618c-11b4-4d77-afae-866385a2e7b3"
+        name="Component1"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="c5102f77-8340-4d3f-b29f-5693790d5ae5"
+        name="Povoliť úpravu polohy"
+        isAbstract="false"
+        isLeaf="false">
+        <extendedCases>
+          <extend
+            Id="be0e6417-897a-46ee-a95b-e8a1fec97d1c">
+            <useCaseMoniker
+              Id="b36cf786-9f52-4452-904d-fa0b6505b6b7"
+              LastKnownName="Upravovať polohu pluginov"
+              LastKnownLocation="ApplicationDesign.uml" />
+          </extend>
+        </extendedCases>
+        <subjects>
+          <subsystemMoniker
+            Id="fafcaa31-8947-4b67-a95c-afb777822f41"
+            LastKnownName="Webová aplikácia"
+            LastKnownLocation="ApplicationDesign.uml" />
+        </subjects>
+      </useCase>
     </packageHasNamedElement>
   </packagedElements>
   <primitiveType

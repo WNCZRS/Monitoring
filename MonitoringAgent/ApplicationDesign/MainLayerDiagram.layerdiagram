@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="e3106424-83b2-45cf-9c95-c6e9e83c7679" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="0ebf4f11-8c6c-4a87-a72d-28c4a79fff80" name="Agenti">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="c767c9a5-3431-4050-a1ff-2fc8b4c18bd0" direction="Forward">
+          <layerMoniker Id="7bbb0af0-60e0-4d09-b28d-409fe0602837" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="14eedf92-b0ff-4979-b297-79b14d7eb3b0" direction="Forward">
+          <layerMoniker Id="8cae7a1a-65f9-4f1a-b3ac-62872cfaee40" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="8cae7a1a-65f9-4f1a-b3ac-62872cfaee40" name="Server">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="e66435c2-a86b-4149-b04b-cb6230dcc45e" direction="Forward">
+          <layerMoniker Id="7bbb0af0-60e0-4d09-b28d-409fe0602837" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="ce316799-6ac0-4e39-9aff-4561a2b78655" direction="Bidirectional">
+          <layerMoniker Id="b934f2fc-ce99-4761-9b6f-c8f6d80a787b" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="7bbb0af0-60e0-4d09-b28d-409fe0602837" name="Pluginy" />
+    <layer Id="6ea4666a-e55a-4e1d-9d04-6d86b1d5ffc7" name="WEB klient">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="126b3ffd-ab25-4ee3-a5c3-4c6f899142c3" direction="Bidirectional">
+          <layerMoniker Id="8cae7a1a-65f9-4f1a-b3ac-62872cfaee40" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="b934f2fc-ce99-4761-9b6f-c8f6d80a787b" name="Serverová Databáza" />
+    <layer Id="7476dde3-b68d-4d48-bd24-1a211f6c8ba7" name="Databáza záloh">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="132c0beb-4065-4920-9a4f-a24e0dc76bfe" direction="Bidirectional">
+          <layerMoniker Id="0ebf4f11-8c6c-4a87-a72d-28c4a79fff80" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+  </layers>
+</layerModel>
