@@ -12,7 +12,7 @@ namespace PluginsCollection
         PluginOutputCollection _pluginOutputs;
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public Guid UID
+        public Guid PluginUID
         {
             get
             {
@@ -20,7 +20,7 @@ namespace PluginsCollection
             }
         }
 
-        public string Name
+        public string PluginName
         {
             get
             {
@@ -28,7 +28,7 @@ namespace PluginsCollection
             }
         }
 
-        public PluginType Type
+        public PluginType PluginType
         {
             get
             {
@@ -39,8 +39,8 @@ namespace PluginsCollection
         public ServiceControl()
         {
             _pluginOutputs = new PluginOutputCollection();
-            _pluginOutputs.PluginUID = UID;
-            _pluginOutputs.PluginName = Name;
+            _pluginOutputs.PluginUID = PluginUID;
+            _pluginOutputs.PluginName = PluginName;
         }
 
         public PluginOutputCollection Output()

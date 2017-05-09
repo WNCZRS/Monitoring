@@ -64,7 +64,6 @@
     <Compile Include="MachineIdentifier.Plugin.cs" />
     <Compile Include="PerformanceCounter.Plugin.cs" />
     <Compile Include="PluginDefinition.cs" />
-    <Compile Include="PluginSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RAM.plugin.cs" />
     <Compile Include="ServiceController.Plugin.cs" />
@@ -72,6 +71,7 @@
     <Compile Include="TerminalServicesUsers.Plugin.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

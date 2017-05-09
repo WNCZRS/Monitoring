@@ -12,15 +12,12 @@ namespace MonitoringServer
         public void Configuration(IAppBuilder app)
         {
             var hubConfiguration = new HubConfiguration();
-            var sqlLiteController = new SQLiteController();
 
             hubConfiguration.EnableDetailedErrors = true;
             hubConfiguration.EnableJavaScriptProxies = true;
             app.MapSignalR(hubConfiguration);
 
-            sqlLiteController.CreateDbFile();
-            sqlLiteController.CreateTables();
-            sqlLiteController.InitPlugins();
+            MessageController.InitDatabase();
             MessageController.StartMessageThread();
         }
     }

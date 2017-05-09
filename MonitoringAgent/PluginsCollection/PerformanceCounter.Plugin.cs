@@ -11,7 +11,7 @@ namespace PluginsCollection
         private static PerformanceCounter avgCounter64Sample;
         private static PerformanceCounter avgCounter64SampleBase;
 
-        public Guid UID
+        public Guid PluginUID
         {
             get
             {
@@ -19,7 +19,7 @@ namespace PluginsCollection
             }
         }
 
-        public string Name
+        public string PluginName
         {
             get
             {
@@ -27,7 +27,7 @@ namespace PluginsCollection
             }
         }
 
-        public PluginType Type
+        public PluginType PluginType
         {
             get
             {
@@ -38,8 +38,8 @@ namespace PluginsCollection
         public Performance()
         {
             _pluginOutputs = new PluginOutputCollection();
-            _pluginOutputs.PluginUID = UID;
-            _pluginOutputs.PluginName = Name;
+            _pluginOutputs.PluginUID = PluginUID;
+            _pluginOutputs.PluginName = PluginName;
         }
 
         public PluginOutputCollection Output()

@@ -25,19 +25,19 @@ namespace MonitoringServer.Controllers
         private static bool _changed;
         private static ViewType _viewType;
 
-        public ViewType ViewType
-        {
-            get
-            {
-                return _viewType;
-            }
-            set
-            {
-                _viewType = value;
-            }
-        }
+        //public ViewType ViewType
+        //{
+        //    get
+        //    {
+        //        return _viewType;
+        //    }
+        //    set
+        //    {
+        //        _viewType = value;
+        //    }
+        //}
 
-        private MessageController()
+        public MessageController()
         {
             _group = string.Empty;
             _nodeID = string.Empty;
@@ -205,6 +205,36 @@ namespace MonitoringServer.Controllers
             {
                 GetContext().Clients.Group("Clients").ActivateTree(node);
             }
+        }
+
+        public static void InitDatabase()
+        {
+            SQLiteController sqlController = new SQLiteController();
+
+            sqlController.CreateDbFile();
+            sqlController.CreateTables();
+            sqlController.InitPlugins();
+        }
+
+        public static void JSONToSQL(ClientOutput clientOutput)
+        {
+            SQLiteController sqlController = new SQLiteController();
+
+            sqlController.JSONToSQL(clientOutput);
+        }
+
+        public static void SaveBasicInfoToDB(ClientOutput clientOutput)
+        {
+            SQLiteController sqlController = new SQLiteController();
+
+            sqlController.SaveBasicInfo(clientOutput);
+        }
+
+        public static void SavePosition(string computerID, string pluginGuid, int posTop, int posLeft)
+        {
+            SQLiteController sqlController = new SQLiteController();
+
+            sqlController.SaveHTMLPosition(computerID, pluginGuid, posTop, posLeft);
         }
 
         public static void SendSavedPosition()

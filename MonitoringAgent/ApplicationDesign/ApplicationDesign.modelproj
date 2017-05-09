@@ -22,12 +22,28 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
+    <Content Include="ModelDefinition\Package1_2229.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package_2227.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package_2229.uml">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="UMLClassDiagram1.classdiagram">
       <SubType>Content</SubType>
     </Content>
     <Content Include="UMLClassDiagram1.classdiagram.layout">
       <SubType>Content</SubType>
       <DependentUpon>UMLClassDiagram1.classdiagram</DependentUpon>
+    </Content>
+    <Content Include="UMLClassDiagramPluginCollection.classdiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="UMLClassDiagramPluginCollection.classdiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>UMLClassDiagramPluginCollection.classdiagram</DependentUpon>
     </Content>
     <Content Include="UMLUseCaseDiagram1.usecasediagram">
       <SubType>Content</SubType>

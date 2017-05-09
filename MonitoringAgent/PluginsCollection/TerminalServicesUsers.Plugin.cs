@@ -9,7 +9,7 @@ namespace PluginsCollection
     {
         PluginOutputCollection _pluginOutputs;
 
-        public Guid UID
+        public Guid PluginUID
         {
             get
             {
@@ -17,7 +17,7 @@ namespace PluginsCollection
             }
         }
 
-        public string Name
+        public string PluginName
         {
             get
             {
@@ -25,7 +25,7 @@ namespace PluginsCollection
             }
         }
 
-        public PluginType Type
+        public PluginType PluginType
         {
             get
             {
@@ -36,8 +36,8 @@ namespace PluginsCollection
         public TerminalServicesUsers()
         {
             _pluginOutputs = new PluginOutputCollection();
-            _pluginOutputs.PluginUID = UID;
-            _pluginOutputs.PluginName = Name;
+            _pluginOutputs.PluginUID = PluginUID;
+            _pluginOutputs.PluginName = PluginName;
         }
 
         public PluginOutputCollection Output()

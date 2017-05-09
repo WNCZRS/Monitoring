@@ -8,9 +8,9 @@ namespace PluginsCollection
 {
     public interface IPlugin
     {
-        string Name { get; }
-        Guid UID { get; }
-        PluginType Type { get; }
+        string PluginName { get; }
+        Guid PluginUID { get; }
+        PluginType PluginType { get; }
         PluginOutputCollection Output();
     }
 
@@ -38,10 +38,11 @@ namespace PluginsCollection
         }
     }
 
-    public class PluginOutputCollection
+    public class PluginOutputCollection : IPlugin
     {
         public string PluginName { get; set; }
         public Guid PluginUID { get; set; }
+        public PluginType PluginType { get; set; }
         public List<PluginOutput> PluginOutputList { get; set; }
 
         public PluginOutputCollection()
@@ -49,10 +50,10 @@ namespace PluginsCollection
             PluginOutputList = new List<PluginOutput>();
         }
 
-        /*public void NewPluginOutput(string name, List<SimplePluginOutput> listOfSimplePluginOutput)
+        public PluginOutputCollection Output()
         {
-            PluginOutputList.Add(new PluginOutput(name, listOfSimplePluginOutput));
-        }*/
+            return null;
+        }
     }
 
     public class ClientOutput
@@ -78,6 +79,40 @@ namespace PluginsCollection
         {
             return CollectionList.Find(item => item.PluginName == pluginName);
         }
+    }
+
+    public struct HTMLPosition
+    {
+        public readonly int Top;
+        public readonly int Left;
+
+        public HTMLPosition(int top, int left)
+        {
+            Top = top;
+            Left = left;
+        }
+    }
+
+    public enum PluginType
+    {
+        Unknown,
+        Table,
+        Graph
+    }
+
+    public class PluginSettings
+    {
+        public Guid PluginUID { get; set; }
+        public string PluginName { get; set; }
+        public string ComputerID { get; set; }
+        public string ComputerName { get; set; }
+        public string GroupName { get; set; }
+        public PluginType PluginType { get; set; }
+        public bool Show { get; set; }
+        public int RefreshInterval { get; set; }
+        public HTMLPosition HTMLPosition { get; set; }
+        public double CriticalValueLimit { get; set; }
+        public double WarningValueLimit { get; set; }
     }
 
     public class PluginLoader
@@ -139,7 +174,7 @@ namespace PluginsCollection
                         foreach (Type type in imp)
                         {
                             IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
-                            if (!PluginList.Any(item => item.Name == plugin.Name))
+                            if (!PluginList.Any(item => item.PluginName == plugin.PluginName))
                             {
                                 PluginList.Add(plugin);
                             }
