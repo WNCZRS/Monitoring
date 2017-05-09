@@ -11,47 +11,6 @@
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
-        <targetEnds>
-          <association
-            Id="d2b7049f-0ab3-4623-9b89-01f736f88e2e"
-            isDerived="false"
-            sourceEndRoleName="MonitoringHub : Hub"
-            targetEndRoleName="MessageController"
-            isLeaf="false"
-            isAbstract="false">
-            <classMoniker
-              Id="d9f743b7-11eb-4b44-8798-176be14bcc04"
-              LastKnownName="MessageController"
-              LastKnownLocation="Package1_2229.uml" />
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd
-                  Id="9be77828-900d-40ec-a41d-46d37f7c0687"
-                  name="MonitoringHub : Hub"
-                  isLeaf="false"
-                  isStatic="false"
-                  isReadOnly="false"
-                  isDerived="false"
-                  isDerivedUnion="false"
-                  aggregation="None"
-                  isComposite="false"
-                  isNavigableOwned="false" />
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd
-                  Id="85362bfe-00cc-4fc2-970f-8b8969bd6a54"
-                  name="MessageController"
-                  isLeaf="false"
-                  isStatic="false"
-                  isReadOnly="false"
-                  isDerived="false"
-                  isDerivedUnion="false"
-                  aggregation="None"
-                  isComposite="false" />
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-          </association>
-        </targetEnds>
         <ownedAttributesInternal>
           <property
             Id="1e8ba0b7-366a-4012-970f-1df7f3d2f831"

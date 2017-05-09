@@ -15,8 +15,8 @@
           <association
             Id="80d7bb8d-7b89-4a67-887f-5dd15b5960f0"
             isDerived="false"
-            sourceEndRoleName="MvcApplication : HttpApplication"
-            targetEndRoleName="RouteConfig"
+            sourceEndRoleName=""
+            targetEndRoleName=""
             isLeaf="false"
             isAbstract="false">
             <classMoniker
@@ -27,7 +27,6 @@
               <associationHasOwnedEnds>
                 <memberEnd
                   Id="72f95bab-42c2-4ae4-9b39-3176c2c01456"
-                  name="MvcApplication : HttpApplication"
                   isLeaf="false"
                   isStatic="false"
                   isReadOnly="false"
@@ -40,7 +39,6 @@
               <associationHasOwnedEnds>
                 <memberEnd
                   Id="8d5e60e3-0fc4-4479-bb32-ccd55f9e1971"
-                  name="RouteConfig"
                   isLeaf="false"
                   isStatic="false"
                   isReadOnly="false"
@@ -153,15 +151,45 @@
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
-        <suppliersInternal>
-          <dependency
-            Id="f29fd2cb-bee4-4f71-85f1-2d1d7f365521">
+        <targetEnds>
+          <association
+            Id="043cf2c6-fac3-4bbb-85b4-a2ef7801a6d7"
+            isDerived="false"
+            sourceEndRoleName=""
+            targetEndRoleName=""
+            isLeaf="false"
+            isAbstract="false">
             <classMoniker
               Id="d9f743b7-11eb-4b44-8798-176be14bcc04"
               LastKnownName="MessageController"
               LastKnownLocation="Package1_2229.uml" />
-          </dependency>
-        </suppliersInternal>
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="7d3d28ab-a304-4675-9f64-3bd390fbdf58"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="672fdab7-0f82-41d5-ba5c-53e5302fd8bf"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
         <ownedOperationsInternal>
           <operation
             Id="191e3a0f-cb10-4304-83f9-70c86c7437e2"

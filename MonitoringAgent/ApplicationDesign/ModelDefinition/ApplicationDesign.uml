@@ -1626,6 +1626,12 @@
         Id="c80f2dd2-8569-4f13-86c4-2d9305dfacee"
         name="HMTLPosition" />
     </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="0d5824c7-5554-48b3-990b-38c570134eae"
+        LastKnownName="MonitoringServer.Controllers"
+        LastKnownLocation="Package_1624.uml" />
+    </packageHasNamedElement>
   </packagedElements>
   <primitiveType
     Id="220a3521-e091-4221-bae9-3ef9018e845c"

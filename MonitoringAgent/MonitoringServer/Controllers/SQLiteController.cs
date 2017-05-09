@@ -130,9 +130,9 @@ namespace MonitoringServer.Controllers
                                                                 SELECT @PluginUID, @Name, @Type                                                           
                                                                 WHERE (Select Changes() = 0)",
                                                                 dbConnection);
-                        cmd.Parameters.AddWithValue("@Name", plugin.Name);
-                        cmd.Parameters.AddWithValue("@Type", plugin.Type);
-                        cmd.Parameters.AddWithValue("@PluginUID", plugin.UID.ToString());
+                        cmd.Parameters.AddWithValue("@Name", plugin.PluginName);
+                        cmd.Parameters.AddWithValue("@Type", plugin.PluginType);
+                        cmd.Parameters.AddWithValue("@PluginUID", plugin.PluginUID.ToString());
                         cmd.ExecuteNonQuery();
                     }
                 }

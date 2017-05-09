@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm10="http://schemas.microsoft.com/dsltools/UseCaseModel" xmlns:dm11="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner"
   dslVersion="1.0.0.0"
-  Id="bfa7c07d-c094-4131-8087-628af6718133"
+  Id="0d5824c7-5554-48b3-990b-38c570134eae"
   name="MonitoringServer.Controllers" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
   <packagedElements>
     <packageHasNamedElement>
       <class
-        Id="7247caa9-6912-4155-9ebd-e129180c36e8"
+        Id="57aa0b3f-dfb3-4960-9812-f0a534deff28"
         name="SQLiteController"
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
         <ownedOperationsInternal>
           <operation
-            Id="c42850d6-bb52-4951-a04c-b24d0d025708"
+            Id="facea52e-262e-4cb4-87e8-8ca33bb5f52f"
             name="CreateDbFile"
             isLeaf="false"
             isStatic="false"
@@ -23,7 +23,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="fe7caddb-89fa-434e-a60e-3686cf6965b8"
+                  Id="c6fbf6f1-acfa-4924-aab8-746c20128fab"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -37,7 +37,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="a68b3026-f422-4d54-a935-54c6df5d1f88"
+            Id="dd5ddbf4-69db-4a69-8b4e-57fcdc5217b3"
             name="CreateTables"
             isLeaf="false"
             isStatic="false"
@@ -47,7 +47,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="51d2b15f-8638-4028-9437-606840d5c6e2"
+                  Id="eb1a8ed2-3d6e-49ea-8c63-749e57e22a86"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -61,7 +61,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="a938e31f-1f48-4677-a3dd-2fc37b521b04"
+            Id="bc48b5d0-428f-43a3-856f-0cb5588088ea"
             name="GetAllPluginSettings"
             isLeaf="false"
             isStatic="false"
@@ -71,7 +71,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="79573924-9435-48c6-b740-74b4b2b18afa"
+                  Id="764cc477-ad44-4246-af5d-3e9d1ad3172f"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -85,7 +85,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="750a43ab-d997-42cf-a190-06143e393c8d"
+            Id="6a12e702-6d67-4763-b121-f7c6e0344082"
             name="GetBasicInfo"
             isLeaf="false"
             isStatic="false"
@@ -95,7 +95,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="6d25f11d-e456-4e92-92b2-97f3072b0a1c"
+                  Id="bdfd9b3c-14e5-4ea8-9539-88383348654a"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -109,7 +109,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="0098c9b4-e12f-4f18-9f10-f7949de1c4b0"
+            Id="01e23108-e15d-4aec-abca-64d3f30cf77e"
             name="GetHTMLPositions"
             isLeaf="false"
             isStatic="false"
@@ -119,7 +119,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="5582e9fa-55c5-4eca-9700-0dcc7ba787c8"
+                  Id="ae18d3c6-b1cc-4812-9ad2-63969a6f8da8"
                   name="computerID"
                   direction="In"
                   isUnique="false">
@@ -133,7 +133,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="dacebe6b-a145-432e-bbf5-b0f27833feb8"
+                  Id="eac96054-67d4-4736-b4bf-8ecc12eb8c2b"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -147,7 +147,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="6378c16a-0b61-4404-b7ef-434e9fb5be66"
+            Id="4fa22d4f-d323-47d7-b028-7b078c741f2c"
             name="GetMachineID"
             isLeaf="false"
             isStatic="false"
@@ -157,7 +157,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="6fb44d18-8381-4429-8792-aedb3638710c"
+                  Id="8a7b8b4a-afb4-4c3f-9b3a-5d5ac1825611"
                   name="computerID"
                   direction="In"
                   isUnique="false">
@@ -171,7 +171,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="9fbeedda-e652-4449-b3ed-3c0c9f832f23"
+                  Id="103c240f-7666-4fa5-a1b4-29974df4ad6d"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -185,7 +185,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="1a104b3f-95e0-42cd-88ca-5472a39d22e1"
+            Id="b6b74385-b8c7-413e-a332-53c2f15dc34c"
             name="GetPluginSettings"
             isLeaf="false"
             isStatic="false"
@@ -195,7 +195,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="9222d2e8-d566-4d5b-81d2-b5e221abe525"
+                  Id="925b4a01-ab98-47c7-bf32-ce536e982733"
                   name="pluginUID"
                   direction="In"
                   isUnique="false">
@@ -209,7 +209,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="cb526e1e-02e4-4ca8-a273-80ae08595e0e"
+                  Id="e93107a2-a3e1-4762-966d-2fb8456686da"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -223,7 +223,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="f0b3a3f9-446b-4345-9778-362cb07f2d7b"
+            Id="d6866c96-ae29-4156-b5b9-71d523d8db93"
             name="GetPluginSettings"
             isLeaf="false"
             isStatic="false"
@@ -233,7 +233,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="32963653-2c8e-43c7-8532-c162f6a33139"
+                  Id="fa6a7f88-1a60-4e00-bbea-69f6ae585cc6"
                   name="pluginUID"
                   direction="In"
                   isUnique="false">
@@ -247,7 +247,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="bbc33653-9b02-4316-bcf1-de66eb64b31f"
+                  Id="852ef824-a044-4cea-8f19-7d6970216993"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -261,7 +261,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="1413d9c1-90f1-42cd-8418-e2ee0d925347"
+            Id="10d521a8-b938-4fb7-8a2d-f41bdb3abbc4"
             name="InitPlugin"
             isLeaf="false"
             isStatic="false"
@@ -271,7 +271,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="2a7d137d-34e4-4a72-8f8e-fd2fc36e8255"
+                  Id="e2d4906f-8af8-4bb7-bb35-deef90a19cc8"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -285,7 +285,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="143ae440-0e87-4dc3-9862-32f696a80ef7"
+            Id="e8482270-7f6c-41da-a883-6cb911a460a3"
             name="JSONFromSQL"
             isLeaf="false"
             isStatic="false"
@@ -295,7 +295,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="da4b2ab4-3781-47d5-bb74-1efb7f884543"
+                  Id="0b91fbf7-4ff1-4a88-b695-eb869ee177af"
                   name="group"
                   direction="In"
                   isUnique="false">
@@ -309,7 +309,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="feb43077-56fb-4e0b-a40d-fd49581a0aaf"
+                  Id="fd63fadb-813a-48e6-8620-38f9fc56d9df"
                   name="computerID"
                   direction="In"
                   isUnique="false">
@@ -323,7 +323,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="4da038e3-6083-4948-a044-903e0e85f27b"
+                  Id="15ef8ce0-384e-4161-9447-490fdcd68edb"
                   name="computerName"
                   direction="In"
                   isUnique="false">
@@ -337,7 +337,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="26f14f0f-4f1e-459b-a5aa-a98fb0881592"
+                  Id="6ec51d97-a8be-420c-8f6c-73bc733fd574"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -351,7 +351,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="f3821d52-73b4-4387-bce7-cd7d778728e2"
+            Id="9526af5c-6580-42d6-ac85-3035aabd53eb"
             name="JSONToSQL"
             isLeaf="false"
             isStatic="false"
@@ -361,7 +361,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="e0499e48-2b81-4019-9284-dccfa6afdd7c"
+                  Id="d09012cd-190b-43d6-bc10-e54c269b619d"
                   name="clientOutput"
                   direction="In"
                   isUnique="false">
@@ -375,7 +375,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="f29f0136-bc9e-455e-8e77-82e54fd0b056"
+                  Id="9ca20c56-ecf0-428c-bdb0-80ed8f0bfe0d"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -389,7 +389,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="0876c52f-7593-4761-a971-ca8c1f2dbd80"
+            Id="ab9dfd79-8817-412d-9219-3c8b5d65d556"
             name="SaveBasicInfo"
             isLeaf="false"
             isStatic="false"
@@ -399,7 +399,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="7f1ee19f-8a68-4ad9-8a65-56bece6b5565"
+                  Id="84cf8bfa-cd8c-4539-98b7-8cf641cddb84"
                   name="clientOutput"
                   direction="In"
                   isUnique="false">
@@ -413,7 +413,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="4aaff4df-a214-48ad-bf3a-5d30c7cdb4fc"
+                  Id="098ae721-5eb2-474b-b01c-5743eaf790ae"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -427,7 +427,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="cf2237e5-6ea1-4848-8083-1b4bbfdce01a"
+            Id="8dafc752-d46a-4e16-88a7-6f8c915c58c7"
             name="LastValuesFromDB"
             isLeaf="false"
             isStatic="false"
@@ -437,7 +437,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="bbe258eb-4e74-40a2-aa32-b1fbc9dc829d"
+                  Id="9c38c546-bf65-4b81-b7a9-976f046009f2"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -451,7 +451,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="248c0cc3-1429-4154-8ae0-ba2fd602cc7e"
+            Id="ca44c3a4-82cf-44fe-ac20-89e42e8e8009"
             name="SaveHTMLPosition"
             isLeaf="false"
             isStatic="false"
@@ -461,7 +461,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="0bd90a0a-9af4-45de-bdac-29191750a170"
+                  Id="a62aea27-4c18-45d8-babd-6222329f3c33"
                   name="computerID"
                   direction="In"
                   isUnique="false">
@@ -475,7 +475,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="a97f5921-3e06-42af-ae54-78746b5a21a2"
+                  Id="bc5e355b-4bed-4578-9f80-cc4bafd4a662"
                   name="pluginUID"
                   direction="In"
                   isUnique="false">
@@ -489,7 +489,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="b35623ad-9875-4f5d-bcc3-5988fb4479e8"
+                  Id="29685488-44e9-4cfc-9088-a4761f8b2dfd"
                   name="posTop"
                   direction="In"
                   isUnique="false">
@@ -503,7 +503,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="5d045afc-26a6-42c5-89f1-937cfa5d390d"
+                  Id="de9f1d5b-1728-416b-94f5-91f002dea469"
                   name="posLeft"
                   direction="In"
                   isUnique="false">
@@ -517,7 +517,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="ca02a393-d229-4d90-8d82-9f3bb555dbba"
+                  Id="cfe27e7d-dc00-4984-8572-0f37215ed6f1"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -531,7 +531,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="ccc0b6c0-30d1-4440-b182-c55c9e304eb4"
+            Id="57af8953-4da3-4d60-91f2-f4cd071d6fac"
             name="SavePluginDefinition"
             visibility="Private"
             isLeaf="false"
@@ -542,7 +542,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="6cc51ad4-c405-4b4f-88f1-674a604706df"
+                  Id="5d91e847-458a-424a-8b32-b47bc9c2deef"
                   name="plugins"
                   direction="In"
                   isUnique="false">
@@ -556,7 +556,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="db500e4a-b630-4efd-9d80-36525bfa8c24"
+                  Id="1b212b92-6302-4154-850a-470ea15bf87c"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -570,7 +570,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="5bafe174-e76b-4aed-9cef-d7fde708e2f7"
+            Id="f1712bc3-4a71-4c80-b91d-3bf5f4ec080f"
             name="SetPluginSettings"
             isLeaf="false"
             isStatic="false"
@@ -580,7 +580,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="ac302ac6-02d5-4c75-9740-db73ca34e09c"
+                  Id="6543e830-93f1-415b-8192-2cb29d1d8378"
                   name="pluginSettings"
                   direction="In"
                   isUnique="false">
@@ -594,7 +594,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="fb50918f-4904-4904-9a4d-888b923376c9"
+                  Id="7c7ef5cb-812b-49f8-96d0-5ef32b3901c9"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -608,7 +608,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="5f264807-ce91-4750-a633-c824bb94dd2a"
+            Id="6fc0bbaf-b8aa-48d6-b567-a8bcc0072309"
             name="SQLiteController"
             isLeaf="false"
             isStatic="false"
@@ -620,55 +620,55 @@
     </packageHasNamedElement>
     <packageHasNamedElement>
       <enumeration
-        Id="4208a353-d978-4760-b430-748a22ad0c46"
+        Id="8eaa2c01-9bc3-42e7-8aae-814627f88bd9"
         name="ViewType"
         isAbstract="false"
         isLeaf="false">
         <ownedLiterals>
           <enumerationLiteral
-            Id="9e29463a-7d4d-4666-b0f2-089f4928050a"
+            Id="3b4aa1b9-1493-4d97-8315-67078f9e1e77"
             name="OneMachine" />
           <enumerationLiteral
-            Id="238fb0cf-926a-45dd-a8a6-71f555f24bd4"
+            Id="a740c0a9-a19b-4e66-895c-2d7798ce8edc"
             name="CriticalPreview" />
           <enumerationLiteral
-            Id="0d538540-93e7-46bc-9466-0b30e3912759"
+            Id="f57268f5-b73e-4f87-bce2-d1c3d03444db"
             name="SettingsView" />
         </ownedLiterals>
       </enumeration>
     </packageHasNamedElement>
     <packageHasNamedElement>
       <class
-        Id="d9f743b7-11eb-4b44-8798-176be14bcc04"
+        Id="660e3942-6c16-471d-956e-e1c42b1b47da"
         name="MessageController"
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
         <suppliersInternal>
           <dependency
-            Id="d8917d6c-b9f9-4a42-8248-ab56d8a242f8">
+            Id="265629d6-1ae3-4590-8493-68b25425682e">
             <enumerationMoniker
-              Id="4208a353-d978-4760-b430-748a22ad0c46"
+              Id="8eaa2c01-9bc3-42e7-8aae-814627f88bd9"
               LastKnownName="ViewType"
-              LastKnownLocation="Package1_2229.uml" />
+              LastKnownLocation="Package_1624.uml" />
           </dependency>
         </suppliersInternal>
         <targetEnds>
           <association
-            Id="e5e3281e-e156-43d9-b23e-021cb1217a0e"
+            Id="e5f0033d-81b1-49c1-b0dc-c6fcf59dc9d4"
             isDerived="false"
             sourceEndRoleName=""
             targetEndRoleName=""
             isLeaf="false"
             isAbstract="false">
             <classMoniker
-              Id="7247caa9-6912-4155-9ebd-e129180c36e8"
+              Id="57aa0b3f-dfb3-4960-9812-f0a534deff28"
               LastKnownName="SQLiteController"
-              LastKnownLocation="Package1_2229.uml" />
+              LastKnownLocation="Package_1624.uml" />
             <relationshipOwnedElementsInternal>
               <associationHasOwnedEnds>
                 <memberEnd
-                  Id="42803fd5-de75-41be-ab59-321d9aa6077f"
+                  Id="27533915-fd0b-4ee8-ad6a-f144a559fcf3"
                   isLeaf="false"
                   isStatic="false"
                   isReadOnly="false"
@@ -680,44 +680,7 @@
               </associationHasOwnedEnds>
               <associationHasOwnedEnds>
                 <memberEnd
-                  Id="9d923010-d0f1-4dd8-a7d4-8f862341921d"
-                  isLeaf="false"
-                  isStatic="false"
-                  isReadOnly="false"
-                  isDerived="false"
-                  isDerivedUnion="false"
-                  aggregation="None"
-                  isComposite="false" />
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-          </association>
-          <association
-            Id="5c860fe8-3509-42ec-ab57-839045f24dd1"
-            isDerived="false"
-            sourceEndRoleName=""
-            targetEndRoleName=""
-            isLeaf="false"
-            isAbstract="false">
-            <classMoniker
-              Id="7fccc237-a277-4303-93d9-f12b169f450c"
-              LastKnownName="MonitoringHub : Hub"
-              LastKnownLocation="Package_2229.uml" />
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd
-                  Id="879d3be5-e5c0-49a1-a1d1-3596e3172d36"
-                  isLeaf="false"
-                  isStatic="false"
-                  isReadOnly="false"
-                  isDerived="false"
-                  isDerivedUnion="false"
-                  aggregation="None"
-                  isComposite="false"
-                  isNavigableOwned="false" />
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd
-                  Id="dd649d00-5aaf-4f77-85cb-91506af3506b"
+                  Id="a0923d39-c175-4bb7-9045-e795627f1297"
                   isLeaf="false"
                   isStatic="false"
                   isReadOnly="false"
@@ -731,7 +694,7 @@
         </targetEnds>
         <ownedAttributesInternal>
           <property
-            Id="100376a4-a8f4-46f3-9236-9531cfd705bc"
+            Id="d84e0c88-0265-4659-8726-856d60a484be"
             name="_group"
             visibility="Private"
             isLeaf="false"
@@ -750,7 +713,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="43ea43d4-0132-4268-b4f9-c0663721e656"
+            Id="d72f93a8-4db4-4b9f-b097-13197342a22b"
             name="_changed"
             visibility="Private"
             isLeaf="false"
@@ -769,7 +732,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="78867de7-252a-443e-b52d-5497227caef3"
+            Id="e36a3e4f-5e76-4eb4-9f37-2962c994709c"
             name="_nodeID"
             visibility="Private"
             isLeaf="false"
@@ -788,7 +751,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="46d56e74-9b94-42dd-8c36-bb2eb330a5d8"
+            Id="6f90d078-ddbf-4a84-98d3-eb1d96f7f1f6"
             name="_pcName"
             visibility="Private"
             isLeaf="false"
@@ -807,7 +770,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="73a76abf-751b-4e7c-9487-f552d9ae6934"
+            Id="227b6718-32b3-4ed0-8a70-6e8e504d0e27"
             name="_viewType"
             visibility="Private"
             isLeaf="false"
@@ -828,7 +791,7 @@
         </ownedAttributesInternal>
         <ownedOperationsInternal>
           <operation
-            Id="9fd392c0-3991-4c16-a544-5ab3e28f6a0f"
+            Id="da6eb511-da0c-41a1-8639-4dcd6a762721"
             name="CriticalPreview"
             visibility="Private"
             isLeaf="false"
@@ -839,7 +802,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="fed3aa73-46ff-4538-80ec-33c66f23f784"
+                  Id="f3ec73c0-84b4-4b71-8769-47457c2e6746"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -853,7 +816,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="ada5315d-892e-4fb6-82ab-2e66ea7a18d2"
+            Id="98ebc342-b5e4-494c-aeed-5c7d8bc9e961"
             name="GetContext"
             visibility="Private"
             isLeaf="false"
@@ -864,7 +827,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="5c9e93b6-85df-4342-873d-9273d7e52938"
+                  Id="86d9938b-ca6b-4cbc-9f47-0feb807a437b"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -878,7 +841,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="3367961c-5f16-423a-bdec-5015a4584d7f"
+            Id="eabca695-2f73-42a7-9397-aafc805fc2fe"
             name="GetCriticalValue"
             visibility="Private"
             isLeaf="false"
@@ -889,14 +852,14 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="f9aaa9d0-bde0-455c-8838-571db510ec36"
+                  Id="9be13372-6913-4cb3-b685-b97e4ebc122e"
                   name="List&lt;ClientOutput&gt; clientOutputList"
                   direction="In"
                   isUnique="false" />
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="8745298d-1e40-44ad-b8d9-485ad5c5bfa2"
+                  Id="3f5b88c9-5d0c-4e61-af6e-fbbf1b20a9fd"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -910,7 +873,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="ce8066ba-a046-43ee-8ced-91f8e692a422"
+            Id="d602b1f7-1774-4012-86dc-f14a9af4c772"
             name="LoadTreeView"
             isLeaf="false"
             isStatic="false"
@@ -920,7 +883,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="c5a71ca8-e16e-4cc7-b022-ce3c664e0666"
+                  Id="15d873b1-5a0d-4b0e-93d1-0cdbb27f0c8d"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -934,7 +897,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="b2a2af5d-ccfe-4d8c-b003-810b135ac00c"
+            Id="99123b4f-d9fe-49ce-a9e4-edd31aecc0a1"
             name="MessageController"
             isLeaf="false"
             isStatic="false"
@@ -942,7 +905,7 @@
             concurrency="Sequential"
             isQuery="false" />
           <operation
-            Id="cfd14de8-3309-44ce-a3f4-42da2d6a198d"
+            Id="cd68a516-c894-473e-abfc-4a880dc6daff"
             name="Messanger"
             isLeaf="false"
             isStatic="false"
@@ -952,7 +915,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="e2a0f88b-480b-4a8c-a64b-ce3865f95671"
+                  Id="aad9858b-6a90-4d49-b669-5ac33dd888c4"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -966,7 +929,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="182730e3-bf07-4459-af58-8b6247b90fa3"
+            Id="99be125c-6c26-4be9-8c1a-69b50181cfd3"
             name="OneMachineView"
             visibility="Private"
             isLeaf="false"
@@ -977,7 +940,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="ac340734-5478-49c3-b640-4d3906999dcb"
+                  Id="001f0d4f-42dc-405c-9a0f-48b7c34848c8"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -991,7 +954,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="a8c7dcb1-70ee-48db-92cd-be211fa737ea"
+            Id="7b9fcdf5-b970-44aa-a07c-42d1e1cf3f6c"
             name="SendPluginSettings"
             isLeaf="false"
             isStatic="false"
@@ -1001,7 +964,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="f6342c46-fb92-47e4-9afb-34dffb3a6efd"
+                  Id="17519942-9ff5-4547-94f3-e6e90eb6740d"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1015,7 +978,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="ea45c9d3-c223-4aef-aef5-040c6a5adebe"
+            Id="ffbfd357-b9c8-40b3-856a-69760e2fd4ef"
             name="SendSavedPosition"
             isLeaf="false"
             isStatic="false"
@@ -1025,7 +988,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="e217eee0-9f77-4650-8fdc-164228a117a1"
+                  Id="0ae11e43-8da0-4c4d-800a-00699cbe9e72"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1039,7 +1002,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="266128ce-857b-4c90-9a66-a1dab7b41337"
+            Id="f78fd99f-335c-4f02-9707-1aa845643b26"
             name="SetGroup"
             isLeaf="false"
             isStatic="false"
@@ -1049,7 +1012,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="e92649d1-f4ce-49d2-9ded-be58d1acb9f1"
+                  Id="102cfcc2-a3ff-4f45-b115-97d46fdae044"
                   name="group"
                   direction="In"
                   isUnique="false">
@@ -1063,7 +1026,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="07fccc16-3741-47dc-8bbe-4d9d27689fcc"
+                  Id="2e71e828-3338-439e-b9f5-32107654d78c"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1077,7 +1040,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="c3fcb3da-e74f-453c-8d43-52a1f461c9d5"
+            Id="e738d890-07a5-4005-b6e2-6abe17d8aa23"
             name="SetNodeID"
             isLeaf="false"
             isStatic="false"
@@ -1087,7 +1050,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="8be332ad-5647-48f3-be3b-cafe16418530"
+                  Id="af22441b-7037-49b8-a75f-1683262f0878"
                   name="nodeID"
                   direction="In"
                   isUnique="false">
@@ -1101,7 +1064,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="afe71b64-ab58-407c-8856-c67b34c74173"
+                  Id="4777778b-b69d-4db3-909e-f47ec148c45d"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1115,7 +1078,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="67dafbe8-c033-40cc-ac23-553bc2ef7109"
+            Id="6500abbf-081b-4e62-bfef-7776a5c5f2ec"
             name="SetPCName"
             isLeaf="false"
             isStatic="false"
@@ -1125,7 +1088,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="80c0fd3b-92dc-484c-9bc8-c921d9012ae6"
+                  Id="05870952-ee80-4ead-85df-d4a8f3d4d128"
                   name="pcName"
                   direction="In"
                   isUnique="false">
@@ -1139,7 +1102,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="1d5c2e64-4d2a-4525-9b3a-0ef75d705c2b"
+                  Id="6c658591-cfc3-49db-8a9a-45bcd4dd5017"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1153,7 +1116,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="faba7299-0963-40e1-85b4-5b7aea3a3882"
+            Id="5682cfda-0f31-4e35-ba2a-7ab4ff83309a"
             name="SetView"
             isLeaf="false"
             isStatic="false"
@@ -1163,7 +1126,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="ef41ee82-750a-4fb6-9052-0b143034d1e5"
+                  Id="9892d696-ae4f-4473-9dbe-35789ffa5022"
                   name="viewType"
                   direction="In"
                   isUnique="false">
@@ -1177,7 +1140,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="51290bb5-6d28-4d87-ad3d-3bbe2a2b8941"
+                  Id="000c3dd6-5f28-4dc1-8792-59966ede71b8"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1191,7 +1154,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="286dc6b4-9d5e-476f-8028-0eef73ef718c"
+            Id="67d05ad0-a36e-4316-8eb0-2e8c62c21d84"
             name="StartMessageThread"
             isLeaf="false"
             isStatic="false"
@@ -1201,7 +1164,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="2f0fabb3-2909-4911-b81f-cc320bb55e00"
+                  Id="2ab337af-de8c-418d-8145-3b84bf222da8"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1215,7 +1178,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="e2c00108-ef64-47d3-b9a6-e3b0cb14e2e9"
+            Id="3af52e1d-a9e4-4831-846f-7ab4ae45099c"
             name="JSONToSQL"
             isLeaf="false"
             isStatic="false"
@@ -1225,7 +1188,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="cb5a3709-4db7-41f6-84c0-eb216c777c05"
+                  Id="0bcd63af-f80f-4286-9331-277874d0a338"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1238,7 +1201,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="a4a2d0cf-122e-43ac-b40a-598288e3f970"
+                  Id="51e7a9ea-8e66-4563-a293-6549441d94fd"
                   name="clientOutput"
                   direction="In"
                   isUnique="false">
@@ -1253,7 +1216,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="dbf3a39b-c040-4786-9167-8d81e6305e63"
+            Id="5b89a962-4d8e-45ee-a140-aa0499cc6a3e"
             name="SaveBasicInfoToDB"
             isLeaf="false"
             isStatic="false"
@@ -1263,7 +1226,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="036bc1df-e9cf-4116-8155-13ed2a951fb1"
+                  Id="92cc04ee-66a1-4770-ab31-310c630e425f"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1276,7 +1239,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="3f16624a-4dc8-4339-842e-5f1da8e6c14a"
+                  Id="e22fc9cf-c9db-4804-a858-be9cca433fd6"
                   name="clientOutput"
                   direction="In"
                   isUnique="false">
@@ -1291,7 +1254,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="ae90b9c7-df74-4540-8d9d-5063ea03b160"
+            Id="fb2a7c13-5b02-444e-9fad-a6806bf783f0"
             name="SavePosition"
             isLeaf="false"
             isStatic="false"
@@ -1301,7 +1264,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="91228291-ae9f-4ebe-b3d6-41cb1e435521"
+                  Id="4e30436e-351e-477c-862b-9ad2bd156d8e"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1314,7 +1277,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="7ecf2865-588a-4fb0-bde7-34b3e9c4ced0"
+                  Id="d7ee7b27-133d-4cb0-8e30-f67a4baecd97"
                   name="computerID"
                   direction="In"
                   isUnique="false">
@@ -1328,7 +1291,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="a44320ef-3baa-4bff-be30-5636996774c3"
+                  Id="d29273ae-b39b-472d-8619-39dd986022cd"
                   name="pluginUID"
                   direction="In"
                   isUnique="false">
@@ -1342,7 +1305,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="d3855711-4fe8-4efe-b665-309112ca63df"
+                  Id="e9e0884f-646d-468a-82e3-2ad2ff60bdee"
                   name="posTop"
                   direction="In"
                   isUnique="false">
@@ -1356,7 +1319,7 @@
               </operationHasOwnedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="f4844047-2772-4f2f-9d06-8db9e11203c7"
+                  Id="1961e1cb-919d-41b6-9ffb-9e4bda9d9a9a"
                   name="posLeft"
                   direction="In"
                   isUnique="false">
@@ -1371,7 +1334,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="4a69a3c7-c6ee-4723-afa1-b982526c0469"
+            Id="8084470e-8dcc-4760-8b15-6ce63392633f"
             name="InitDatabase"
             isLeaf="false"
             isStatic="false"
@@ -1381,7 +1344,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="b2c4b26e-63fb-4ea2-8b32-518a836b0757"
+                  Id="397e0780-3e45-4eb5-b5bf-e7621476bb65"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1399,14 +1362,14 @@
     </packageHasNamedElement>
     <packageHasNamedElement>
       <class
-        Id="33d23536-5e4e-489d-8bb5-ef40c7c7af22"
+        Id="c741ec8a-d1c8-4f45-89e8-8f6c14f0ba33"
         name="HomeController"
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
         <ownedOperationsInternal>
           <operation
-            Id="2f1d34f7-b1f1-417b-8577-a06a74cbd578"
+            Id="c3f514c5-92d7-47d1-8696-79057e7d4745"
             name="Index"
             isLeaf="false"
             isStatic="false"
@@ -1416,7 +1379,7 @@
             <ownedParameters>
               <operationHasOwnedParameters>
                 <parameter
-                  Id="93bb1741-30df-4fa7-bcda-4af6d8c93502"
+                  Id="74d74f35-3973-47d7-89d3-bb0742d39f05"
                   direction="Return"
                   isUnique="false">
                   <type_NamedElement>
@@ -1431,16 +1394,6 @@
           </operation>
         </ownedOperationsInternal>
       </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <undefinedType
-        Id="bef9179c-192b-4968-8a72-96af43ee81b7"
-        name="ClientOutput" />
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <undefinedType
-        Id="57706b72-f0ef-4fb4-96b8-d530b8a2d6dc"
-        name="voi" />
     </packageHasNamedElement>
   </packagedElements>
 </package>
