@@ -3,7 +3,7 @@ using Microsoft.Owin;
 using MonitoringServer.Controllers;
 using Owin;
 
-//[assembly: OwinStartup(typeof(MonitoringServer.Startup))]
+[assembly: OwinStartup(typeof(MonitoringServer.Startup))]
 
 namespace MonitoringServer
 {
@@ -17,8 +17,8 @@ namespace MonitoringServer
             hubConfiguration.EnableJavaScriptProxies = true;
             app.MapSignalR(hubConfiguration);
 
-            MessageController.InitDatabase();
-            MessageController.StartMessageThread();
+            //MessageController.InitDatabase();
+            //MessageController.StartMessageThread();
         }
     }
 }

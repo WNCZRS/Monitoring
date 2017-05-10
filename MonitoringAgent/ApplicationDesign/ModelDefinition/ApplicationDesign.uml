@@ -438,6 +438,24 @@
                 LastKnownLocation="ApplicationDesign.uml" />
             </type_NamedElement>
           </property>
+          <property
+            Id="4f058f4d-53c7-4022-bc0d-1323d39f9fe7"
+            name="IsWarning"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <undefinedTypeMoniker
+                Id="f3c84856-18c5-468d-8226-1d3a9b3595e0"
+                LastKnownName="bool"
+                LastKnownLocation="ApplicationDesign.uml" />
+            </type_NamedElement>
+          </property>
         </ownedAttributesInternal>
       </class>
     </packageHasNamedElement>

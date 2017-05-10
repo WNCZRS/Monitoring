@@ -29,11 +29,14 @@ namespace PluginsCollection
     public class SimplePluginOutput
     {
         public object Value { get; set; }
+        //public bool IsWarning { get; set; }
         public bool IsCritical { get; set; }
-
-        public SimplePluginOutput(object value, bool isCritical)
+        
+        //TODO: IsWarning
+        public SimplePluginOutput(object value, bool isCritical/*, bool isWarning*/)
         {
             Value = value;
+            //IsWarning = isWarning;
             IsCritical = isCritical;
         }
     }

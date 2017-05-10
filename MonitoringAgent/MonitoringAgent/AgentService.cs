@@ -183,18 +183,21 @@ namespace MonitoringAgent
 
             try
             {
-                hubConnection.Start().ContinueWith(task =>
+                if (hubConnection.State == ConnectionState.Disconnected)
                 {
-                    if (task.IsFaulted)
+                    hubConnection.Start().ContinueWith(task =>
                     {
-                        Console.WriteLine($"There was an error opening the connection: {task.Exception.GetBaseException()}");
-                        sended = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Connected");
-                    }
-                }).Wait();
+                        if (task.IsFaulted)
+                        {
+                            Console.WriteLine($"There was an error opening the connection: {task.Exception.GetBaseException()}");
+                            sended = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Connected");
+                        }
+                    }).Wait();
+                }
 
                 monitoringHub.Invoke<ClientOutput>("SendPluginOutput", output).Wait();
             }
@@ -206,7 +209,7 @@ namespace MonitoringAgent
             }
             finally
             {
-                hubConnection.Stop();
+                //hubConnection.Stop();
             }
             return sended;
         }

@@ -190,6 +190,12 @@
               <referencedTypeMoniker Id="ecc90f96-9f95-477f-bdef-5abc402119b5" LastKnownName="bool" />
             </type_NamedElement>
           </property>
+          <property Id="e8dbef35-86b5-4a4a-ba32-0d9f3847da9f" name="IsWarning" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="4f058f4d-53c7-4022-bc0d-1323d39f9fe7" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="ecc90f96-9f95-477f-bdef-5abc402119b5" LastKnownName="bool" />
+            </type_NamedElement>
+          </property>
         </ownedAttributesInternal>
       </class>
     </logicalClassDesignerModelHasTypes>

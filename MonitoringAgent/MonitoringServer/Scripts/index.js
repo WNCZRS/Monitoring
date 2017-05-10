@@ -19,8 +19,13 @@
 
     console.log("before start connection");
     // Get a reference to our hub
-    $.connection.hub.url = "signalr";
+    //$.connection.hub.url = "signalr";
+    $.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub
+    
+    console.log($.connection);
+    console.log($.connection.hub);
+    console.log($.connection.hub.url);
 
     //$.connection.hub.logging = true;
     // Start the connection
@@ -320,9 +325,11 @@
             link.textContent = pluginSettings.PluginName;
             link.setAttribute("onclick", "OnLinkClick(this)");
 
-            if ($(newSettingsTable).find("#" + pluginSettings.ComputerID).length) {
+            var editCellInRow = $(newSettingsTable).find("#" + pluginSettings.ComputerID);
+
+            if (editCellInRow.length) {
                 //add plugin link button to exist cell in table
-                $(newSettingsTable).find("#editCell").append(link);
+                editCellInRow.find("#editCell").append(link);
             } else {
                 //create new row for one computer
                 var row = document.createElement("tr");
@@ -353,20 +360,38 @@ function checkFirstVisit() {
     }
     else {
         setTimeout(function () {
-            $.connection.hub.url = "signalr";
+            //$.connection.hub.url = "signalr";
+            $.connection.hub.url = "http://localhost:8000/signalr";
+            console.log("$.connection.hub");
+            console.log($.connection.hub);
+
+            console.log("$.connection.hub.state");
+            console.log($.connection.hub.state);
+
+            console.log("$.connection.MyHub");
+            console.log($.connection.MyHub);
+
+            console.log("$.connection.MyHub.state");
+            console.log($.connection.MyHub.state);
+
             var hub = $.connection.MyHub;
-            if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
-                $.connection.hub.start().done(function () {
-                    $("#containment-wrapper").empty();
-                    hub.server.onRefresh();
-                    onRootNodeClick();
-                });
-            }
-            else {
+            $.connection.hub.start().done(function () {
                 $("#containment-wrapper").empty();
                 hub.server.onRefresh();
                 onRootNodeClick();
-            }
+            });
+            //if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+            //    $.connection.hub.start().done(function () {
+            //        $("#containment-wrapper").empty();
+            //        hub.server.onRefresh();
+            //        onRootNodeClick();
+            //    });
+            //}
+            //else {
+            //    $("#containment-wrapper").empty();
+            //    hub.server.onRefresh();
+            //    onRootNodeClick();
+            //}
         }, 500);
 
 
@@ -395,7 +420,8 @@ function onRootNodeClick() {
     }
     $("#editableSwitch").hide();
 
-    $.connection.hub.url = "signalr";
+    //$.connection.hub.url = "signalr";
+    $.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
 
     if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
@@ -413,7 +439,8 @@ function onNodeClick(object) {
     $("#mainTitle").html(object.getAttribute('group') + "/" + object.textContent);
     $("#containment-wrapper").empty();
     $("#editableSwitch").show();
-    $.connection.hub.url = "signalr";
+    //$.connection.hub.url = "signalr";
+    $.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
     if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
         $.connection.hub.start().done(function () {
@@ -432,7 +459,8 @@ function onSettingsClick() {
         $('.toggle').toggles({ drag: false });
     }
     $("#editableSwitch").hide();
-    $.connection.hub.url = "signalr";
+    //$.connection.hub.url = "signalr";
+    $.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
     if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
         $.connection.hub.start().done(function () {
@@ -532,7 +560,8 @@ function saveSettings() {
 }
 
 function onLoadClick() {
-    $.connection.hub.url = "signalr";
+    //$.connection.hub.url = "signalr";
+    $.connection.hub.url = "http://localhost:8000/signalr";
     var hub = $.connection.MyHub;
     if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
         $.connection.hub.start().done(function () {
@@ -567,7 +596,8 @@ function savePositonOnToggleOff() {
         $('.draggable').each(function () {
             var plugObj = $(this);
             setTimeout(function () {
-                $.connection.hub.url = "signalr";
+                //$.connection.hub.url = "signalr";
+                $.connection.hub.url = "http://localhost:8000/signalr";
                 var hub = $.connection.MyHub;
                 var top = plugObj.position().top;
                 var left = plugObj.position().left;
