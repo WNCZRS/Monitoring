@@ -100,7 +100,6 @@ namespace MonitoringServer.Controllers
 
         private static void CriticalPreview()
         {
-            //GetContext().Clients.Group("Clients").InitMainDiv();
             try
             {
                 SQLiteController sqlController = new SQLiteController();
@@ -108,10 +107,8 @@ namespace MonitoringServer.Controllers
                 if (clientOutputList != null || clientOutputList.Count != 0)
                 {
                     List<ClientOutput> criticalValues = GetCriticalValues(clientOutputList);
-                    if (criticalValues.Count > 0)
-                    {
-                        GetContext().Clients.Group("Clients").PreviewCritical(criticalValues);
-                    }
+
+                    GetContext().Clients.Group("Clients").PreviewCritical(criticalValues);
                 }
             }
             catch (Exception ex)
@@ -261,17 +258,15 @@ namespace MonitoringServer.Controllers
             SQLiteController sqlController = new SQLiteController();
 
             List<PluginSettings> pluginSettingsList = sqlController.GetAllPluginSettings();
-            if (pluginSettingsList != null && pluginSettingsList.Count > 0)
+
+            try
             {
-                try
-                {
-                    GetContext().Clients.Group("Clients").SaveSettingsToLocalStorage(pluginSettingsList.ToArray());
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                GetContext().Clients.Group("Clients").SaveSettingsToLocalStorage(pluginSettingsList.ToArray());
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }   
         }
     }
 }

@@ -45,17 +45,29 @@ namespace PluginsCollection
             List<SimplePluginOutput> listSPO = new List<SimplePluginOutput>();
             _pluginOutputs.PluginOutputList.Clear();
 
-            memoryUsage = (Math.Round((GetTotalMemoryInBytes() / (1024 * 1024 * 1024)), 2)).ToString();
+            memoryUsage = (Math.Round((GetFreeMemoryInBytes() / (1024 * 1024 * 1024)), 2)).ToString();
             memoryUsage += " GB";
 
-            listSPO.Add(new SimplePluginOutput(memoryUsage, true));
+            if (((GetFreeMemoryInBytes() / GetTotalMemoryInBytes()) * 100) < 10)
+            {
+                listSPO.Add(new SimplePluginOutput(memoryUsage, true));
+            }
+            else
+            {
+                listSPO.Add(new SimplePluginOutput(memoryUsage, false));
+            }
             _pluginOutputs.PluginOutputList.Add(new PluginOutput("Free RAM", listSPO));
             return _pluginOutputs;
         }
 
-        static double GetTotalMemoryInBytes()
+        double GetFreeMemoryInBytes()
         {
             return new ComputerInfo().AvailablePhysicalMemory;
+        }
+
+        double GetTotalMemoryInBytes()
+        {
+            return new ComputerInfo().TotalPhysicalMemory;
         }
     }
 }

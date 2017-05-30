@@ -211,40 +211,41 @@
         headerRow.appendChild(valueHead);
         newResultTable.appendChild(headerRow);
 
+        if (typeof clientOutput !== 'undefined') {
+            criticalValues.forEach(function (clientOutput) {
 
-        criticalValues.forEach(function (clientOutput) {
+                clientOutput.CollectionList.forEach(function (plugin) {
 
-            clientOutput.CollectionList.forEach(function (plugin) {
+                    plugin.PluginOutputList.forEach(function (pluginElement) {
 
-                plugin.PluginOutputList.forEach(function (pluginElement) {
+                        pluginElement.Values.forEach(function (simplePluginElement) {
 
-                    pluginElement.Values.forEach(function (simplePluginElement) {
-
-                        var row = document.createElement("tr");
-                        var group = document.createElement("td");
-                        group.textContent = clientOutput.Group;
-                        row.appendChild(group);
-                        var station = document.createElement("td");
-                        station.textContent = clientOutput.PCName;
-                        row.appendChild(station);
-                        var pluginRow = document.createElement("td");
-                        pluginRow.textContent = plugin.PluginName;
-                        row.appendChild(pluginRow);
-                        var value = document.createElement("td");
-                        value.textContent = pluginElement.PropertyName + " - " + simplePluginElement.Value;
-                        if (simplePluginElement.IsCritical) {
-                            value.className = "alertRow";
-                        }
-                        //TODO warning
-                        /*if (simplePluginElement.IsWarning) {
-                            cellValue.className = "warningRow";
-                        }*/
-                        row.appendChild(value);
-                        newResultTable.appendChild(row);
+                            var row = document.createElement("tr");
+                            var group = document.createElement("td");
+                            group.textContent = clientOutput.Group;
+                            row.appendChild(group);
+                            var station = document.createElement("td");
+                            station.textContent = clientOutput.PCName;
+                            row.appendChild(station);
+                            var pluginRow = document.createElement("td");
+                            pluginRow.textContent = plugin.PluginName;
+                            row.appendChild(pluginRow);
+                            var value = document.createElement("td");
+                            value.textContent = pluginElement.PropertyName + " - " + simplePluginElement.Value;
+                            if (simplePluginElement.IsCritical) {
+                                value.className = "alertRow";
+                            }
+                            //TODO warning
+                            /*if (simplePluginElement.IsWarning) {
+                                cellValue.className = "warningRow";
+                            }*/
+                            row.appendChild(value);
+                            newResultTable.appendChild(row);
+                        });
                     });
                 });
             });
-        });
+        };
 
         $("#containment-wrapper").append(newResultTable);
     };
@@ -338,7 +339,6 @@
                 edit.appendChild(link);
                 row.appendChild(edit);
                 newSettingsTable.appendChild(row);
-
             }
         });
         $("#containment-wrapper").append(newSettingsTable);
@@ -427,6 +427,7 @@ function onNodeClick(object) {
 
 function onSettingsClick() {
     $("#mainTitle").html("Settings");
+    $('.node.active').removeClass('active');
     $("#containment-wrapper").empty();
     if ($('.toggle-on').hasClass('active')) {
         $('.toggle').toggles({ drag: false });
@@ -446,65 +447,63 @@ function onSettingsClick() {
 
 function OnLinkClick(pluginLink) {
 
-    if (!$("#dialog").length)
-    {
-        var newDialog = document.createElement("div");
-        newDialog.id = "dialog";
-        newDialog.title = pluginLink.textContent;
-        var form = document.createElement("form");
+    console.log('new dialog');
+    var newDialog = document.createElement("div");
+    newDialog.id = "dialog";
+    newDialog.title = pluginLink.textContent;
+    var form = document.createElement("form");
 
-        var activeCheckBox = document.createElement("input");
-        activeCheckBox.type = "checkbox";
-        var labelCheckBox = document.createElement("label");
-        labelCheckBox.appendChild(document.createTextNode("Active"));
-        form.appendChild(activeCheckBox);
-        form.appendChild(labelCheckBox);
-        form.appendChild(document.createElement("br"));
+    var activeCheckBox = document.createElement("input");
+    activeCheckBox.type = "checkbox";
+    var labelCheckBox = document.createElement("label");
+    labelCheckBox.appendChild(document.createTextNode("Active"));
+    form.appendChild(activeCheckBox);
+    form.appendChild(labelCheckBox);
+    form.appendChild(document.createElement("br"));
 
-        var textBoxCritLimit = document.createElement("input");
-        textBoxCritLimit.type = "text";
-        var labelCritLimit = document.createElement("p");
-        labelCritLimit.id = "dialog_p";
-        labelCritLimit.textContent = "Critical value limit (%): ";
-        form.appendChild(labelCritLimit);
-        form.appendChild(textBoxCritLimit);
-        form.appendChild(document.createElement("br"));
+    var textBoxCritLimit = document.createElement("input");
+    textBoxCritLimit.type = "text";
+    var labelCritLimit = document.createElement("p");
+    labelCritLimit.id = "dialog_p";
+    labelCritLimit.textContent = "Critical value limit (%): ";
+    form.appendChild(labelCritLimit);
+    form.appendChild(textBoxCritLimit);
+    form.appendChild(document.createElement("br"));
         
-        var textBoxWarnLimit = document.createElement("input");
-        textBoxWarnLimit.type = "text";
-        var labelWarnLimit = document.createElement("p");
-        labelWarnLimit.id = "dialog_p";
-        labelWarnLimit.textContent = "Warning value limit (%): ";
-        form.appendChild(labelWarnLimit);
-        form.appendChild(textBoxWarnLimit);
-        form.appendChild(document.createElement("br"));
+    var textBoxWarnLimit = document.createElement("input");
+    textBoxWarnLimit.type = "text";
+    var labelWarnLimit = document.createElement("p");
+    labelWarnLimit.id = "dialog_p";
+    labelWarnLimit.textContent = "Warning value limit (%): ";
+    form.appendChild(labelWarnLimit);
+    form.appendChild(textBoxWarnLimit);
+    form.appendChild(document.createElement("br"));
 
-        var clientID = $("#" + pluginLink.id).parent().parent()[0].id;
-        if (clientID !== null) {
-            var pluginSettings = JSON.parse(localStorage.getItem(clientID + '_' + pluginLink.id));
-            if (pluginSettings.PluginType === 0) {
-                var textBoxTimeSpan = document.createElement("input");
-                textBoxTimeSpan.type = "text";
-                var labelTimeSpan = document.createElement("p");
-                labelTimeSpan.id = "dialog_p";
-                labelTimeSpan.textContent = "Graph time span (minutes): ";
-                form.appendChild(labelTimeSpan);
-                form.appendChild(textBoxTimeSpan);
-                form.appendChild(document.createElement("br"));
-            }
+    var clientID = $("#" + pluginLink.id).parent().parent()[0].id;
+    if (clientID !== null) {
+        var pluginSettings = JSON.parse(localStorage.getItem(clientID + '_' + pluginLink.id));
+        if (pluginSettings.PluginType === 0) {
+            var textBoxTimeSpan = document.createElement("input");
+            textBoxTimeSpan.type = "text";
+            var labelTimeSpan = document.createElement("p");
+            labelTimeSpan.id = "dialog_p";
+            labelTimeSpan.textContent = "Graph time span (minutes): ";
+            form.appendChild(labelTimeSpan);
+            form.appendChild(textBoxTimeSpan);
+            form.appendChild(document.createElement("br"));
         }
-
-        var textBoxRefresh = document.createElement("input");
-        textBoxRefresh.type = "text";
-        var labelRefresh = document.createElement("p");
-        labelRefresh.id = "dialog_p";
-        labelRefresh.textContent = "Refresh period (seconds): ";
-        form.appendChild(labelRefresh);
-        form.appendChild(textBoxRefresh);
-
-        newDialog.appendChild(form);
-        $("body").append(newDialog);
     }
+
+    var textBoxRefresh = document.createElement("input");
+    textBoxRefresh.type = "text";
+    var labelRefresh = document.createElement("p");
+    labelRefresh.id = "dialog_p";
+    labelRefresh.textContent = "Refresh period (seconds): ";
+    form.appendChild(labelRefresh);
+    form.appendChild(textBoxRefresh);
+
+    newDialog.appendChild(form);
+    $("body").append(newDialog);
 
     dialog = $("#dialog").dialog({
         autoOpen: false,
